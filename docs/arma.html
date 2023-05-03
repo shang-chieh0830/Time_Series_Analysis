@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 11 ARMA | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 11 ARMA | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 11 ARMA | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="moving-average-models.html"/>
+<link rel="next" href="acf-and-pacf-for-arma-models.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="arma" class="section level1 hasAnchor" number="11">
+<h1><span class="header-section-number">Chapter 11</span> ARMA<a href="arma.html#arma" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="autoregressive-moving-averagearma" class="section level2 hasAnchor" number="11.1">
+<h2><span class="header-section-number">11.1</span> Autoregressive Moving Average(ARMA)<a href="arma.html#autoregressive-moving-averagearma" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Combines MA and AR models into one model. An “ARMA(p,q)” model is:</p>
+<p><span class="math display">\[(1-\phi_1B-\phi_2B^2-…-\phi_pB^p)x_t = (1+\theta_1B+\theta_2B^2+…+\theta_qB^q)w_t\\
+\iff \phi(B)x_t = \theta(B)w_t\]</span></p>
+<p>assuming <span class="math inline">\(x_t\)</span> is stationary.</p>
+<p>Notes:</p>
+<ul>
+<li>If <span class="math inline">\(E(x_t) = \mu \ne\)</span> 0, then we could rewrite the model as</li>
+</ul>
+<p><span class="math display">\[\phi(B)x_t = \alpha + \theta(B)w_t\]</span> where <span class="math inline">\(\alpha = \mu(1-\phi_1-\phi_2-…-\phi_p)\)</span></p>
+<p>or let <span class="math inline">\(z_t = x_t-\mu\)</span> so that the model is <span class="math inline">\(\phi(B)z_t = \theta(B)w_t\)</span></p>
+<ul>
+<li>If the model is casual, then it can be rewritten as</li>
+</ul>
+<p><span class="math display">\[x_t = \frac{\theta(B)}{\phi(B)}w_t = \psi(B)w_t\]</span></p>
+<p>where <span class="math inline">\(\psi(B) = 1+B\psi_1+B^2\psi_2+… .\)</span></p>
+<ul>
+<li>If the model is invertible, then it can be rewritten as</li>
+</ul>
+<p><span class="math display">\[\frac{\phi(B)}{\theta(B)}x_t = \pi(B)x_t = w_t\]</span>, where <span class="math inline">\(\pi(B)=1+\pi_1B+\pi_2B^2+...\)</span></p>
+<ul>
+<li>Problem with parameter redundancy</li>
+</ul>
+<p>ARMA(1,1): <span class="math inline">\((1-0.5B)x_t = (1-0.5B)w_t\)</span></p>
+<p>Notice that <span class="math inline">\(x_t = \frac{1-0.5B}{1-0.5B}w_t = w_t\)</span>! Thus, this ARMA(1,1) can also be represented by a white noise process.</p>
+<p>Another example illustrating this is the following ARMA(2,1):</p>
+<p><span class="math display">\[(1-0.1B-0.2B^2)x_t = (1-0.5B)w_t\\
+\iff (1+0.4B)(1-0.5B)x_t = (1-0.5B)w_t\\
+\iff (1+0.4B)x_t = \frac{1-0.5B}{1-0.5B}w_t\]</span></p>
+<p>Thus, this ARMA(2,1) can also be represented by an ARMA(1,0).</p>
+<p>The problem here is that both the AR and MA parts have a “common factor”. To avoid this problem, we need to assume that AR and MA operators have no common factors.</p>
+<p>To overcome the problems with stationary AR models that depend on the future and MA models that are not unique, we require ARMA models to be causal and invertible.</p>
+<p>Let <span class="math inline">\(\phi(z) = 1-\phi_1z-\phi_2z^2-…-\phi_pz^p, \phi_p\ne\)</span> 0, and <span class="math inline">\(\theta(z) = 1+\theta_1z+\theta_2z^2+…+\theta_qz^q, \theta_q\ne\)</span> 0
+be the AR and MA operators with “z” used in it to emphasize they are as polynomials and z is an ordinary algebraic variable. Note that z is possibly a complex number.</p>
+<p>Assume that <span class="math inline">\(\phi_(z)\)</span> and <span class="math inline">\(\theta(z)\)</span> have no common factors.</p>
+</div>
+<div id="causality-of-an-armapq-process" class="section level2 hasAnchor" number="11.2">
+<h2><span class="header-section-number">11.2</span> Causality of an ARMA(p,q) process<a href="arma.html#causality-of-an-armapq-process" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An ARMA(p,q) model is causal when the roots of <span class="math inline">\(\phi(z)\)</span> lie outside the unit circle; that is, <span class="math inline">\(\phi(z) = 0\)</span> only when |z| &gt; 1. The coefficients of the linear process for <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span> can be determined from solving <span class="math inline">\(\sum_{j=0}^{\infty}\psi_jz^j=\frac{\theta(z)}{\phi(z)}\)</span> .</p>
+<p>Note that when z is a real number, |z| means absolute value of z. When z is a complex number c+di, |z| means <span class="math inline">\(\sqrt{c^2+d^2}\)</span> where i = <span class="math inline">\(\sqrt{-1}\)</span> .</p>
+<p>Again, this means the model can be rewritten as an infinite order MA model.</p>
+<p>Reason: Stationarity that is not future dependent</p>
+<p>The appendix of Shumway and Stoffer’s textbook includes a proof.</p>
+</div>
+<div id="invertibility-of-armapq-process" class="section level2 hasAnchor" number="11.3">
+<h2><span class="header-section-number">11.3</span> Invertibility of ARMA(p,q) process<a href="arma.html#invertibility-of-armapq-process" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An ARMA(p,q) model is invertible when the roots of <span class="math inline">\(\theta(z)\)</span> lie outside the unit circle; that is, <span class="math inline">\(\theta(z) = 0\)</span> only when |z|&gt;1. The coefficients of the linear process for <span class="math inline">\(\sum_{j=0}^{\infty}\pi_jB^jx_t=w_t\)</span> can be determined from solving <span class="math inline">\(\sum_{j=0}^{\infty}\pi_jz^j=\frac{\phi(z)}{\theta(z)}\)</span> .</p>
+<p>Again, this means the model can be rewritten as an infinite order AR model.</p>
+<p>Reason: Model has a unique representation</p>
+<p>The appendix of Shumway and Stoffer’s textbook includes a proof.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-32" class="example"><strong>Example 11.1  </strong></span><strong>AR(1), <span class="math inline">\((1-\phi B)x_t=w_t\)</span></strong></p>
+<p>Causal: Let <span class="math inline">\(\phi(z) = (1-\phi z)\)</span>. Note that <span class="math inline">\((1-\phi z) = 0\)</span> has a root of <span class="math inline">\(z = \frac{1}{\phi}\)</span>. For this to be causal,</p>
+<p><span class="math inline">\(|\frac{1}{\phi}|&gt;1 \iff -1 &lt; \phi &lt; 1\)</span></p>
+<p>Therefore, an AR(1) model is causal if -1 &lt; <span class="math inline">\(\phi\)</span> &lt; 1. Relate this back to earlier in the notes when we used the sum of an infinite series to find the infinite MA representation.</p>
+<p>Invertible: Yes, because the model is already written in terms of an AR only model.</p>
+<p>What happens if the causal conditions are violated? The model will not be causal and thus will not be “backward” stationary.</p>
+<p>Suppose <span class="math inline">\(\phi_1 = 2\)</span> in an AR(1). Then <span class="math inline">\(x_t=\phi_1x_{t-1}+w_t=2x_{t-1}+w_t\)</span>. Using a program similar to ar1.R in Chapter 1 (with <span class="math inline">\(w_t \sim ind. N(0,1)\)</span> and the <code>for()</code> function), the data generated from this series produces</p>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="arma.html#cb340-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1381</span>)  </span>
+<span id="cb340-2"><a href="arma.html#cb340-2" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">200</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb340-3"><a href="arma.html#cb340-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb340-4"><a href="arma.html#cb340-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb340-5"><a href="arma.html#cb340-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb340-6"><a href="arma.html#cb340-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="at">length =</span> <span class="dv">200</span>)</span>
+<span id="cb340-7"><a href="arma.html#cb340-7" aria-hidden="true" tabindex="-1"></a>x<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb340-8"><a href="arma.html#cb340-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x)) {</span>
+<span id="cb340-9"><a href="arma.html#cb340-9" aria-hidden="true" tabindex="-1"></a>    x[i] <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>x<span class="fl">.1</span> <span class="sc">+</span> w[i]</span>
+<span id="cb340-10"><a href="arma.html#cb340-10" aria-hidden="true" tabindex="-1"></a>    x<span class="fl">.1</span> <span class="ot">&lt;-</span> x[i]</span>
+<span id="cb340-11"><a href="arma.html#cb340-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb340-12"><a href="arma.html#cb340-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb340-13"><a href="arma.html#cb340-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(x, w))</span></code></pre></div>
+<pre><code>##              x          w
+## 1  0.441380065  0.4413801
+## 2 -0.006146795 -0.8889069
+## 3 -0.185414839 -0.1731212
+## 4 -1.668871234 -1.2980416
+## 5 -4.272024597 -0.9342821
+## 6 -6.358892543  2.1851567</code></pre>
+<p>Notice that <span class="math inline">\(x_t\)</span> is changing rapidly (not stationary in the mean).</p>
+<p>Note: All AR only models are invertible!</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-33" class="example"><strong>Example 11.2  </strong></span><strong>AR(2)</strong></p>
+<p><span class="math inline">\((1-\phi_1B-\phi_2B^2)x_t=w_t\)</span></p>
+<p>Invertible: Yes, because the model is already written in terms of an AR only model.</p>
+<p>Causal: <span class="math inline">\((1-\phi_1z-\phi_2z^2) = 0\)</span> needs to have roots <span class="math inline">\(z_1\)</span> and <span class="math inline">\(z_2\)</span> outside of the unit circle.</p>
+<p>R has a function called <code>polyroot()</code> that can find the roots of a polynomial automatically. Below are some examples of working with it.</p>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="arma.html#cb342-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Syntax for a AR(2): 1 - phi1*z - phi2*z^2 </span></span>
+<span id="cb342-2"><a href="arma.html#cb342-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  phi1 = 0.5, phi2 = 0</span></span>
+<span id="cb342-3"><a href="arma.html#cb342-3" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">0</span>))   <span class="co"># 1-0.5z</span></span></code></pre></div>
+<pre><code>## [1] 2+0i</code></pre>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="arma.html#cb344-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Outside unit circle examples - causal</span></span>
+<span id="cb344-2"><a href="arma.html#cb344-2" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = 0, phi2 = 0.5 </span></span>
+<span id="cb344-3"><a href="arma.html#cb344-3" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="sc">-</span><span class="fl">0.5</span>)) <span class="co"># 1-0.5z^2</span></span></code></pre></div>
+<pre><code>## [1]  1.414214-0i -1.414214+0i</code></pre>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="arma.html#cb346-1" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = 0, phi2 = -0.5 </span></span>
+<span id="cb346-2"><a href="arma.html#cb346-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">0.5</span>))   <span class="co"># 1+0.5z^2</span></span></code></pre></div>
+<pre><code>## [1] 0+1.414214i 0-1.414214i</code></pre>
+<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="arma.html#cb348-1" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = -0.2, phi2 = -0.5</span></span>
+<span id="cb348-2"><a href="arma.html#cb348-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>))  <span class="co"># 1+0.2z+0.5z^2</span></span></code></pre></div>
+<pre><code>## [1] -0.2+1.4i -0.2-1.4i</code></pre>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="arma.html#cb350-1" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>))) <span class="co">#Check if outside </span></span></code></pre></div>
+<pre><code>## [1] 1.414214 1.414214</code></pre>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="arma.html#cb352-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>((<span class="sc">-</span><span class="fl">0.2</span>)<span class="sc">^</span><span class="dv">2</span><span class="fl">+1.4</span><span class="sc">^</span><span class="dv">2</span>) <span class="co">#Verify abs() function did it correctly</span></span></code></pre></div>
+<pre><code>## [1] 1.414214</code></pre>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="arma.html#cb354-1" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = -1, phi2 = -0.5</span></span>
+<span id="cb354-2"><a href="arma.html#cb354-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>))  </span></code></pre></div>
+<pre><code>## [1] -1+1i -1-1i</code></pre>
+<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="arma.html#cb356-1" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>))) </span></code></pre></div>
+<pre><code>## [1] 1.414214 1.414214</code></pre>
+<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="arma.html#cb358-1" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = -1.8, phi2 = -0.9</span></span>
+<span id="cb358-2"><a href="arma.html#cb358-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.8</span>, <span class="fl">0.9</span>))  </span></code></pre></div>
+<pre><code>## [1] -1+0.333333i -1-0.333333i</code></pre>
+<div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb360-1"><a href="arma.html#cb360-1" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.8</span>, <span class="fl">0.9</span>))) </span></code></pre></div>
+<pre><code>## [1] 1.054093 1.054093</code></pre>
+<div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="arma.html#cb362-1" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = 0.5, phi2 = 0.25 </span></span>
+<span id="cb362-2"><a href="arma.html#cb362-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>))</span></code></pre></div>
+<pre><code>## [1]  1.236068+0i -3.236068-0i</code></pre>
+<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="arma.html#cb364-1" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.25</span>))) </span></code></pre></div>
+<pre><code>## [1] 1.236068 3.236068</code></pre>
+<div class="sourceCode" id="cb366"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb366-1"><a href="arma.html#cb366-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inside unit circle examples - not causal</span></span>
+<span id="cb366-2"><a href="arma.html#cb366-2" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = 1.8, phi2 = 0.9</span></span>
+<span id="cb366-3"><a href="arma.html#cb366-3" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">1.8</span>, <span class="sc">-</span><span class="fl">0.9</span>))  </span></code></pre></div>
+<pre><code>## [1]  0.4529663+0i -2.4529663-0i</code></pre>
+<div class="sourceCode" id="cb368"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb368-1"><a href="arma.html#cb368-1" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">1.8</span>, <span class="sc">-</span><span class="fl">0.9</span>))) </span></code></pre></div>
+<pre><code>## [1] 0.4529663 2.4529663</code></pre>
+<div class="sourceCode" id="cb370"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb370-1"><a href="arma.html#cb370-1" aria-hidden="true" tabindex="-1"></a><span class="co">#phi1 = -1.2, phi2 = 0.8</span></span>
+<span id="cb370-2"><a href="arma.html#cb370-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.2</span>, <span class="sc">-</span><span class="fl">0.8</span>))  </span></code></pre></div>
+<pre><code>## [1] -0.5962912+0i  2.0962912+0i</code></pre>
+<div class="sourceCode" id="cb372"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb372-1"><a href="arma.html#cb372-1" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="fu">polyroot</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.2</span>, <span class="sc">-</span><span class="fl">0.8</span>))) </span></code></pre></div>
+<pre><code>## [1] 0.5962912 2.0962912</code></pre>
+</div>
+<p>It can be shown that the conditions are -1 &lt; <span class="math inline">\(\phi_2\)</span> &lt; 1, <span class="math inline">\(\phi_2+\phi_1\)</span> &lt; 1, and <span class="math inline">\(\phi_2-\phi_1\)</span> &lt; 1. Shumway and Stoffer and Wei’s textbooks provides proofs via the quadratic formula.</p>
+<p>Below is a plot of the region from the Box, Jenkins, and Reinsel textbook. The ACF plots (labeled <span class="math inline">\(\rho_k\)</span>) inside the triangle show what ACFs would look like. The other plots inside of the triangle are plots of the “partial” autocorrelation function, which will be discussed later in the course.</p>
+<div class="figure">
+<img src="ARMA-graph1.png" alt="" />
+<p class="caption">graph1</p>
+</div>
+<div class="sourceCode" id="cb374"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb374-1"><a href="arma.html#cb374-1" aria-hidden="true" tabindex="-1"></a><span class="co">#By default, R goes 4% more on y and x-axis limits,</span></span>
+<span id="cb374-2"><a href="arma.html#cb374-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  These par() options make it stop at specified limits </span></span>
+<span id="cb374-3"><a href="arma.html#cb374-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">xaxs =</span> <span class="st">&quot;i&quot;</span>, <span class="at">yaxs =</span> <span class="st">&quot;i&quot;</span>)</span>
+<span id="cb374-4"><a href="arma.html#cb374-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb374-5"><a href="arma.html#cb374-5" aria-hidden="true" tabindex="-1"></a><span class="co">#dummy plot</span></span>
+<span id="cb374-6"><a href="arma.html#cb374-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">y =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), </span>
+<span id="cb374-7"><a href="arma.html#cb374-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;n&quot;</span>, <span class="at">frame.plot =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> </span>
+<span id="cb374-8"><a href="arma.html#cb374-8" aria-hidden="true" tabindex="-1"></a>     <span class="fu">expression</span>(phi1[<span class="dv">1</span>]), <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[<span class="dv">2</span>])) </span>
+<span id="cb374-9"><a href="arma.html#cb374-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb374-10"><a href="arma.html#cb374-10" aria-hidden="true" tabindex="-1"></a><span class="co">#abline() draws y = a + bx       </span></span>
+<span id="cb374-11"><a href="arma.html#cb374-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="co">#Draw line of phi2 = 1 – phi1</span></span>
+<span id="cb374-12"><a href="arma.html#cb374-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span>  <span class="dv">1</span>) <span class="co">#Draw line of phi2 = 1 + phi1</span></span>
+<span id="cb374-13"><a href="arma.html#cb374-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb374-14"><a href="arma.html#cb374-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the phi1 and phi2 values </span></span>
+<span id="cb374-15"><a href="arma.html#cb374-15" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) </span>
+<span id="cb374-16"><a href="arma.html#cb374-16" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">pch =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>)</span>
+<span id="cb374-17"><a href="arma.html#cb374-17" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">pch =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>)</span>
+<span id="cb374-18"><a href="arma.html#cb374-18" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">pch =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>)</span>
+<span id="cb374-19"><a href="arma.html#cb374-19" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">1.8</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.9</span>, <span class="at">pch =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>)</span>
+<span id="cb374-20"><a href="arma.html#cb374-20" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.25</span>, <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb374-21"><a href="arma.html#cb374-21" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb374-22"><a href="arma.html#cb374-22" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="fl">1.8</span>, <span class="at">y =</span> <span class="fl">0.9</span>, <span class="at">pch =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb374-23"><a href="arma.html#cb374-23" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">1.2</span>, <span class="at">y =</span> <span class="fl">0.8</span>, <span class="at">pch =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb374-24"><a href="arma.html#cb374-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb374-25"><a href="arma.html#cb374-25" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Causal, real roots&quot;</span>, </span>
+<span id="cb374-26"><a href="arma.html#cb374-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Causal, complex roots&quot;</span>, <span class="st">&quot;Not Casual&quot;</span>), <span class="at">pch =</span> </span>
+<span id="cb374-27"><a href="arma.html#cb374-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="at">cex =</span> </span>
+<span id="cb374-28"><a href="arma.html#cb374-28" aria-hidden="true" tabindex="-1"></a>      <span class="fl">0.75</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="10-ARMA_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="example">
+<p><span id="exm:unlabeled-div-34" class="example"><strong>Example 11.3  </strong></span><strong>MA(1)</strong></p>
+<p><span class="math inline">\(x_t=(1+\theta B)w_t\)</span></p>
+<p>Causal: Yes, because the model is already written in terms of an MA only model.</p>
+<p>Invertible: Let <span class="math inline">\(\theta(z) = (1 + \theta z).\)</span> Note that <span class="math inline">\((1 + \theta z) = 0\)</span> has a root of z = <span class="math inline">\(-\frac{1}{\theta}.\)</span> For this to be invertible,</p>
+<p><span class="math inline">\(|\frac{-1}{\theta}| &gt; 1 \iff -1 &lt; \theta &lt; 1.\)</span></p>
+<p>Therefore, a MA(1) model is invertible if <span class="math inline">\(-1 &lt; \theta &lt; 1\)</span></p>
+</div>
+<p>Notes:</p>
+<ul>
+<li>MA only model will always be causal.</li>
+<li>MA(2) model has similar invertibility conditions as the AR(2) model’s causal conditions.<br />
+</li>
+<li>ARMA(1,1) model has the same causal conditions as an AR(1) and the same invertible conditions as a MA(1).<br />
+</li>
+<li>ARMA(2,2) model has the same causal conditions as an AR(2) and the same invertible conditions as a MA(2)…</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="moving-average-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="acf-and-pacf-for-arma-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

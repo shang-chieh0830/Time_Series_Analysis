@@ -1,0 +1,358 @@
+# Resolving Non-Stationarity Problems
+
+## Differencing
+
+Differencing helps to create the constant mean needed for stationarity. We will use differencing a lot! 
+
+1st differences: $x_t – x_{t-1} = \nabla x_t$
+
+2nd differences: $(x_t – x_{t-1}) – (x_{t-1} – x_{t-2}) = \nabla x_t – \nabla x_{t-1} = \nabla^2x_t$
+
+Taking “differences” between successive data values in the time series helps to remove trend. Specifically, 1st differences help remove linear trend and 2nd differences help remove quadratic trend.  
+
+Why does this work? Consider the linear trend model $x_t = \beta_0 + \beta_1t$ where t = time and $\beta_1\ne$0. Then 
+
+$$x_t – x_{t-1} =  \beta_0 + \beta_1t – [\beta_0 + \beta_1(t – 1)] = \beta_1$$
+which is not dependent on t.    
+
+
+:::{.example }
+
+**Non-stationarity in the mean**
+
+Click [Here](http://www.chrisbilder.com/stat878/sections/2/nonstat.mean.csv) to download data.
+
+Below is the code for a plot of xt vs. t and the ACF for xt. 
+
+```{r}
+nonstat.mean <- read.csv(file="nonstat.mean.csv")
+head(nonstat.mean)
+tail(nonstat.mean)
+```
+
+```{r}
+dev.new(width=8, height=6, pointsize=10)
+
+plot(x=nonstat.mean$x, ylab=expression(x[t]), xlab="t (time)", type="l", col="red", main="Nonstationary time series", panel.first=grid(col="gray", lty="dotted"))
+
+points(x=nonstat.mean$x, col="blue", pch=20)
+
+```
+
+```{r}
+acf(x=nonstat.mean$x, type="correlation", main="Plot of the ACF")
+```
+Whenever you see a ACF plot like this(high correlation), it's highly likely that there's a non-stationarity in mean.
+
+```{r}
+# scatter plot of x_t vs. x_t-1
+x.ts <- ts(nonstat.mean[,2])
+set1 <- ts.intersect(x.ts, x.ts1=lag(x=x.ts, k=-1))
+head(set1)
+
+```
+```{r}
+cor(set1)
+```
+
+```{r}
+# Need as.numeric() so that plot.ts() is not run, want plot.default()
+
+plot(y=as.numeric(set1[,1]), x=as.numeric(set1[,2]), ylab=expression(x[t]), type="p", xlab=expression(x[t-1]))
+
+# you can see from the graph there's a positive linear relationship, this is why the correlation is so high.
+```
+
+:::
+
+- This data is said to have “nonstationarity in the mean” because the mean of $x_t, \mu_t,$ appears to be changing as a function of time.
+- Why is there large positive autocorrelation at lag = 1, 2, … ? 
+  - This is b/c we have a positive linear relationship btw $x_t$ and $x_{t-1}$.
+
+
+Below is the code to find the first differences:
+
+```{r}
+# Find first differences
+
+first.diff <- diff(x=nonstat.mean$x, lag=1, differences=1)
+first.diff[1:5]
+
+nonstat.mean$x[2]-nonstat.mean$x[1]
+nonstat.mean$x[3]-nonstat.mean$x[2]
+```
+
+```{r}
+plot(x= first.diff, ylab=expression(x[t]-x[t-1]), xlab="t (time)", type="l", col="red", main="First differences", panel.first = grid(col="gray",lty="dotted"))
+
+points(x=first.diff, col="blue", pch=20)
+```
+The linear relationship just disappears after first differencing!
+
+
+```{r}
+acf(x=first.diff, type="correlation", main="Plot of the ACF for first differences")
+
+```
+
+If you want xt and xt - xt-1 in the same data frame, use the `ts.intersect()` function: 
+
+```{r}
+x <- ts(data=nonstat.mean$x)
+x.diff1 <- ts(data=first.diff, start=2)
+ts.intersect(x, x.diff1)
+
+```
+
+Why does the data set start at 2?
+
+Other types of differencing:
+
+- 2nd differences: `diff(x, lag = 1, differences = 2)`
+- xt – xt-2: `diff(x, lag = 2, differences = 1)`; this can be useful when there is a “seasonal” trend
+
+```{r}
+# Second differences
+diff(x, lag = 1, differences=2)
+(nonstat.mean$x[3] - nonstat.mean$x[2]) - (nonstat.mean$x[2] - nonstat.mean$x[1])
+```
+
+```{r}
+# x_t - x_t-2
+diff(x, lag = 2, differences = 1)
+nonstat.mean$x[3] - nonstat.mean$x[1]
+
+```
+
+```{r}
+# Plot
+lag.plot(x, lags = 4, layout = c(2,2), do.lines = FALSE)
+```
+
+Note: There are formal hypothesis tests to determine if differencing is needed. This corresponds to an area of time series known as “unit root” testing. The name will be clear once we examine autoregressive models in detail.
+
+## Backshift Operator
+
+A convenient way to represent differencing in time series models is to use the “backshift operator”. It is denoted by “B” and defined as follows: 
+$$Bx_t=x_{t-1}$$
+Notice that $x_t$ moved back one-time period when the backshift operator was applied to it.
+
+In general, $B^2x_t = x_{t-2}, B^3x_t = x_{t-3}, …, and \quad B^kx_t = x_{t-k}.$
+
+
+Notes: 
+
+- Let C be a constant not indexed by time. Then $BC = C.$  
+- $(1-B)x_t = x_t – x_{t-1} = \nabla x_t$
+- $B\times B = B^2$
+- $$(1-B)^2x_t = (1 - 2B + B^2)x_t = x_t – 2Bx_t + B^2x_t\\
+= x_t – 2x_{t-1} + x_{t-2}\\
+= x_t – x_{t-1} – x_{t-1} + x_{t-2}\\ 
+= (x_t – x_{t-1}) – (x_{t-1} – x_{t-2})\\
+= \nabla^2x_t$$
+- $(1-B)^0x_t = x_t$
+- $(1-B)x_t$ can be thought of as a “linear filter” since the linear trend is being filtered out of the time series.  
+
+:::{.example}
+
+**Moving Average**
+
+$m_t=\frac{w_t+w_{t-1}+w_{t-2}}{3}$, where $w_t \sim \mathrm{ind}N(0,\sigma^2_w) \forall t=1,..n$ can be represented by $(1+B+B^2)\frac{w_t}{3}$
+
+:::
+
+
+:::{.example}
+
+**Autoregression**
+
+$x_t=0.7x_{t-1}+w_t$, where $w_t \sim \mathrm{ind}N(0,\sigma^2_w) \forall t=1,..n$ can be represented by $(1-0.7B)x_t=w_t$
+
+:::
+
+
+:::{.example}
+
+**first differencing needed example**
+
+Consider the following model:
+
+$(1-0.7B)(1-B)x_t=w_t$, where $w_t \sim \mathrm{ind}N(0,\sigma^2_w) \forall t=1,..n$. This simplifies to 
+
+$$(1-0.7B)(x_t-x_{t-1})=w_t\\
+\iff x_t-x_{t-1}-0.7Bx_t+0.7Bx_{t-1}=w_t\\
+\iff x_t=x_{t-1}+0.7x_{t-1}-0.7x_{t-2}+w_t\\
+\iff x_t=1.7x_{t-1}-0.7x_{t-2}+w_t$$
+
+Later in the course, we will identify this as a ARIMA(1,1,0) model.  
+
+Suppose a realization of a time series is simulated from this model. Below is a plot of the data. 
+
+```{r}
+set.seed(7328)  
+w <- rnorm(n = 200, mean = 0, sd = 1)
+
+x <- numeric(length = 200)
+x.1 <- 0
+x.2 <- 0
+for (i in 1:length(x)) {
+  x[i] <- 1.7*x.1 - 0.7*x.2 + w[i] 
+  x.2 <- x.1
+  x.1 <- x[i] 
+}
+
+#Do not use first 100
+X <- x[101:200]
+```
+
+
+
+```{r}
+dev.new(width = 8, height = 6, pointsize = 10)      
+plot(x = X, ylab = expression(x[t]), xlab = "t", type = 
+    "l", col = "red", lwd = 1 , main = 
+    expression(paste("Data simulated from ", (1-0.7*B)*(1-
+    B)*x[t] == w[t], " where ", w[t], "~N(0,1)")), 
+    panel.first=grid(col = "gray", lty = "dotted"))
+points(x = X, pch = 20, col = "blue")
+
+# from the graph there's nonstationarity in mean
+
+```
+```{r}
+acf(x=X, type="correlation", main="Plot of the ACF")
+```
+
+After the first differences:
+
+```{r}
+# Finf first differences
+
+plot(x=diff(x=X, lag=1, differences = 1), ylab=expression(x[t]-x[t-1]), xlab="t (time)", type="l", col="red", main=expression(paste("1st diff. for data simulated from ", (1-0.7*B)*(1-B)*x[t] == w[t], " where 
+   ", w[t], "~N(0,1)")), panel.first=grid(col="gray",lty="dotted"))
+
+points(x=diff(x=X, lag=1, differences = 1), pch=20, col="blue")
+
+
+```
+
+```{r}
+acf(x=diff(x=X, lag=1, differences = 1), type="correlation", main="Plot of the ACF")
+```
+
+An easier way is to use `arima.sim()` to simulate the data.
+
+:::
+
+## Fractional Differencing
+
+Use fractional powers of B between –0.5 to 0.5 to do the differencing. This is used with long-memory time series.  
+
+Notes: 
+
+- Differencing is often used to help make a nonstationary in the mean time series stationary. Unfortunately in real applications, we do not know what exact level of differencing is needed (we can approximate it). If a too high of level of differencing is done, this can hurt a time series model. As a compromise between differencing and not differencing at all, fractional differencing can be used.  
+- The reason why these are called a “long memory” time series can be seen from a “short memory” time series.  A short memory stationary process will have $\rho(h)\to 0$ “quickly” as $h\to \infty$.  A long memory time series does not and has $\rho(h)\to 0$ “slowly”.  More on this later in the course.
+- The fractional difference series can be represented as $$\nabla^dx_t=\sum_{j=0}^{\infty}\pi_jx_{t-j}$$
+
+where the $\pi_j$ are found through a Taylor series expansion of $(1-B)^d$. 
+
+## Transformations
+
+In regression analysis, transformations of the response variable are taken to induce approximate constant variance. In a similar manner, we can take transformations of xt to help make a nonstationary in the variance time series be approximately stationary in the variance. 
+
+:::{.example }
+
+**Johnson & Johnson earnings per share data**
+
+This data comes from Shumway and Stoffer’s book.
+
+```{r}
+library(astsa)
+x <- jj
+x
+```
+
+```{r}
+dev.new(width = 8, height = 6, pointsize = 10)  #Opens up wider plot window than the default (good for time series plots)
+
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "l", col = "red", lwd = 1, main = "Johnson and Johnson 
+    quarterly earnings per share", panel.first = grid(col = 
+    "gray", lty = "dotted"))
+    
+points(x = x, pch = 20, col = "blue")
+
+
+# an upward trend in mean
+# and the variance is increasing as well
+# both non-stationarity in mean and variance
+```
+
+```{r}
+plot(x = log(x), ylab = expression(log(x[t])), xlab = "t", type = "l", col = "red", lwd = 1 , 
+     main = "Johnson and Johnson quarterly earnings per share - log transformed", 
+     panel.first = grid(col = "gray", lty = "dotted"))
+points(x = log(x), pch = 20, col = "blue")
+
+#we deal with non-stationarity in variance
+```
+
+```{r}
+#Still some variance issues???
+plot(x = diff(x = log(x), lag = 1, differences = 1), ylab = expression(log(x[t]) - log(x[t-1])), xlab = "t", type = "l", col = "red", lwd = 1 , 
+     main = "Johnson and Johnson quarterly earnings per share - log transformed and 1st diff.", 
+     panel.first = grid(col = "gray", lty = "dotted"))
+points(x = diff(x = log(x), lag = 1, differences = 1), pch = 20, col = "blue")
+```
+
+:::
+
+
+Notes:
+
+- Typical transformations include $log(x_t),\sqrt{x_t}$ and $x_t^{-1}$  There are a few different ways to deciding between the appropriate transformations. Usually, I will try all of these transformations and examine a plot of the transformed data over time to determine if the transformation worked. Constants may need to be added to $x_t$ if $x_t$ can be less than 0.  
+- Regression courses sometimes teach the Box-Cox family of transformations to determine an appropriate transformation. The process involves finding the “best” $\lambda$ to transform $x_t$ in the following manner:
+
+$$
+y_t= 
+\begin{cases}
+(x^{\lambda}_t-1)/\lambda & \text{if } \lambda \ne 0 \\
+log(x_t) &  \text{if } \lambda=0  \\
+\end{cases}
+$$
+I have not found it used often in time series analysis. For example, Shumway and Stoffer suggest it could be used here, but do not explore it further. The `BoxCox()` and `BoxCox.lambda()` functions from the forecast package provide ways to obtain it. Please see my program.    
+
+
+```{r}
+#How could one do a Box-Cox transformation here?
+
+library(package = forecast)
+save.it <- BoxCox(x = x, lambda = "auto")
+# save.it - this has the transformed data
+names(save.it) # Not useful
+attributes(save.it)  # Older form of R coding shows it
+attributes(save.it)$lambda
+
+# Looking at the code in BoxCox() leads one to use the function below to
+#   obtain lambda
+BoxCox.lambda(x = x)
+lambda <- BoxCox.lambda(x = x)
+
+# Don't see a benefit from using this transformation over log()
+plot(x = (x^lambda - 1)/lambda, ylab = "Transformed x", xlab = "t", type = "l", col = "red", lwd = 1 ,panel.first = grid(col = "gray", lty = "dotted"))
+points(x = (x^lambda - 1)/lambda, pch = 20, col = "blue")
+
+```
+
+```{r}
+plot(x = diff(x = (x^lambda - 1)/lambda, lag = 1, differences = 1),
+    ylab = "Transformed x with first differences", xlab = "t", type = "l",
+    col = "red", lwd = 1 ,
+    panel.first = grid(col = "gray", lty = "dotted"))
+points(x = diff(x = (x^lambda - 1)/lambda, lag = 1, differences = 1), pch = 20, col = "blue")
+```
+
+- If the variance stabilizing transformation is needed, do this before differencing (see Wei’s time series book for a discussion). For example, suppose differencing and a natural log variance stabilizing transformation is needed. Then examine $log(x_t) – log(x_{t-1})$ instead of $log(x_t – x_{t-1}).$ 
+- Variance stabilizing transformations often help with normality assumption of $w_t$.  
+
+

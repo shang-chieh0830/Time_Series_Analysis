@@ -1,0 +1,21 @@
+bookdown::gitbook:
+  config:
+    toc:
+      before: |
+        <li><a href="./">Time Series Analysis</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+  css: style.css
+  split_by: "chapter"
+  number_sections: true # 如果需要显示章节编号，添加此行
+  repo: https://github.com/shang-chieh0830/Time_Series_Analysis
+  download: ["pdf", "epub"]
+ 
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+
+bookdown::epub_book: default

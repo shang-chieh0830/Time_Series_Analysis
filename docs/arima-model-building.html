@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 17 ARIMA Model Building | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 17 ARIMA Model Building | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 17 ARIMA Model Building | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="drift-term.html"/>
+<link rel="next" href="sarima-models.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="arima-model-building" class="section level1 hasAnchor" number="17">
+<h1><span class="header-section-number">Chapter 17</span> ARIMA Model Building<a href="arima-model-building.html#arima-model-building" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="steps" class="section level2 hasAnchor" number="17.1">
+<h2><span class="header-section-number">17.1</span> Steps<a href="arima-model-building.html#steps" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The goal of this section is to show how one can go through the process of choosing the best model for a time series data set.</p>
+<div id="model-building-process-steps-1-3-of-6-total-steps" class="section level3 hasAnchor" number="17.1.1">
+<h3><span class="header-section-number">17.1.1</span> Model Building Process (steps 1-3 of 6 total steps)<a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Construct plots of <span class="math inline">\(x_t\)</span> vs. t and the estimated ACF to determine if the time series data is stationary</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>If it is not stationary in the variance, make the appropriate transformation</li>
+<li>If it is not stationary in the mean, examine differences of <span class="math inline">\(x_t\)</span></li>
+<li>Use plots of <span class="math inline">\(x_t\)</span> vs. t and the estimated ACF to determine if what you did worked.</li>
+</ol>
+<ol start="2" style="list-style-type: decimal">
+<li>Construct plots of the estimated ACF and PACF of the stationary series (call it <span class="math inline">\(x_t\)</span>).</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Match patterns in these plots with those of ARMA models.<br />
+</li>
+<li>Determine a few models to investigate further.</li>
+</ol>
+<ol start="3" style="list-style-type: decimal">
+<li>Find the estimated models using maximum likelihood estimation.</li>
+</ol>
+<div class="example">
+<p><span id="exm:unlabeled-div-59" class="example"><strong>Example 17.1  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7, \mu=0, \sigma_w^2=1\)</span> (ar1_model_build.R)</strong></p>
+<p>Step 1.</p>
+<div class="sourceCode" id="cb625"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb625-1"><a href="arima-model-building.html#cb625-1" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;AR1.0.7.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb625-2"><a href="arima-model-building.html#cb625-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ar1<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb626"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb626-1"><a href="arima-model-building.html#cb626-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb626-2"><a href="arima-model-building.html#cb626-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">&quot;Plot of </span></span>
+<span id="cb626-3"><a href="arima-model-building.html#cb626-3" aria-hidden="true" tabindex="-1"></a><span class="st">     AR1.0.7.txt data&quot;</span>, <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, </span>
+<span id="cb626-4"><a href="arima-model-building.html#cb626-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb626-5"><a href="arima-model-building.html#cb626-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb626-6"><a href="arima-model-building.html#cb626-6" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>) </span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb627"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb627-1"><a href="arima-model-building.html#cb627-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb627-2"><a href="arima-model-building.html#cb627-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb627-3"><a href="arima-model-building.html#cb627-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice the xlim starts at 1</span></span>
+<span id="cb627-4"><a href="arima-model-building.html#cb627-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb627-5"><a href="arima-model-building.html#cb627-5" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Estimated ACF </span></span>
+<span id="cb627-6"><a href="arima-model-building.html#cb627-6" aria-hidden="true" tabindex="-1"></a><span class="st">    for AR1.0.7.txt data&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb627-7"><a href="arima-model-building.html#cb627-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb627-8"><a href="arima-model-building.html#cb627-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb627-9"><a href="arima-model-building.html#cb627-9" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">&quot;Estimated PACF for </span></span>
+<span id="cb627-10"><a href="arima-model-building.html#cb627-10" aria-hidden="true" tabindex="-1"></a><span class="st">         AR1.0.7.txt data&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>While the PACF plot is not needed here (Note that it’s usually not useful to look at PACF plots when the time series has not dealt with stationarity or seasonality issue, you’ll see it’s hard to interpret anything from such PACF plots. So whenever you have difficulty with PACF plots, just simply ignore it and look at the ACF plots only.), it is often nice to look at both functions in the next step. Notice that these plots start at lag = 1.</p>
+<p>From examining the plot of the data over time and the estimated ACF plot, there is no evidence against the stationary assumption.</p>
+<p>Step 2.</p>
+<p>From examining the ACF and PACF plots above, it appears that an AR(1) model would be appropriate for the data. I am also going to examine a MA(1) model just to show what could happen if the “wrong” model is chosen.</p>
+<p>Step 3.</p>
+<div class="sourceCode" id="cb628"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb628-1"><a href="arima-model-building.html#cb628-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ARIMA(1,0,0)</span></span>
+<span id="cb628-2"><a href="arima-model-building.html#cb628-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb628-3"><a href="arima-model-building.html#cb628-3" aria-hidden="true" tabindex="-1"></a>mod.fit1 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), include.mean </span>
+<span id="cb628-4"><a href="arima-model-building.html#cb628-4" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="cn">TRUE</span>)</span>
+<span id="cb628-5"><a href="arima-model-building.html#cb628-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb628-6"><a href="arima-model-building.html#cb628-6" aria-hidden="true" tabindex="-1"></a>mod.fit1</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 0, 0), include.mean = TRUE)
+## 
+## Coefficients:
+##          ar1  intercept
+##       0.6854    -0.4322
+## s.e.  0.0730     0.3602
+## 
+## sigma^2 estimated as 1.336:  log likelihood = -156.68,  aic = 319.36</code></pre>
+<div class="sourceCode" id="cb630"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb630-1"><a href="arima-model-building.html#cb630-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hat mu= -0.4322</span></span>
+<span id="cb630-2"><a href="arima-model-building.html#cb630-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hat phi_1 =0.6854</span></span></code></pre></div>
+<div class="sourceCode" id="cb631"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb631-1"><a href="arima-model-building.html#cb631-1" aria-hidden="true" tabindex="-1"></a>mod.fit1<span class="sc">$</span>coef</span></code></pre></div>
+<pre><code>##        ar1  intercept 
+##  0.6853698 -0.4322225</code></pre>
+<div class="sourceCode" id="cb633"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb633-1"><a href="arima-model-building.html#cb633-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the covariance matrix </span></span>
+<span id="cb633-2"><a href="arima-model-building.html#cb633-2" aria-hidden="true" tabindex="-1"></a><span class="co"># diagonal are variances</span></span>
+<span id="cb633-3"><a href="arima-model-building.html#cb633-3" aria-hidden="true" tabindex="-1"></a>mod.fit1<span class="sc">$</span>var.coef</span></code></pre></div>
+<pre><code>##                   ar1   intercept
+## ar1       0.005324151 0.001518125
+## intercept 0.001518125 0.129723806</code></pre>
+<div class="sourceCode" id="cb635"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb635-1"><a href="arima-model-building.html#cb635-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> mod.fit1<span class="sc">$</span>coef<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">diag</span>(mod.fit1<span class="sc">$</span>var.coef))</span>
+<span id="cb635-2"><a href="arima-model-building.html#cb635-2" aria-hidden="true" tabindex="-1"></a>p.value <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> <span class="fu">abs</span>(z), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
+<span id="cb635-3"><a href="arima-model-building.html#cb635-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(z, p.value)</span></code></pre></div>
+<pre><code>##                   z   p.value
+## ar1        9.392902 0.0000000
+## intercept -1.200045 0.2301219</code></pre>
+<div class="sourceCode" id="cb637"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb637-1"><a href="arima-model-building.html#cb637-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Could use confint() function too </span></span></code></pre></div>
+<div class="sourceCode" id="cb638"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb638-1"><a href="arima-model-building.html#cb638-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ARIMA(0,0,1)</span></span>
+<span id="cb638-2"><a href="arima-model-building.html#cb638-2" aria-hidden="true" tabindex="-1"></a>mod.fit2 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>), include.mean </span>
+<span id="cb638-3"><a href="arima-model-building.html#cb638-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="cn">TRUE</span>)</span>
+<span id="cb638-4"><a href="arima-model-building.html#cb638-4" aria-hidden="true" tabindex="-1"></a>mod.fit2</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(0, 0, 1), include.mean = TRUE)
+## 
+## Coefficients:
+##          ma1  intercept
+##       0.5801    -0.4794
+## s.e.  0.0661     0.1979
+## 
+## sigma^2 estimated as 1.581:  log likelihood = -164.99,  aic = 335.98</code></pre>
+<div class="sourceCode" id="cb640"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb640-1"><a href="arima-model-building.html#cb640-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hat theta_1=0.5801</span></span>
+<span id="cb640-2"><a href="arima-model-building.html#cb640-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hat mu= -0.4794</span></span></code></pre></div>
+<div class="sourceCode" id="cb641"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb641-1"><a href="arima-model-building.html#cb641-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> mod.fit2<span class="sc">$</span>coef<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">diag</span>(mod.fit2<span class="sc">$</span>var.coef))</span>
+<span id="cb641-2"><a href="arima-model-building.html#cb641-2" aria-hidden="true" tabindex="-1"></a>p.value <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> <span class="fu">abs</span>(z), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
+<span id="cb641-3"><a href="arima-model-building.html#cb641-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(z, p.value)</span></code></pre></div>
+<pre><code>##                   z   p.value
+## ma1        8.770337 0.0000000
+## intercept -2.422093 0.0154314</code></pre>
+<div class="sourceCode" id="cb643"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb643-1"><a href="arima-model-building.html#cb643-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can see theta_1 is significantly different from 0</span></span>
+<span id="cb643-2"><a href="arima-model-building.html#cb643-2" aria-hidden="true" tabindex="-1"></a><span class="co"># but out data are simulated from AR1 w/o any MA terms</span></span></code></pre></div>
+</div>
+</div>
+<div id="model-building-process-continued-step-4." class="section level3 hasAnchor" number="17.1.2">
+<h3><span class="header-section-number">17.1.2</span> Model Building Process (continued, Step 4.)<a href="arima-model-building.html#model-building-process-continued-step-4." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol start="4" style="list-style-type: decimal">
+<li>For each model chosen, investigate diagnostic measures.</li>
+</ol>
+<ul>
+<li><p>Examine the residuals to determine if they appear to be “white noise”.</p>
+<p>Remember that <span class="math inline">\(w_t \sim ind (0,\sigma_w^2)\)</span>. The residuals <span class="math inline">\(\tilde w_t^n\)</span> were introduced during the forecasting notes.</p>
+<p>Examine an ACF plot of the residuals to determine if they appear to come from a white noise process.</p>
+<p>If they do, then the model assumption about <span class="math inline">\(w_t \sim ind (0,\sigma_w^2)\)</span> is satisfied.</p>
+<p>If they do not, then changes need to be made to the model. There is an autocorrelation pattern in the <span class="math inline">\(x_t\)</span> that has not been accounted for by the AR or MA terms. The changes that need to be made correspond to the autocorrelations on the ACF plot. In other words, the residual ACF plot can be used just like the ACF of the original data!</p></li>
+</ul>
+<p>Why can this be done? The answer is coming up!</p>
+<ul>
+<li><p>Examine a PACF plot of the residuals to determine if they appear to “white noise”.</p>
+<p>If they do, then the model assumption about <span class="math inline">\(w_t \sim ind (0,\sigma_w^2)\)</span> is satisfied.</p>
+<p>If they do not, then changes need to be made to the model. The changes that need to be made correspond to the partial autocorrelations on the PACF plot. In other words, the residual PACF plot can be used just like the PACF of the original data!</p></li>
+</ul>
+<p>Why can this be done?</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-60" class="example"><strong>Example 17.2  </strong></span><strong>Examining the residuals</strong></p>
+<p>Suppose the residuals for</p>
+<p><span class="math display">\[\phi_{p&#39;}(1-B)^{d&#39;}x_t=\theta_{q&#39;}(B)b_t \tag 1\]</span></p>
+<p>do not correspond to a white noise process. Note that the p’, q’, and d’ correspond to the AR operator order, MA operator order, and differencing order, respectively. Also the <span class="math inline">\(b_t\)</span> term is not necessarily our white noise, but it plays as the error term.</p>
+<p>Using the residual ACF and PACF, a new model for the <span class="math inline">\(b_t\)</span> can be identified to be</p>
+<p><span class="math display">\[\bar \phi_{p&#39;&#39;}(1-B)^{d&#39;&#39;}b_t=\bar \theta_{q&#39;&#39;}(B)w_t \tag 2\]</span></p>
+<p>Note that the bar over <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> is just to differentiate between the parameters in (1) and (2). Also, we now have actual white noise <span class="math inline">\(w_t\)</span> left over.</p>
+<p>Solving for <span class="math inline">\(b_t\)</span> in (2) produces <span class="math inline">\(b_t=\frac{\bar \theta_{q&#39;&#39;}(B)}{\bar \phi_{p&#39;&#39;}(B)(1-B)^{d&#39;&#39;}}w_t\)</span> and substituting this into (1) produces</p>
+<p><span class="math display">\[\phi_{p&#39;}(B)(1-B)^{d&#39;&#39;}x_t=\theta_{q&#39;}(B)\frac{\bar \theta_{q&#39;&#39;}(B)}{\bar \phi_{p&#39;&#39;}(B)(1-B)^{d&#39;&#39;}}w_t \\
+\iff \phi_{p&#39;}(B)\bar\phi_{p&#39;&#39;}(B)(1-B)^{d&#39;}(1-B)^{d&#39;&#39;}x_t=\theta_{q&#39;}(B)\bar\theta_{q&#39;&#39;}(B)w_t\]</span></p>
+<p>Suppose that a series is wrongly identified as ARIMA(0,1,1): <span class="math inline">\((1-B)x_t=(1+0.6B)b_t\)</span>.</p>
+<p>Also, suppose examining the residuals identify the model ARIMA(0,0,1):<span class="math inline">\(b_t=(1-0.8B)w_t\)</span>.</p>
+<p>The “identification” could be done by examining the residual ACF and PACF. In this case, the residual ACF has a spike at 1 and the PACF tails off to 0. Solving for <span class="math inline">\(b_t\)</span> and substituting this into the wrongly identified model produces</p>
+<p><span class="math display">\[(1-B)x_t=(1+0.6B)(1-0.8B)w_t\\
+\iff (1-B)x_t=(1-0.2B-0.48B^2)w_t\]</span></p>
+<p>Thus the new model is ARIMA(0,1,2).</p>
+</div>
+<ul>
+<li><p>Examine the standardized residuals for outliers.</p>
+<p>Standardized residuals:</p></li>
+</ul>
+<p><span class="math display">\[e_t=\frac{x_t-\tilde x^n_t}{\sqrt{\hat Var(x_t-\tilde x^n_t)}}=\frac{x_t-\tilde x^n_t}{\hat \sigma_w}\]</span></p>
+<p>where <span class="math inline">\(\tilde x^n_t\)</span> is the predicted value of <span class="math inline">\(x_t\)</span> for time t using the model.</p>
+<blockquote>
+<p>Some individuals may refer to <span class="math inline">\(\tilde x^n_t\)</span> as <span class="math inline">\(\tilde x^{t-1}_t\)</span> because only the previous t – 1 <span class="math inline">\(x_t\)</span>’s are used directly to calculate the predicted value. However, the model parameters are based on all of the observations so I prefer to use <span class="math inline">\(\tilde x^n_t\)</span>.</p>
+</blockquote>
+<p>If the correct model is chosen, these standardized residuals should approximately follow a <span class="math inline">\(N(0,1)\)</span> distribution. Thus, we would expect about 95% of them to fall within <span class="math inline">\(\pm 2\)</span> and about 99% to fall within <span class="math inline">\(\pm 3\)</span>. Standardized residuals falling outside of this range indicate the correct model may not have been chosen.</p>
+<p>If needed, special model terms can be introduced into a time series model to account for these outliers. For example, special cases of transfer function models can be used.</p>
+<p>Note that some individuals will refer to residuals as “innovations” in time series analysis.</p>
+<ul>
+<li><p>Plot the standardized residuals (or residuals) vs. time.</p>
+<p>This is another method to determine if there is autocorrelation among the standardized residuals.</p></li>
+<li><p>Perform the Ljung-Box-Pierce test to determine if there is evidence against the <span class="math inline">\(w_t\)</span> independent assumption.</p>
+<p>This performs a hypothesis test on a group of residual autocorrelations.</p></li>
+</ul>
+<p><span class="math inline">\(H_0: \rho_e(1)=\rho_e(2)=...=\rho_e(H)=0\)</span></p>
+<p><span class="math inline">\(H_a:\)</span> Not all 0</p>
+<p>where <span class="math inline">\(\rho_e(h)\)</span> for h = 1, …, H is the autocorrelation for the <span class="math inline">\(e_t\)</span>’s.</p>
+<p>If you do reject <span class="math inline">\(H_0\)</span>, this indicates that independence assumption of <span class="math inline">\(w_t\)</span> is violated.</p>
+<p>Many different values of H are chosen to provide more than one hypothesis test. Some textbooks suggest performing a test with H = 20.</p>
+<p>The test statistic for the Ljung-Box-Pierce hypothesis test is</p>
+<p><span class="math display">\[Q=n(n+2)\sum_{h=1}^{H}\frac{\hat\rho_e^2(h)}{n-h}\]</span></p>
+<p>Under the assumption that the null hypothesis is true, <span class="math inline">\(Q \sim \chi^2_{H-p-q}\)</span>for large n. </p>
+<blockquote>
+<p>If <span class="math inline">\(Q &gt; \chi^2_{H-p-q, 1-\alpha}\)</span>, then the null hypothesis is rejected and other models should be examined.</p>
+</blockquote>
+<blockquote>
+<p>If <span class="math inline">\(Q \le \chi^2_{H-p-q, 1-\alpha}\)</span>, then there is not sufficient evidence against the null hypothesis. There is not enough evidence that the model should be changed. This is what you want to happen if you are satisfied with your model!</p>
+</blockquote>
+<p>The direct function in R to perform the test is <code>Box.test()</code>. By specifying the argument, <code>type = "Ljung-Box"</code>, the Ljung-Box-Pierce hypothesis test is performed for a specified number of lags using the <code>lag = argument</code>. By default, the Box-Pierce is performed where <code>type = "Box-Pierce"</code>. Its test statistic is</p>
+<p><span class="math inline">\(Q=n\sum_{h=1}^{H}\hat\rho_e^2(h)\)</span></p>
+<p>Under the assumption that the null hypothesis is true, <span class="math inline">\(Q \sim \chi^2_{H-p-q}\)</span> for large n. Box, Jenkins, and Reinsel’s work suggest the Ljung-Box-Pierce test statistic is better approximated by the <span class="math inline">\(\chi^2\)</span> distribution than the Box-Pierce test.</p>
+<p>Note that the <code>tsdiag()</code> (time series diagnostic) function to be discussed soon will perform the Ljung-Box-Pierce hypothesis test automatically along with calculating other items.</p>
+<ul>
+<li><p>Examine the normality assumption for the <span class="math inline">\(w_t\)</span> by constructing histograms and Q-Q plots of the residuals or standardized residuals.</p>
+<p>The Q-Q plot is a plot of the ordered residuals versus ordered quantiles from a normal distribution. If the points fall on a straight line, this suggests the normality assumption is satisfied. If they do not, then the normality assumption may be violated.</p>
+<p>The histogram can be plotted with a normal distribution overlay to assess normality. If there is evidence against the normality assumption (for example, histogram has large deviations from the normal distribution overlay), investigate similar transformations as previously done to solve nonstationary variance problems (For example, taking log).</p></li>
+<li><p>Perform hypothesis tests for <span class="math inline">\(\phi_i=0\)</span> and <span class="math inline">\(\theta_j=0\)</span> parameters.</p>
+<p>If the test does not reject these hypotheses, then a different model may be needed.</p></li>
+</ul>
+<p>Examine the various diagnostic measures in an iterative manner until at least one model satisfies all of the model assumptions!</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-61" class="example"><strong>Example 17.3  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7, \mu=0, \sigma_w^2=1\)</span> (ar1_model_build.R)</strong></p>
+<p>Step 4.</p>
+<p>AR(1) model:</p>
+<p>Note that the first plot: std. residuals vs. time can be used to detect outliers. Be careful if many std. residuals reach <span class="math inline">\(\pm 3\)</span>.
+This plot can also be used to examine independence of std. residuals, so you don’t want to see significant pattern in this plot.</p>
+<p>For the second plot: ACF of Residuals, notice that <span class="math inline">\(\rho_e(0)=1\)</span> as always.</p>
+<p>For the third plot: p values for Ljung-Box statistic, these are testing, for example, say you look at lag=15, i.e. H=15, <span class="math inline">\(H_0: \rho_e(1)=...=\rho_e(15)=0\)</span>. So large p-values means you’re fine.</p>
+<div class="sourceCode" id="cb644"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb644-1"><a href="arima-model-building.html#cb644-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tsdiag</span>(<span class="at">object =</span> mod.fit1, <span class="at">gof.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div class="sourceCode" id="cb645"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb645-1"><a href="arima-model-building.html#cb645-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Could also get the Ljung-Box-Pierce test this way.</span></span>
+<span id="cb645-2"><a href="arima-model-building.html#cb645-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb645-3"><a href="arima-model-building.html#cb645-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(mod.fit1<span class="sc">$</span>residuals, <span class="at">lag=</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+##  Box-Ljung test
+## 
+## data:  mod.fit1$residuals
+## X-squared = 21.256, df = 20, p-value = 0.3822</code></pre>
+<div class="sourceCode" id="cb647"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb647-1"><a href="arima-model-building.html#cb647-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Box-Pierce test</span></span>
+<span id="cb647-2"><a href="arima-model-building.html#cb647-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb647-3"><a href="arima-model-building.html#cb647-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(mod.fit1<span class="sc">$</span>residuals, <span class="at">lag=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>## 
+##  Box-Pierce test
+## 
+## data:  mod.fit1$residuals
+## X-squared = 18.693, df = 20, p-value = 0.5419</code></pre>
+<div class="sourceCode" id="cb649"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb649-1"><a href="arima-model-building.html#cb649-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) </span>
+<span id="cb649-2"><a href="arima-model-building.html#cb649-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb649-3"><a href="arima-model-building.html#cb649-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> mod.fit1<span class="sc">$</span>residuals, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb649-4"><a href="arima-model-building.html#cb649-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;Estimated PACF for residuals using ARIMA(1,0,0) fit&quot;</span>, </span>
+<span id="cb649-5"><a href="arima-model-building.html#cb649-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb649-6"><a href="arima-model-building.html#cb649-6" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb649-7"><a href="arima-model-building.html#cb649-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb649-8"><a href="arima-model-building.html#cb649-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="at">x =</span> mod.fit1<span class="sc">$</span>residuals, <span class="at">main =</span> <span class="st">&quot;Histogram of </span></span>
+<span id="cb649-9"><a href="arima-model-building.html#cb649-9" aria-hidden="true" tabindex="-1"></a><span class="st">    residuals&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Residuals&quot;</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb649-10"><a href="arima-model-building.html#cb649-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb649-11"><a href="arima-model-building.html#cb649-11" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="at">expr =</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="fu">mean</span>(mod.fit1<span class="sc">$</span>residuals), </span>
+<span id="cb649-12"><a href="arima-model-building.html#cb649-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(mod.fit1<span class="sc">$</span>residuals)), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">add =</span> </span>
+<span id="cb649-13"><a href="arima-model-building.html#cb649-13" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span>)</span>
+<span id="cb649-14"><a href="arima-model-building.html#cb649-14" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb649-15"><a href="arima-model-building.html#cb649-15" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="at">y =</span> mod.fit1<span class="sc">$</span>residuals, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>, </span>
+<span id="cb649-16"><a href="arima-model-building.html#cb649-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb649-17"><a href="arima-model-building.html#cb649-17" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="at">y =</span> mod.fit1<span class="sc">$</span>residuals, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb649-18"><a href="arima-model-building.html#cb649-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb649-19"><a href="arima-model-building.html#cb649-19" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)) <span class="co"># set back to original setting</span></span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb650"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb650-1"><a href="arima-model-building.html#cb650-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MA(1)</span></span>
+<span id="cb650-2"><a href="arima-model-building.html#cb650-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tsdiag</span>(<span class="at">object =</span> mod.fit2, <span class="at">gof.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<div class="sourceCode" id="cb651"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb651-1"><a href="arima-model-building.html#cb651-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) </span>
+<span id="cb651-2"><a href="arima-model-building.html#cb651-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb651-3"><a href="arima-model-building.html#cb651-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> mod.fit2<span class="sc">$</span>residuals, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb651-4"><a href="arima-model-building.html#cb651-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Estimated PACF for residuals using ARIMA(0,0,1) </span></span>
+<span id="cb651-5"><a href="arima-model-building.html#cb651-5" aria-hidden="true" tabindex="-1"></a><span class="st">    fit&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb651-6"><a href="arima-model-building.html#cb651-6" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb651-7"><a href="arima-model-building.html#cb651-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="at">x =</span> mod.fit2<span class="sc">$</span>residuals, <span class="at">main =</span> <span class="st">&quot;Histogram of </span></span>
+<span id="cb651-8"><a href="arima-model-building.html#cb651-8" aria-hidden="true" tabindex="-1"></a><span class="st">    residuals&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Residuals&quot;</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb651-9"><a href="arima-model-building.html#cb651-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb651-10"><a href="arima-model-building.html#cb651-10" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="at">expr =</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="fu">mean</span>(mod.fit2<span class="sc">$</span>residuals), </span>
+<span id="cb651-11"><a href="arima-model-building.html#cb651-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(mod.fit2<span class="sc">$</span>residuals)), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb651-12"><a href="arima-model-building.html#cb651-12" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb651-13"><a href="arima-model-building.html#cb651-13" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="at">y =</span> mod.fit2<span class="sc">$</span>residuals, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>, </span>
+<span id="cb651-14"><a href="arima-model-building.html#cb651-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb651-15"><a href="arima-model-building.html#cb651-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb651-16"><a href="arima-model-building.html#cb651-16" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="at">y =</span> mod.fit2<span class="sc">$</span>residuals, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb651-17"><a href="arima-model-building.html#cb651-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb651-18"><a href="arima-model-building.html#cb651-18" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+<p>Notes:</p>
+<ul>
+<li>Everything appears to be fine with the AR(1) model. There is a significant (barely) partial autocorrelation at lag 5. There are some people who will fit a model of the form:</li>
+</ul>
+<p><span class="math inline">\(x_t = \phi_1x_{t-1} + \phi_5x_{t-5} + w_t.\)</span></p>
+<p>Notice that <span class="math inline">\(\phi_2, \phi_3, \phi_4\)</span> are assumed to be 0 here. I prefer not to do this unless there is a known “seasonality” to the data. We will discuss seasonal ARIMA (SARIMA) models later in the course.</p>
+<ul>
+<li>Similar to the previous note, there is a barely significant autocorrelation at lag 5. Some people may add a <span class="math inline">\(\theta_5w_{t-5}\)</span> to the model, but I recommend against it unless there is a seasonality aspect to it.</li>
+<li>Problems with the MA(1) model were detected. There are some autocorrelations and partial autocorrelations found to be not 0. The Ljung-Box-Pierce hypothesis test also detects some autocorrelations are not 0.<br />
+</li>
+<li>On p. 4 in the notes, I performed a test of <span class="math inline">\(H_0:\phi_1=0\)</span> vs. <span class="math inline">\(Ha:\phi_1\ne 0\)</span> and the test rejects <span class="math inline">\(H_0\)</span>. The test statistic was</li>
+</ul>
+<p><span class="math inline">\(Z=\frac{\hat \phi_1-0}{\sqrt{\hat Var(\hat \phi_1)}}=\frac{0.6854}{0.0730}=9.39\)</span></p>
+<ul>
+<li>On p. 5 in the notes, I performed a test of <span class="math inline">\(H_0:\theta_1=0\)</span> vs. <span class="math inline">\(Ha:\theta_1\ne 0\)</span> and the test rejects <span class="math inline">\(H_0\)</span>. The test statistic was</li>
+</ul>
+<p><span class="math inline">\(Z=\frac{\hat \theta_1-0}{\sqrt{\hat Var(\hat \theta_1)}}=\frac{0.5801}{0.0661}=8.770\)</span></p>
+<ul>
+<li><p>What if you do not reject?</p></li>
+<li><p>The number of lags displayed on the plot of the Ljung-Box-Pierce test p-values can be changed using the <code>gof.lag</code> argument in <code>tsdiag()</code>. Unfortunately, there is not an argument to control the lags displayed for the ACF plot produced by <code>tsdiag()</code>.</p></li>
+</ul>
+</div>
+<div id="model-building-processcontinued-step-5." class="section level3 hasAnchor" number="17.1.3">
+<h3><span class="header-section-number">17.1.3</span> Model Building Process(continued, Step 5.)<a href="arima-model-building.html#model-building-processcontinued-step-5." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol start="5" style="list-style-type: decimal">
+<li>Using each model that gets through Step 4., pick the best model based upon model parsimony and the AIC. The best model corresponds to the one with the smallest number of AR and MA parameters and the smallest AIC.</li>
+</ol>
+<ul>
+<li><p>Principle of parsimony – choose the model with the smallest number of parameters</p></li>
+<li><p>Akaike’s information criterion (AIC)</p></li>
+</ul>
+<p>The AIC is</p>
+<p><span class="math inline">\(-2 \mathcal l(\boldsymbol{\hat \phi}, \boldsymbol{\hat \theta}, \hat \mu, \hat \sigma_w^2| \boldsymbol{\tilde w})+2\times\)</span>(# of parameters estimating)</p>
+<p>where <span class="math inline">\(\mathcal l(\boldsymbol{\hat \phi}, \boldsymbol{\hat \theta}, \hat \mu, \hat \sigma_w^2| \boldsymbol{\tilde w})\)</span> is the log-likelihood evaluated with parameter estimates and <span class="math inline">\(\boldsymbol{\tilde w}\)</span> is a vector of the estimated w’s (residuals).</p>
+<p>Because the likelihood function is a measurement of “how plausible” a set of parameter estimates are, a criteria of model fit is to have <span class="math inline">\(\mathcal l(\boldsymbol{\hat \phi}, \boldsymbol{\hat \theta}, \hat \mu, \hat \sigma_w^2| \boldsymbol{\tilde w})\)</span> be as large as possible. Multiplying by -2 means we want <span class="math inline">\(-2\mathcal l(\boldsymbol{\hat \phi}, \boldsymbol{\hat \theta}, \hat \mu, \hat \sigma_w^2| \boldsymbol{\tilde w})\)</span> to be as small as possible.</p>
+<p>The <span class="math inline">\(2 \times\)</span>(# of parameters estimating) part serves as a “penalty” for the number of parameters in the model. This is needed because generally <span class="math inline">\(\mathcal l(\boldsymbol{\hat \phi}, \boldsymbol{\hat \theta}, \hat \mu, \hat \sigma_w^2| \boldsymbol{\tilde w})\)</span> can be made larger by adding more parameters (more AR or MA terms).</p>
+<p>In summary, the model with the smallest AIC is the “best” model to use (according to this criteria).</p>
+<p>Because models are fit to the same data set, there are some parts of the likelihood function that will be the same for each model. This will cause some software packages (and packages within R) to drop these parts of the likelihood function in the calculation of the AIC. Thus, different software packages can result in different AIC values so please be careful in comparing them across software packages!</p>
+<ul>
+<li>Forecast error: choose the model that does the best with forecasting</li>
+</ul>
+<p>Choose the model that has the smallest forecast error. How can you do this if the future values are not known?</p>
+<p>Estimate the model without the last c observations where c &lt; n. Forecast the c observations and find the mean square error. The smallest MSE corresponds to the best model using this criterion.</p>
+<p>Problem: You are no longer using all of your observations in the model.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-62" class="example"><strong>Example 17.4  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7, \mu=0, \sigma_w^2=1\)</span> (ar1_model_build.R)</strong></p>
+<p>Step 5.</p>
+<p>Because the MA(1) model did not “pass” the various diagnostic tests, the model should not be considered further. For illustrative purposes, I am considering it further here.</p>
+<p>Both models have the same number of AR and MA parameters so parsimony cannot be used to choose between the models.</p>
+<p>The AIC was shown previously in the R output for the <code>arima()</code> function. Below are the AIC values again by extracting parts of the model fit object.</p>
+<div class="sourceCode" id="cb652"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb652-1"><a href="arima-model-building.html#cb652-1" aria-hidden="true" tabindex="-1"></a>mod.fit1<span class="sc">$</span>aic</span></code></pre></div>
+<pre><code>## [1] 319.363</code></pre>
+<div class="sourceCode" id="cb654"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb654-1"><a href="arima-model-building.html#cb654-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>mod.fit1<span class="sc">$</span>loglik<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span><span class="dv">3</span></span></code></pre></div>
+<pre><code>## [1] 319.363</code></pre>
+<div class="sourceCode" id="cb656"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb656-1"><a href="arima-model-building.html#cb656-1" aria-hidden="true" tabindex="-1"></a>mod.fit2<span class="sc">$</span>aic</span></code></pre></div>
+<pre><code>## [1] 335.9806</code></pre>
+<p>According to this criterion, the AR(1) model is the best because it has the lowest value.</p>
+<div class="sourceCode" id="cb658"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb658-1"><a href="arima-model-building.html#cb658-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Other models, feel free to ignore</span></span>
+<span id="cb658-2"><a href="arima-model-building.html#cb658-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb658-3"><a href="arima-model-building.html#cb658-3" aria-hidden="true" tabindex="-1"></a><span class="co">#ARIMA(1,0,2)</span></span>
+<span id="cb658-4"><a href="arima-model-building.html#cb658-4" aria-hidden="true" tabindex="-1"></a>mod.fit3 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">2</span>), <span class="at">include.mean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb658-5"><a href="arima-model-building.html#cb658-5" aria-hidden="true" tabindex="-1"></a>mod.fit3</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 0, 2), include.mean = TRUE)
+## 
+## Coefficients:
+##          ar1     ma1     ma2  intercept
+##       0.5563  0.1938  0.0835    -0.4434
+## s.e.  0.1481  0.1648  0.1201     0.3254
+## 
+## sigma^2 estimated as 1.313:  log likelihood = -155.85,  aic = 321.7</code></pre>
+<div class="sourceCode" id="cb660"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb660-1"><a href="arima-model-building.html#cb660-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tsdiag</span>(<span class="at">object =</span> mod.fit3, <span class="at">gof.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb661-1"><a href="arima-model-building.html#cb661-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb661-2"><a href="arima-model-building.html#cb661-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> mod.fit3<span class="sc">$</span>residuals, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">&quot;Estimated PACF for residuals using ARIMA(1,0,2) fit&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb661-3"><a href="arima-model-building.html#cb661-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb661-4"><a href="arima-model-building.html#cb661-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="at">x =</span> mod.fit3<span class="sc">$</span>residuals, <span class="at">main =</span> <span class="st">&quot;Histogram of residuals&quot;</span>,</span>
+<span id="cb661-5"><a href="arima-model-building.html#cb661-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">&quot;Residuals&quot;</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb661-6"><a href="arima-model-building.html#cb661-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb661-7"><a href="arima-model-building.html#cb661-7" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="at">expr =</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="fu">mean</span>(mod.fit3<span class="sc">$</span>residuals), <span class="at">sd =</span> <span class="fu">sd</span>(mod.fit3<span class="sc">$</span>residuals)), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb661-8"><a href="arima-model-building.html#cb661-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb661-9"><a href="arima-model-building.html#cb661-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb661-10"><a href="arima-model-building.html#cb661-10" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="at">y =</span> mod.fit3<span class="sc">$</span>residuals, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb661-11"><a href="arima-model-building.html#cb661-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb661-12"><a href="arima-model-building.html#cb661-12" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="at">y =</span> mod.fit3<span class="sc">$</span>residuals, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb661-13"><a href="arima-model-building.html#cb661-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb661-14"><a href="arima-model-building.html#cb661-14" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div class="sourceCode" id="cb662"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb662-1"><a href="arima-model-building.html#cb662-1" aria-hidden="true" tabindex="-1"></a>mod.fit3<span class="sc">$</span>aic</span></code></pre></div>
+<pre><code>## [1] 321.7001</code></pre>
+<div class="sourceCode" id="cb664"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb664-1"><a href="arima-model-building.html#cb664-1" aria-hidden="true" tabindex="-1"></a><span class="co"># no better than mod.fit1 as it should be</span></span></code></pre></div>
+</div>
+</div>
+<div id="model-building-process-continued-step-6." class="section level3 hasAnchor" number="17.1.4">
+<h3><span class="header-section-number">17.1.4</span> Model Building Process (continued, Step 6.)<a href="arima-model-building.html#model-building-process-continued-step-6." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol start="6" style="list-style-type: decimal">
+<li>Begin Forecasting!</li>
+</ol>
+<p>This is not really a “model building” step, but I include it here because this is a main purpose of creating the model.</p>
+</div>
+</div>
+<div id="example" class="section level2 hasAnchor" number="17.2">
+<h2><span class="header-section-number">17.2</span> Example<a href="arima-model-building.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The goal of this section is to show how one can go through the process of choosing the best model for a time series data set.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-63" class="example"><strong>Example 17.5  </strong></span><strong>ARIMA(1,1,1) with <span class="math inline">\(\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200\)</span> (arima111_model_build.R, examine.mod.R)</strong></p>
+<ol style="list-style-type: decimal">
+<li>Construct plots of <span class="math inline">\(x_t\)</span> vs. t and the estimated ACF to determine if the time series data is stationary</li>
+</ol>
+<div class="sourceCode" id="cb665"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb665-1"><a href="arima-model-building.html#cb665-1" aria-hidden="true" tabindex="-1"></a>arima111 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;arima111.csv&quot;</span>)</span>
+<span id="cb665-2"><a href="arima-model-building.html#cb665-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(arima111)</span></code></pre></div>
+<pre><code>##   time         x
+## 1    1 -143.2118
+## 2    2 -142.8908
+## 3    3 -138.0634
+## 4    4 -133.5038
+## 5    5 -132.7496
+## 6    6 -132.2910</code></pre>
+<div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb667-1"><a href="arima-model-building.html#cb667-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> arima111<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb668"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb668-1"><a href="arima-model-building.html#cb668-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step 1 and 2</span></span>
+<span id="cb668-2"><a href="arima-model-building.html#cb668-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb668-3"><a href="arima-model-building.html#cb668-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of the data</span></span>
+<span id="cb668-4"><a href="arima-model-building.html#cb668-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb668-5"><a href="arima-model-building.html#cb668-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb668-6"><a href="arima-model-building.html#cb668-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb668-7"><a href="arima-model-building.html#cb668-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb668-8"><a href="arima-model-building.html#cb668-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>,  <span class="at">main =</span> <span class="st">&quot;Plot of the </span></span>
+<span id="cb668-9"><a href="arima-model-building.html#cb668-9" aria-hidden="true" tabindex="-1"></a><span class="st">    arima111.csv data&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, </span>
+<span id="cb668-10"><a href="arima-model-building.html#cb668-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb668-11"><a href="arima-model-building.html#cb668-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb668-12"><a href="arima-model-building.html#cb668-12" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb669-1"><a href="arima-model-building.html#cb669-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ACF and PACF of x_t</span></span>
+<span id="cb669-2"><a href="arima-model-building.html#cb669-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb669-3"><a href="arima-model-building.html#cb669-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb669-4"><a href="arima-model-building.html#cb669-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">xlim =</span> </span>
+<span id="cb669-5"><a href="arima-model-building.html#cb669-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">main =</span> <span class="st">&quot;Estimated ACF of the </span></span>
+<span id="cb669-6"><a href="arima-model-building.html#cb669-6" aria-hidden="true" tabindex="-1"></a><span class="st">    arima111.csv data&quot;</span>)</span>
+<span id="cb669-7"><a href="arima-model-building.html#cb669-7" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> </span>
+<span id="cb669-8"><a href="arima-model-building.html#cb669-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Estimated PACF of the </span></span>
+<span id="cb669-9"><a href="arima-model-building.html#cb669-9" aria-hidden="true" tabindex="-1"></a><span class="st">   arima111.csv data&quot;</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<div class="sourceCode" id="cb670"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb670-1"><a href="arima-model-building.html#cb670-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>The data appears to be nonstationary in the mean because there is a linear trend in the <span class="math inline">\(x_t\)</span> vs. t plot and the autocorrelations are going to 0 very slowly. Below is what happens after the first differences are taken.</p>
+<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb671-1"><a href="arima-model-building.html#cb671-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Examine the first differences</span></span>
+<span id="cb671-2"><a href="arima-model-building.html#cb671-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), <span class="at">ylab =</span> </span>
+<span id="cb671-3"><a href="arima-model-building.html#cb671-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(x[t]<span class="sc">-</span>x[t<span class="dv">-1</span>]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, col </span>
+<span id="cb671-4"><a href="arima-model-building.html#cb671-4" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;red&quot;</span>,  <span class="at">main =</span> <span class="st">&quot;Plot of the 1st differences for </span></span>
+<span id="cb671-5"><a href="arima-model-building.html#cb671-5" aria-hidden="true" tabindex="-1"></a><span class="st">    arima111.csv data&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, </span>
+<span id="cb671-6"><a href="arima-model-building.html#cb671-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb671-7"><a href="arima-model-building.html#cb671-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb671-8"><a href="arima-model-building.html#cb671-8" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), <span class="at">pch =</span> </span>
+<span id="cb671-9"><a href="arima-model-building.html#cb671-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<div class="sourceCode" id="cb672"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb672-1"><a href="arima-model-building.html#cb672-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ACF and PACF of x_t - x_t-1</span></span>
+<span id="cb672-2"><a href="arima-model-building.html#cb672-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb672-3"><a href="arima-model-building.html#cb672-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb672-4"><a href="arima-model-building.html#cb672-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), <span class="at">type =</span> </span>
+<span id="cb672-5"><a href="arima-model-building.html#cb672-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> </span>
+<span id="cb672-6"><a href="arima-model-building.html#cb672-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">main =</span> <span class="st">&quot;Est. ACF 1st diff. for arima111.csv </span></span>
+<span id="cb672-7"><a href="arima-model-building.html#cb672-7" aria-hidden="true" tabindex="-1"></a><span class="st">    data&quot;</span>)</span>
+<span id="cb672-8"><a href="arima-model-building.html#cb672-8" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), lag.max </span>
+<span id="cb672-9"><a href="arima-model-building.html#cb672-9" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">20</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,  </span>
+<span id="cb672-10"><a href="arima-model-building.html#cb672-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">&quot;Est. PACF 1st diff. for arima111.csv data&quot;</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<div class="sourceCode" id="cb673"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb673-1"><a href="arima-model-building.html#cb673-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>The data now appears to be stationary in the mean. Also, there appears to be no evidence against constant variance.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Construct plots of the estimated ACF and PACF of the stationary series.</li>
+</ol>
+<p>The plots are above. The ACF is tailing off toward 0 after q = 1 lags. The PACF may also be tailing off toward 0 after p = 1 lags. This would be indicative of an ARMA(1,1,1) model.</p>
+<p>Other possible models include:</p>
+<ul>
+<li>ARIMA(2,1,0) or ARIMA(3,1,0) because the PACF possibly cuts off to 0 after lag 2 or 3.</li>
+<li>Try simple models such as ARIMA(1,1,0) or ARIMA(0,1,1) to see if ACF and PACF plots of the model residuals help determine what types of changes should be made to the model. <strong>This is often a very good strategy to follow when it is not obvious from an ACF or PACF what the model should be.</strong></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Find the estimated models using maximum likelihood estimation AND</p></li>
+<li><p>For each model chosen, investigate diagnostic measures.</p></li>
+</ol>
+<p>To help perform Step 4. correctly, I wrote a function called <code>examine.mod()</code> which automatically does most of R parts needed. The function puts together the code that was used in the AR(1) data example. You will need to run the entire function first before using it! Below is the codes of the function.</p>
+<div class="sourceCode" id="cb674"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb674-1"><a href="arima-model-building.html#cb674-1" aria-hidden="true" tabindex="-1"></a>examine.mod <span class="ot">&lt;-</span> <span class="cf">function</span>(mod.fit.obj, mod.name, <span class="at">max.lag =</span> <span class="dv">20</span>) {</span>
+<span id="cb674-2"><a href="arima-model-building.html#cb674-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb674-3"><a href="arima-model-building.html#cb674-3" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> mod.fit.obj<span class="sc">$</span>coef<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">diag</span>(mod.fit.obj<span class="sc">$</span>var.coef))</span>
+<span id="cb674-4"><a href="arima-model-building.html#cb674-4" aria-hidden="true" tabindex="-1"></a>  p.value <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> <span class="fu">abs</span>(z), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
+<span id="cb674-5"><a href="arima-model-building.html#cb674-5" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb674-6"><a href="arima-model-building.html#cb674-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb674-7"><a href="arima-model-building.html#cb674-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tsdiag</span>(<span class="at">object =</span> mod.fit.obj, <span class="at">gof.lag =</span> max.lag)</span>
+<span id="cb674-8"><a href="arima-model-building.html#cb674-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(<span class="at">text =</span> <span class="fu">paste</span>(<span class="st">&quot;Model is&quot;</span>, mod.name), <span class="at">side =</span> <span class="dv">1</span>, <span class="at">line =</span> <span class="dv">3</span>,</span>
+<span id="cb674-9"><a href="arima-model-building.html#cb674-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">at =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">adj =</span> <span class="dv">0</span>)</span>
+<span id="cb674-10"><a href="arima-model-building.html#cb674-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb674-11"><a href="arima-model-building.html#cb674-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb674-12"><a href="arima-model-building.html#cb674-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)) </span>
+<span id="cb674-13"><a href="arima-model-building.html#cb674-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(mod.fit.obj<span class="sc">$</span>residuals), <span class="at">lag.max =</span> max.lag,</span>
+<span id="cb674-14"><a href="arima-model-building.html#cb674-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;Estimated PACF for residuals&quot;</span>, mod.name),</span>
+<span id="cb674-15"><a href="arima-model-building.html#cb674-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,max.lag), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb674-16"><a href="arima-model-building.html#cb674-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(<span class="at">x =</span> mod.fit.obj<span class="sc">$</span>residuals, <span class="at">main =</span> <span class="st">&quot;Histogram of residuals&quot;</span>,</span>
+<span id="cb674-17"><a href="arima-model-building.html#cb674-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">&quot;Residuals&quot;</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb674-18"><a href="arima-model-building.html#cb674-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(<span class="at">expr =</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="fu">mean</span>(mod.fit.obj<span class="sc">$</span>residuals),</span>
+<span id="cb674-19"><a href="arima-model-building.html#cb674-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(mod.fit.obj<span class="sc">$</span>residuals)), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb674-20"><a href="arima-model-building.html#cb674-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(<span class="at">y =</span> mod.fit.obj<span class="sc">$</span>residuals, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb674-21"><a href="arima-model-building.html#cb674-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb674-22"><a href="arima-model-building.html#cb674-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(<span class="at">y =</span> mod.fit.obj<span class="sc">$</span>residuals, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb674-23"><a href="arima-model-building.html#cb674-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)) </span>
+<span id="cb674-24"><a href="arima-model-building.html#cb674-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb674-25"><a href="arima-model-building.html#cb674-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">z =</span> z, <span class="at">p.value =</span> p.value)</span>
+<span id="cb674-26"><a href="arima-model-building.html#cb674-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>The <code>mtext()</code> function means margin text.</p>
+<p><strong>ARIMA(1,1,1)</strong></p>
+<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb675-1"><a href="arima-model-building.html#cb675-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;examine.mod.R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb676"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb676-1"><a href="arima-model-building.html#cb676-1" aria-hidden="true" tabindex="-1"></a>mod.fit111 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb676-2"><a href="arima-model-building.html#cb676-2" aria-hidden="true" tabindex="-1"></a>mod.fit111</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1))
+## 
+## Coefficients:
+##          ar1     ma1
+##       0.6720  0.4681
+## s.e.  0.0637  0.0904
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1021.36</code></pre>
+<div class="sourceCode" id="cb678"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb678-1"><a href="arima-model-building.html#cb678-1" aria-hidden="true" tabindex="-1"></a>save.it <span class="ot">&lt;-</span> <span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit111, <span class="at">mod.name =</span> <span class="st">&quot;ARIMA(1,1,1)&quot;</span>, <span class="at">max.lag=</span><span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-31-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-31-2.png" width="672" /></p>
+<div class="sourceCode" id="cb679"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb679-1"><a href="arima-model-building.html#cb679-1" aria-hidden="true" tabindex="-1"></a>save.it</span></code></pre></div>
+<pre><code>## $z
+##       ar1       ma1 
+## 10.545076  5.177294 
+## 
+## $p.value
+##          ar1          ma1 
+## 0.000000e+00 2.251269e-07</code></pre>
+<p><strong>ARIMA(2,1,0)</strong></p>
+<div class="sourceCode" id="cb681"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb681-1"><a href="arima-model-building.html#cb681-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ARIMA(2,1,0)</span></span>
+<span id="cb681-2"><a href="arima-model-building.html#cb681-2" aria-hidden="true" tabindex="-1"></a>mod.fit210 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb681-3"><a href="arima-model-building.html#cb681-3" aria-hidden="true" tabindex="-1"></a>mod.fit210</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(2, 1, 0))
+## 
+## Coefficients:
+##          ar1      ar2
+##       1.0137  -0.2371
+## s.e.  0.0690   0.0691
+## 
+## sigma^2 estimated as 9.97:  log likelihood = -511.8,  aic = 1029.59</code></pre>
+<div class="sourceCode" id="cb683"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb683-1"><a href="arima-model-building.html#cb683-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Need to run function in examine.mod.R file first</span></span>
+<span id="cb683-2"><a href="arima-model-building.html#cb683-2" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit210, <span class="at">mod.name =</span> <span class="st">&quot;ARIMA(2,1,0)&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-33-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-33-2.png" width="672" /></p>
+<pre><code>## $z
+##       ar1       ar2 
+## 14.701106 -3.431004 
+## 
+## $p.value
+##          ar1          ar2 
+## 0.0000000000 0.0006013512</code></pre>
+<p><strong>ARIMA(3,1,0)</strong></p>
+<div class="sourceCode" id="cb685"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb685-1"><a href="arima-model-building.html#cb685-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ARIMA(3,1,0)</span></span>
+<span id="cb685-2"><a href="arima-model-building.html#cb685-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb685-3"><a href="arima-model-building.html#cb685-3" aria-hidden="true" tabindex="-1"></a>mod.fit310 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb685-4"><a href="arima-model-building.html#cb685-4" aria-hidden="true" tabindex="-1"></a>mod.fit310</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(3, 1, 0))
+## 
+## Coefficients:
+##          ar1      ar2     ar3
+##       1.0627  -0.4436  0.2010
+## s.e.  0.0697   0.0985  0.0697
+## 
+## sigma^2 estimated as 9.565:  log likelihood = -507.73,  aic = 1023.46</code></pre>
+<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb687-1"><a href="arima-model-building.html#cb687-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit310, <span class="at">mod.name =</span> </span>
+<span id="cb687-2"><a href="arima-model-building.html#cb687-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ARIMA(3,1,0)&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-35-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-35-2.png" width="672" /></p>
+<pre><code>## $z
+##       ar1       ar2       ar3 
+## 15.251132 -4.501187  2.883806 
+## 
+## $p.value
+##          ar1          ar2          ar3 
+## 0.000000e+00 6.757493e-06 3.929004e-03</code></pre>
+</div>
+<p>Model notes:</p>
+<ul>
+<li>ARIMA(1,1,1)
+<ul>
+<li>Ljung-Box-Pierce test does not indicate any significant groups of autocorrelations.<br />
+</li>
+<li>ACF and PACF plots do not exhibit any significant values.<br />
+</li>
+<li>There are a few standardized residuals outside of the -1.96 and 1.96 range, but still &lt; 3.</li>
+<li>The normality assumption appears to be satisfied because the normal distribution appears to fit the histogram of residuals well.<br />
+</li>
+<li>The hypothesis test for <span class="math inline">\(\phi_1=0\)</span> and <span class="math inline">\(\theta_1=0\)</span> results in</li>
+</ul></li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Test statistic</th>
+<th>P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\phi_1\)</span></td>
+<td>10.54</td>
+<td>&lt;0.0001</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\theta_1\)</span></td>
+<td>5.18</td>
+<td><span class="math inline">\(2.3\times 10^{-7}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Because the p-values are small, there is sufficient evidence to indicate that <span class="math inline">\(\phi_1\ne 0\)</span> and <span class="math inline">\(\theta_1\ne 0\)</span>.</p>
+<ul>
+<li>ARIMA(2,1,0)
+<ul>
+<li>Ljung-Box-Pierce test indicates marginally significant groups of autocorrelations for H = 2 to 6.</li>
+<li>The ACF plot has a marginally significant value at lag 2. The PACF plot has a marginally significant value at lag 2. This indicates that an additional AR or MA term may need to be added to the model.</li>
+<li>There are a few standardized residuals outside of the -1.96 and 1.96 range with one close to -3.<br />
+</li>
+<li>The normality assumption appears to be satisfied because the normal distribution appears to fit the histogram of residuals well.<br />
+</li>
+<li>The test for <span class="math inline">\(\phi_i = 0\)</span> results in</li>
+</ul></li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Test statistic</th>
+<th>P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\phi_1\)</span></td>
+<td>14.70</td>
+<td>&lt;0.0001</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\phi_2\)</span></td>
+<td>-3.43</td>
+<td>0.0006</td>
+</tr>
+</tbody>
+</table>
+<p>Because the p-values are small, there is sufficient evidence to indicate that <span class="math inline">\(\phi_1 \ne 0\)</span> and <span class="math inline">\(\phi_2 \ne 0\)</span>.</p>
+<ul>
+<li>ARIMA(3,1,0)
+<ul>
+<li>Ljung-Box-Pierce test does not indicate any significant groups of autocorrelations.<br />
+</li>
+<li>ACF and PACF plots do not exhibit any significant values.<br />
+</li>
+<li>There are a few standardized residuals outside of the -1.96 and 1.96 range with two close to -3.</li>
+<li>The normality assumption appears to be satisfied because the normal distribution appears to fit the histogram of residuals well.<br />
+</li>
+<li>The test for <span class="math inline">\(\phi_i = 0\)</span> results in</li>
+</ul></li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Test statistic</th>
+<th>P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\phi_1\)</span></td>
+<td>15.25</td>
+<td>&lt;0.0001</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\phi_2\)</span></td>
+<td>-4.50</td>
+<td><span class="math inline">\(6.8\times 10^{-6}\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\phi_3\)</span></td>
+<td>2.88</td>
+<td>0.0039</td>
+</tr>
+</tbody>
+</table>
+<p>Because the p-values are small, there is sufficient evidence to indicate that <span class="math inline">\(\phi_1 \ne 0\)</span>, <span class="math inline">\(\phi_2\ne 0\)</span>, and <span class="math inline">\(\phi_3\ne 0\)</span>.</p>
+<p>Summary: Both the ARIMA(1,1,1) and ARIMA(3,1,0) models appear to be better than the ARIMA(2,1,0) model. The ARIMA(1,1,1) model may be a “little” better than the ARIMA(3,1,0) model due to the examination of the standardized residuals.</p>
+<p>Suppose I tried an ARIMA(1,1,0) model with the hope that the residual ACF and PACF plots help suggest changes to the model. Below are the plots and other summary measures.</p>
+<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb689-1"><a href="arima-model-building.html#cb689-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ARIMA(1,1,0)</span></span>
+<span id="cb689-2"><a href="arima-model-building.html#cb689-2" aria-hidden="true" tabindex="-1"></a>mod.fit110 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb689-3"><a href="arima-model-building.html#cb689-3" aria-hidden="true" tabindex="-1"></a>mod.fit110</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 0))
+## 
+## Coefficients:
+##          ar1
+##       0.8180
+## s.e.  0.0398
+## 
+## sigma^2 estimated as 10.57:  log likelihood = -517.51,  aic = 1039.02</code></pre>
+<div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb691-1"><a href="arima-model-building.html#cb691-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit110, <span class="at">mod.name =</span> </span>
+<span id="cb691-2"><a href="arima-model-building.html#cb691-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ARIMA(1,1,0)&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-37-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-37-2.png" width="672" /></p>
+<pre><code>## $z
+##      ar1 
+## 20.52674 
+## 
+## $p.value
+## ar1 
+##   0</code></pre>
+<p>Both the ACF and PACF plots have possibly significant values at lag = 1 and 2. The problem is knowing if these are signs of cutting off or tailing off and where does the tailing off start. If the PACF was tailing off to 0 starting at lag 1, the significant ACF value(s) would indicate correctly that a MA term was needed.</p>
+<p>Suppose I tried an ARIMA(0,1,1) model with the hope that the residual ACF and PACF plots help suggest changes to the model. Below are the plots and other summary measures.</p>
+<div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb693-1"><a href="arima-model-building.html#cb693-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ARIMA(0,1,1)</span></span>
+<span id="cb693-2"><a href="arima-model-building.html#cb693-2" aria-hidden="true" tabindex="-1"></a>mod.fit011 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb693-3"><a href="arima-model-building.html#cb693-3" aria-hidden="true" tabindex="-1"></a>mod.fit011</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(0, 1, 1))
+## 
+## Coefficients:
+##          ma1
+##       0.8371
+## s.e.  0.0321
+## 
+## sigma^2 estimated as 13.6:  log likelihood = -542.67,  aic = 1089.35</code></pre>
+<div class="sourceCode" id="cb695"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb695-1"><a href="arima-model-building.html#cb695-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit011, <span class="at">mod.name =</span> </span>
+<span id="cb695-2"><a href="arima-model-building.html#cb695-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ARIMA(0,1,1)&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-39-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-39-2.png" width="672" /></p>
+<pre><code>## $z
+##      ma1 
+## 26.05175 
+## 
+## $p.value
+## ma1 
+##   0</code></pre>
+<p>Notice the pattern among the standardized residuals indicating dependence still exists among them. There are significant partial autocorrelations at lag 1 and 2 and they are non-significant after lag 2. The ACF appears to be tailing off to 0 (maybe, although lag 2 is greater than lag 1). This suggests that AR terms may need to be added to the model. If <span class="math inline">\(\phi_1\)</span> is added, the results shown for ARIMA(1,1,1) earlier are found. Normally, I would add only one term at a time. However, given the PACF here, it may be reasonable to add both <span class="math inline">\(\phi_1\)</span> and <span class="math inline">\(\phi_2\)</span> to the model:</p>
+<div class="sourceCode" id="cb697"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb697-1"><a href="arima-model-building.html#cb697-1" aria-hidden="true" tabindex="-1"></a>mod.fit211 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb697-2"><a href="arima-model-building.html#cb697-2" aria-hidden="true" tabindex="-1"></a>mod.fit211</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(2, 1, 1))
+## 
+## Coefficients:
+##          ar1     ar2     ma1
+##       0.3636  0.2926  0.7394
+## s.e.  0.1431  0.1329  0.1107
+## 
+## sigma^2 estimated as 9.365:  log likelihood = -505.69,  aic = 1019.38</code></pre>
+<div class="sourceCode" id="cb699"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb699-1"><a href="arima-model-building.html#cb699-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit211, <span class="at">mod.name =</span> </span>
+<span id="cb699-2"><a href="arima-model-building.html#cb699-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ARIMA(2,1,1)&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-41-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-41-2.png" width="672" /></p>
+<pre><code>## $z
+##      ar1      ar2      ma1 
+## 2.541126 2.202129 6.676701 
+## 
+## $p.value
+##          ar1          ar2          ma1 
+## 1.104961e-02 2.765621e-02 2.443801e-11</code></pre>
+<p>The tests for <span class="math inline">\(\phi_1\)</span> and <span class="math inline">\(\phi_2 = 0\)</span> result in somewhat marginally significant p-values. Thus, it is difficult to decide whether or not to include both in the model. Generally, one will build the models in a hierarchical manner so that if <span class="math inline">\(\phi_2\)</span> is in the model then <span class="math inline">\(\phi_1\)</span> will also be in the model. The main time when this generality is not done is in the case of seasonal dependence (for example, data is collected quarterly) and models for that situation will be discussed later in the course.</p>
+<p>Note that the Ljung-Box-Pierce test results in no reject <span class="math inline">\(H_0\)</span>’s.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Using each model that gets through Step 4., pick the best model based upon model parsimony and the AIC. The best model corresponds to the one with the smallest number of AR and MA terms and the smallest AIC.</li>
+</ol>
+<ul>
+<li>Akaike’s information criterion (AIC)</li>
+</ul>
+<p>Although all of the models in the table below did not satisfy the model assumptions, I decided to present all of the AIC values for illustrative purposes. Normally, I would have only examined the AIC for the ARIMA(1,1,1), ARIMA(3,1,0), and ARIMA(2,1,1) models.</p>
+<div class="sourceCode" id="cb701"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb701-1"><a href="arima-model-building.html#cb701-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">mod.name =</span> <span class="fu">c</span>(<span class="st">&quot;ARIMA(1,1,1)&quot;</span>, <span class="st">&quot;ARIMA(2,1,0)&quot;</span>, </span>
+<span id="cb701-2"><a href="arima-model-building.html#cb701-2" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ARIMA(3,1,0)&quot;</span>, <span class="st">&quot;ARIMA(1,1,0)&quot;</span>, <span class="st">&quot;ARIMA(0,1,1)&quot;</span>, </span>
+<span id="cb701-3"><a href="arima-model-building.html#cb701-3" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ARIMA(2,1,1)&quot;</span>), </span>
+<span id="cb701-4"><a href="arima-model-building.html#cb701-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">AIC =</span> <span class="fu">c</span>(mod.fit111<span class="sc">$</span>aic, mod.fit210<span class="sc">$</span>aic, mod.fit310<span class="sc">$</span>aic,</span>
+<span id="cb701-5"><a href="arima-model-building.html#cb701-5" aria-hidden="true" tabindex="-1"></a>              mod.fit110<span class="sc">$</span>aic, mod.fit011<span class="sc">$</span>aic, mod.fit211<span class="sc">$</span>aic))</span></code></pre></div>
+<pre><code>##       mod.name      AIC
+## 1 ARIMA(1,1,1) 1021.360
+## 2 ARIMA(2,1,0) 1029.591
+## 3 ARIMA(3,1,0) 1023.459
+## 4 ARIMA(1,1,0) 1039.015
+## 5 ARIMA(0,1,1) 1089.346
+## 6 ARIMA(2,1,1) 1019.383</code></pre>
+<p>Notice that the ARIMA(2,1,1) model has the lowest AIC! This model appeared to satisfy all of the model’s assumptions so this is the best model to use (according to AIC).</p>
+<p>The ARIMA(1,1,1) model also has a low AIC. Because the data was simulated from this type of model, one would expect this AIC to be the lowest! Generally, this should happen.</p>
+<p>There is some justification for using the ARIMA(1,1,1) model over the ARIMA(2,1,1) model. Because the ARIMA(1,1,1) has less parameters and the model assumptions were satisfied, this may be the better model to use. Also, remember the marginally significant result for the <span class="math inline">\(\phi_2 = 0\)</span> test.</p>
+<p>Which model should you choose? There is sufficient justification for both models. One could also examine the MSE of forecasts for a number of the last observations to help make a decision as well.</p>
+<p><strong>Once you choose the model, state it as “ARIMA(p,d,q)” and written out with the estimated parameters.</strong></p>
+<p>What if included the <span class="math inline">\(\delta\)</span> term in the model?</p>
+<ul>
+<li>I tried this with a few of the best models found above and received very similar results. The <span class="math inline">\(\delta\)</span> term is marginally significant. Please see the program for the actual code used to investigate the addition of <span class="math inline">\(\delta\)</span> term.</li>
+</ul>
+<div class="sourceCode" id="cb703"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb703-1"><a href="arima-model-building.html#cb703-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ARIMA(1,1,1)</span></span>
+<span id="cb703-2"><a href="arima-model-building.html#cb703-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb703-3"><a href="arima-model-building.html#cb703-3" aria-hidden="true" tabindex="-1"></a>mod.fit111.delta <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">xreg =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x))</span>
+<span id="cb703-4"><a href="arima-model-building.html#cb703-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb703-5"><a href="arima-model-building.html#cb703-5" aria-hidden="true" tabindex="-1"></a>mod.fit111.delta</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1), xreg = 1:length(x))
+## 
+## Coefficients:
+##          ar1     ma1  1:length(x)
+##       0.6382  0.4826      -1.6847
+## s.e.  0.0671  0.0894       0.8815
+## 
+## sigma^2 estimated as 9.404:  log likelihood = -506.03,  aic = 1020.05</code></pre>
+<div class="sourceCode" id="cb705"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb705-1"><a href="arima-model-building.html#cb705-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit111.delta, <span class="at">mod.name =</span> <span class="st">&quot;ARIMA(1,1,1) with delta&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-44-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-44-2.png" width="672" /></p>
+<pre><code>## $z
+##         ar1         ma1 1:length(x) 
+##    9.510494    5.400756   -1.911036 
+## 
+## $p.value
+##          ar1          ma1  1:length(x) 
+## 0.000000e+00 6.636063e-08 5.599999e-02</code></pre>
+<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="arima-model-building.html#cb707-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ARIMA(2,1,1)</span></span>
+<span id="cb707-2"><a href="arima-model-building.html#cb707-2" aria-hidden="true" tabindex="-1"></a>mod.fit211.delta <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">xreg =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x))</span>
+<span id="cb707-3"><a href="arima-model-building.html#cb707-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb707-4"><a href="arima-model-building.html#cb707-4" aria-hidden="true" tabindex="-1"></a>mod.fit211.delta</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(2, 1, 1), xreg = 1:length(x))
+## 
+## Coefficients:
+##          ar1     ar2     ma1  1:length(x)
+##       0.3580  0.2657  0.7293      -1.6667
+## s.e.  0.1463  0.1347  0.1151       0.9772
+## 
+## sigma^2 estimated as 9.247:  log likelihood = -504.39,  aic = 1018.78</code></pre>
+<div class="sourceCode" id="cb709"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb709-1"><a href="arima-model-building.html#cb709-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit211.delta, <span class="at">mod.name =</span> <span class="st">&quot;ARIMA(2,1,1) with delta&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-46-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-46-2.png" width="672" /></p>
+<pre><code>## $z
+##         ar1         ar2         ma1 1:length(x) 
+##    2.446715    1.972754    6.337217   -1.705630 
+## 
+## $p.value
+##          ar1          ar2          ma1  1:length(x) 
+## 1.441647e-02 4.852364e-02 2.339517e-10 8.807701e-02</code></pre>
+<div class="sourceCode" id="cb711"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb711-1"><a href="arima-model-building.html#cb711-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> mod.fit211.delta<span class="sc">$</span>coef<span class="sc">/</span><span class="fu">sqrt</span>(mod.fit211.delta<span class="sc">$</span>var.coef)</span></code></pre></div>
+<pre><code>## Warning in sqrt(mod.fit211.delta$var.coef): NaNs produced</code></pre>
+<div class="sourceCode" id="cb713"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb713-1"><a href="arima-model-building.html#cb713-1" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div>
+<pre><code>##                  ar1        ar2        ma1 1:length(x)
+## ar1         2.446715        NaN        NaN         NaN
+## ar2              NaN   1.972754   2.302216    7.217869
+## ma1              NaN   6.319660   6.337217   23.288570
+## 1:length(x)      NaN -45.276546 -53.218112   -1.705630</code></pre>
+<div class="sourceCode" id="cb715"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb715-1"><a href="arima-model-building.html#cb715-1" aria-hidden="true" tabindex="-1"></a>pvalues <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> <span class="fu">abs</span>(z)))</span>
+<span id="cb715-2"><a href="arima-model-building.html#cb715-2" aria-hidden="true" tabindex="-1"></a>pvalues</span></code></pre></div>
+<pre><code>##                    ar1          ar2          ma1  1:length(x)
+## ar1         0.01441647          NaN          NaN          NaN
+## ar2                NaN 4.852364e-02 2.132300e-02 5.280221e-13
+## ma1                NaN 2.621394e-10 2.339517e-10 0.000000e+00
+## 1:length(x)        NaN 0.000000e+00 0.000000e+00 8.807701e-02</code></pre>
+<div class="sourceCode" id="cb717"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb717-1"><a href="arima-model-building.html#cb717-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ARIMA(3,1,0)</span></span>
+<span id="cb717-2"><a href="arima-model-building.html#cb717-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb717-3"><a href="arima-model-building.html#cb717-3" aria-hidden="true" tabindex="-1"></a>mod.fit310.delta <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">xreg =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x))</span>
+<span id="cb717-4"><a href="arima-model-building.html#cb717-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb717-5"><a href="arima-model-building.html#cb717-5" aria-hidden="true" tabindex="-1"></a>mod.fit310.delta</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(3, 1, 0), xreg = 1:length(x))
+## 
+## Coefficients:
+##          ar1      ar2     ar3  1:length(x)
+##       1.0499  -0.4396  0.1871      -1.6595
+## s.e.  0.0699   0.0981  0.0700       1.0577
+## 
+## sigma^2 estimated as 9.466:  log likelihood = -506.65,  aic = 1023.29</code></pre>
+<div class="sourceCode" id="cb719"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb719-1"><a href="arima-model-building.html#cb719-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit310.delta, <span class="at">mod.name =</span> <span class="st">&quot;ARIMA(3,1,0) with delta&quot;</span>, <span class="at">max.lag =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="16-Model-Building_files/figure-html/unnamed-chunk-50-1.png" width="672" /><img src="16-Model-Building_files/figure-html/unnamed-chunk-50-2.png" width="672" /></p>
+<pre><code>## $z
+##         ar1         ar2         ar3 1:length(x) 
+##   15.024453   -4.482729    2.672093   -1.568999 
+## 
+## $p.value
+##          ar1          ar2          ar3  1:length(x) 
+## 0.000000e+00 7.369437e-06 7.537971e-03 1.166481e-01</code></pre>
+<ul>
+<li>Note that the ARIMA(2,1,1) model with the <span class="math inline">\(\delta\)</span> term has the lowest AIC with a value of 1018.78! The p-value for the <span class="math inline">\(\delta\)</span> = 0 test is 0.0881.</li>
+</ul>
+<div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="arima-model-building.html#cb721-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">mod.name =</span> <span class="fu">c</span>(<span class="st">&quot;ARIMA(1,1,1) with delta&quot;</span>, <span class="st">&quot;ARIMA(2,1,1) with delta&quot;</span>, <span class="st">&quot;ARIMA(3,1,0) with delta&quot;</span>),</span>
+<span id="cb721-2"><a href="arima-model-building.html#cb721-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">AIC =</span> <span class="fu">c</span>(mod.fit111.delta<span class="sc">$</span>aic, mod.fit211.delta<span class="sc">$</span>aic, mod.fit310.delta<span class="sc">$</span>aic))</span></code></pre></div>
+<pre><code>##                  mod.name      AIC
+## 1 ARIMA(1,1,1) with delta 1020.050
+## 2 ARIMA(2,1,1) with delta 1018.777
+## 3 ARIMA(3,1,0) with delta 1023.295</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Begin froecasting!!</li>
+</ol>
+<div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb723-1"><a href="arima-model-building.html#cb723-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare forecasts for ARIMA(1,1,1) to ARIMA(2,1,1)</span></span>
+<span id="cb723-2"><a href="arima-model-building.html#cb723-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb723-3"><a href="arima-model-building.html#cb723-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Forecasts 5 time periods (weeks) into the future</span></span>
+<span id="cb723-4"><a href="arima-model-building.html#cb723-4" aria-hidden="true" tabindex="-1"></a>  fore.mod111 <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit111, <span class="at">n.ahead =</span> <span class="dv">5</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb723-5"><a href="arima-model-building.html#cb723-5" aria-hidden="true" tabindex="-1"></a>  fore.mod111</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1] -486.3614 -484.9361 -483.9784 -483.3348 -482.9023
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1]  3.091673  7.303206 11.578890 15.682551 19.534208</code></pre>
+<div class="sourceCode" id="cb725"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb725-1"><a href="arima-model-building.html#cb725-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate 95% C.I.s</span></span>
+<span id="cb725-2"><a href="arima-model-building.html#cb725-2" aria-hidden="true" tabindex="-1"></a>  low111 <span class="ot">&lt;-</span> fore.mod111<span class="sc">$</span>pred <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)<span class="sc">*</span>fore.mod111<span class="sc">$</span>se</span>
+<span id="cb725-3"><a href="arima-model-building.html#cb725-3" aria-hidden="true" tabindex="-1"></a>  up111 <span class="ot">&lt;-</span> fore.mod111<span class="sc">$</span>pred <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)<span class="sc">*</span>fore.mod111<span class="sc">$</span>se</span>
+<span id="cb725-4"><a href="arima-model-building.html#cb725-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">forecasts =</span> fore.mod111<span class="sc">$</span>pred, low111, up111)</span></code></pre></div>
+<pre><code>##   forecasts    low111     up111
+## 1 -486.3614 -492.4209 -480.3018
+## 2 -484.9361 -499.2502 -470.6221
+## 3 -483.9784 -506.6726 -461.2842
+## 4 -483.3348 -514.0720 -452.5976
+## 5 -482.9023 -521.1886 -444.6159</code></pre>
+<div class="sourceCode" id="cb727"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb727-1"><a href="arima-model-building.html#cb727-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Forecasts 5 time periods (weeks) into the future</span></span>
+<span id="cb727-2"><a href="arima-model-building.html#cb727-2" aria-hidden="true" tabindex="-1"></a>  fore.mod211 <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit211, <span class="at">n.ahead =</span> <span class="dv">5</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb727-3"><a href="arima-model-building.html#cb727-3" aria-hidden="true" tabindex="-1"></a>  fore.mod211</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1] -486.4539 -485.7934 -484.9598 -484.4635 -484.0391
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1]  3.060249  7.126310 11.136926 15.181830 19.093188</code></pre>
+<div class="sourceCode" id="cb729"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb729-1"><a href="arima-model-building.html#cb729-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Calculate 95% C.I.s</span></span>
+<span id="cb729-2"><a href="arima-model-building.html#cb729-2" aria-hidden="true" tabindex="-1"></a>  low211 <span class="ot">&lt;-</span> fore.mod211<span class="sc">$</span>pred <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)<span class="sc">*</span>fore.mod211<span class="sc">$</span>se</span>
+<span id="cb729-3"><a href="arima-model-building.html#cb729-3" aria-hidden="true" tabindex="-1"></a>  up211 <span class="ot">&lt;-</span> fore.mod211<span class="sc">$</span>pred <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)<span class="sc">*</span>fore.mod211<span class="sc">$</span>se</span>
+<span id="cb729-4"><a href="arima-model-building.html#cb729-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">forecasts =</span> fore.mod211<span class="sc">$</span>pred, low211, up211)</span></code></pre></div>
+<pre><code>##   forecasts    low211     up211
+## 1 -486.4539 -492.4519 -480.4559
+## 2 -485.7934 -499.7607 -471.8261
+## 3 -484.9598 -506.7878 -463.1318
+## 4 -484.4635 -514.2193 -454.7076
+## 5 -484.0391 -521.4611 -446.6172</code></pre>
+</div>
+<div id="model-building-process-summarized" class="section level2 hasAnchor" number="17.3">
+<h2><span class="header-section-number">17.3</span> Model Building Process Summarized<a href="arima-model-building.html#model-building-process-summarized" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Construct plots of <span class="math inline">\(x_t\)</span> vs. t and the estimated ACF to determine if the time series data is stationary</li>
+</ol>
+<ul>
+<li><ol style="list-style-type: lower-alpha">
+<li>If it is not stationary in the variance, make the appropriate transformation.</li>
+</ol></li>
+<li><ol start="2" style="list-style-type: lower-alpha">
+<li>If it is not stationary in the mean, examine differences of <span class="math inline">\(x_t\)</span>.</li>
+</ol></li>
+<li><ol start="3" style="list-style-type: lower-alpha">
+<li>Use plots of <span class="math inline">\(x_t\)</span> vs. t and the estimated ACF to determine if what you did worked.<br />
+</li>
+</ol></li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Construct plots of the estimated ACF and PACF of the stationary series (call it <span class="math inline">\(x_t\)</span>).<br />
+</li>
+</ol>
+<ul>
+<li><ol style="list-style-type: lower-alpha">
+<li>Match patterns in these plots with those of ARMA models.<br />
+</li>
+</ol></li>
+<li><ol start="2" style="list-style-type: lower-alpha">
+<li>Determine a few models to investigate further.<br />
+</li>
+</ol></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Find the estimated models using maximum likelihood estimation.</li>
+<li>For each model chosen, investigate the diagnostic measures.</li>
+</ol>
+<ul>
+<li><ol style="list-style-type: lower-alpha">
+<li>Construct plots of the estimated residual ACF and PACF. If the plots do not look similar to corresponding plots from a white noise process, the model is not acceptable. Patterns in the plot may suggest what types of changes need to be made to the model.</li>
+</ol></li>
+<li><ol start="2" style="list-style-type: lower-alpha">
+<li>Examine the standardized residuals for outliers.<br />
+</li>
+</ol></li>
+<li><ol start="3" style="list-style-type: lower-alpha">
+<li>Plot the standardized residuals versus time to look for autocorrelation.<br />
+</li>
+</ol></li>
+<li><ol start="4" style="list-style-type: lower-alpha">
+<li>Investigate the normality assumption for wt by constructing histograms and Q-Q plots of the residuals. If the histogram is not symmetric, mound shape, or the Q-Q plot points do not fall on a straight line, there is evidence against normality. Investigate similar transformations as previously done to stabilize the variance.</li>
+</ol></li>
+<li><ol start="5" style="list-style-type: lower-alpha">
+<li>Perform the Ljung-Box-Pierce test on the residuals. If the test rejects the residual white noise hypothesis, other models need to be examined.<br />
+</li>
+</ol></li>
+<li><ol start="6" style="list-style-type: lower-alpha">
+<li>Perform hypothesis tests for <span class="math inline">\(\phi_i = 0\)</span> and <span class="math inline">\(\theta_j = 0\)</span> parameters. If the test does not reject these hypotheses, then a different model may be needed.</li>
+</ol></li>
+<li><ol start="7" style="list-style-type: lower-alpha">
+<li>Examine the various diagnostic measures in an iterative manner until at least one model satisfies all of the model’s assumptions.<br />
+</li>
+</ol></li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Using each model that gets through Step 4., pick the best model based upon model parsimony and the AIC. The best model corresponds to the one with the smallest number of AR and MA terms and the smallest AIC.</li>
+<li>Choose one model and begin forecasting.</li>
+</ol>
+<p>Final notes:</p>
+<ul>
+<li><p>Some models can be quite similar to one another when written out. Shumway and Stoffer’s GNP example provides an interesting case for how an AR(1) model is similar to a MA(2) model.</p></li>
+<li><p>There are automated procedures that choose the best ARIMA model. Here is a quote from Box, Jenkins, and Reinsel’s textbook regarding them:</p></li>
+</ul>
+<blockquote>
+<p>Such procedures…have been useful, but they should be viewed as supplementary guidelines to assist in the model selection process. In particular they should not be used as a substitute for careful examination of characteristics of the estimated autocorrelation and partial autocorrelation function of the series, and critical examination of the residuals for the model inadequacies should always be included as a major aspect of the model selection process.</p>
+</blockquote>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="drift-term.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="sarima-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Estimation and Inference for measures of dependence | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Estimation and Inference for measures of dependence | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Estimation and Inference for measures of dependence | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="stationarity.html"/>
+<link rel="next" href="resolving-non-stationarity-problems.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimation-and-inference-for-measures-of-dependence" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Estimation and Inference for measures of dependence<a href="estimation-and-inference-for-measures-of-dependence.html#estimation-and-inference-for-measures-of-dependence" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><span class="math inline">\(\mu, \gamma(h),\rho(h)\)</span> are usually unknown so we need to estimate them. To estimate these quantities, we need to assume the time series is weakly stationary.</p>
+<div id="sample-mean-function" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Sample mean function<a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>By the weakly stationary assumption, <span class="math inline">\(E(x_1) = \mu, E(x_2) = \mu,…, E(x_n) = \mu\)</span>. Thus, a logical estimate of <span class="math inline">\(\mu\)</span> is<span class="math display">\[\bar{X}=\frac{1}{n}\sum_{t=1}^{n}X_t\]</span>
+Note that this would not make sense to do if the weakly stationarity assumption did not hold!</p>
+</div>
+<div id="sample-autocovariance-function" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Sample autocovariance function<a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Again with the weakly stationarity assumption, we only need to worry about the lag difference. The estimated autocovariance function is: <span class="math display">\[\hat{\gamma}(h)=\frac{1}{n}\sum_{t=1}^{n-h}(X_{t+h}-\bar{X})(X_t-\bar{X})\]</span></p>
+<ul>
+<li><span class="math inline">\(\hat{\gamma}(h)=\hat{\gamma}(-h)\)</span></li>
+<li>What is this quantity if h = 0?
+<ul>
+<li><span class="math inline">\(\hat{\gamma}(h)=\frac{1}{n}\sum_{t=1}^{n}(X_t-\bar{X})(X_t-\bar{X})\)</span>, which is essentially the sample variance.(when n is large n<span class="math inline">\(\approx\)</span>n-1)</li>
+</ul></li>
+<li>What is this quantity if h =1?
+<ul>
+<li><span class="math inline">\(\hat{\gamma}(h)=\frac{1}{n}\sum_{t=1}^{n-1}(X_{t+1}-\bar{X})(X_t-\bar{X})\)</span></li>
+</ul></li>
+<li>This is similar to the formula often used to estimate the covariance between two random variables x and y: <span class="math inline">\(\hat{Cov}(X,Y)=\frac{1}{n}\sum_{i=1}^{n}(X_i-\bar{X})(Y_i-\bar{Y})\)</span>.</li>
+<li>The sum goes up to n - h to avoid having negative subscripts in the x’s.</li>
+<li>This is NOT an unbiased estimate of <span class="math inline">\(\gamma(h)\)</span>! However, as n gets larger, the bias will go to 0.</li>
+</ul>
+</div>
+<div id="sample-autocorrelation-function-acf" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Sample autocorrelation function (ACF)<a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><span class="math display">\[\hat{\rho}(h)=\frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}\]</span></p>
+<p>Question: What does <span class="math inline">\(\rho(h) = 0\)</span> mean and why would this be important to detect?</p>
+<p>That means there’s no linear relationship between <span class="math inline">\(X_{t-h}\)</span> and <span class="math inline">\(X_t\)</span> for this particular lag h. This is important b/c this makes it no sense to use <span class="math inline">\(X_{t-h}\)</span> to predict <span class="math inline">\(X_t\)</span>.</p>
+<p>Because this is important, we conduct hypothesis tests for <span class="math inline">\(\rho(h)\)</span> for all h <span class="math inline">\(\ne\)</span> 0! To do the hypothesis test, we need to find the sampling distribution for <span class="math inline">\(\hat{\rho}(h)\)</span> under the null hypothesis of <span class="math inline">\(\rho(h)\)</span> = 0.</p>
+</div>
+<div id="sampling-distribution" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Sampling distribution<a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In summary, if <span class="math inline">\(\rho(h)\)</span> = 0, <span class="math inline">\(x_t\)</span> is stationary, and the sample size is “large”, then <span class="math inline">\(\hat{\rho}(h)\)</span> has an approximate normal distribution with mean 0 and standard deviation <span class="math inline">\(\sigma_{\hat{\rho}(h)}=\frac{1}{\sqrt{n}}\)</span>, i.e., <span class="math inline">\(\hat{\rho}(h)\sim N(0,\frac{1}{\sqrt{n}})\)</span></p>
+<p>A proof is available in Shumway and Stoffer’s textbook and requires an understanding asymptotics (PhD level statistics course). (<span class="math inline">\(\sqrt{n}(\hat{\rho}(h)-0) \to^{d} N(0,1)\)</span>)</p>
+<p><span class="math inline">\(H_0: \rho(h)=0\)</span></p>
+<p><span class="math inline">\(Z=\frac{\hat{\rho}(h)-0}{\frac{1}{\sqrt{n}}}\)</span></p>
+<p><span class="math inline">\(Z&gt;|Z_{1-\frac{\alpha}{2}}|\)</span> reject <span class="math inline">\(H_0\)</span></p>
+<p><span class="math inline">\(\hat{\rho}(h)&gt;\pm \frac{Z_{1-\frac{\alpha}{2}}}{\sqrt{n}}\)</span> reject <span class="math inline">\(H_0\)</span></p>
+<p>For a hypothesis test, we could check if <span class="math inline">\(\hat{\rho}(h)\)</span> is within the bounds of 0 <span class="math inline">\(\pm \frac{Z_{1-\frac{\alpha}{2}}}{\sqrt{n}}\)</span> or not where P(Z &lt; <span class="math inline">\(Z_{1-\frac{\alpha}{2}}\)</span>) = 1 – <span class="math inline">\(\frac{\alpha}{2}\)</span> for a standard normal random variable Z. If it is not, then there is sufficient evidence to conclude that <span class="math inline">\(\rho(h) \ne\)</span> 0. We will be using this result a lot for the rest of this course!</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-19" class="example"><strong>Example 7.1  </strong></span><span class="math inline">\(x_t=0.7x_{t-1}+w_t, w_t\sim\mathrm{ind.}N(0,1), n=100\)</span></p>
+<p>Click <a href="http://www.chrisbilder.com/stat878/sections/2/AR1.0.7.txt">here</a> to download data.</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb188-1" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">&quot;AR1.0.7.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb188-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb188-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb188-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb188-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ar1)</span></code></pre></div>
+<pre><code>##   t          x
+## 1 1  0.0417268
+## 2 2  0.3719068
+## 3 3 -0.1854518
+## 4 4 -1.3829742
+## 5 5 -2.8759365
+## 6 6 -2.6001761</code></pre>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb190-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ar1<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.new</span>(<span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">pointsize =</span> <span class="dv">10</span>)  </span>
+<span id="cb191-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb191-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Opens up wider plot window than the default (good for time series plots)</span></span>
+<span id="cb191-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb191-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span> , </span>
+<span id="cb191-4"><a href="estimation-and-inference-for-measures-of-dependence.html#cb191-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)) , </span>
+<span id="cb191-5"><a href="estimation-and-inference-for-measures-of-dependence.html#cb191-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb191-6"><a href="estimation-and-inference-for-measures-of-dependence.html#cb191-6" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p>The easiest way to find the autocorrelations in R is to use the <code>acf()</code> function.</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb192-1" aria-hidden="true" tabindex="-1"></a>rho.x <span class="ot">&lt;-</span> <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span></span>
+<span id="cb192-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb192-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)))</span></code></pre></div>
+<p><img src="06-Estimation-and-Inference_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb193-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ci argument can be used to change 1 - alpha for plot</span></span>
+<span id="cb193-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb193-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># lag.max argument can be used to change the maximum number of lags</span></span></code></pre></div>
+<p>In our language, the horizontal axis: lag=h, the verical axis: ACF=<span class="math inline">\(\hat{\rho}(h)\)</span></p>
+<p>The horizontal lines on the plot are drawn at 0 <span class="math inline">\(\pm \frac{Z_{1-\frac{0.05}{2}}}{\sqrt{n}}\)</span> where <span class="math inline">\(Z_{1-\frac{0.05}{2}} = 1.96\)</span>.
+i.e., outside the blue dashed line, we reject <span class="math inline">\(H_0\)</span></p>
+<p>The location of the lines can be changed by using the <code>ci</code> (confidence interval )argument. The default is ci = 0.95. i.e., <span class="math inline">\(\alpha=0.05\)</span></p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb194-1" aria-hidden="true" tabindex="-1"></a>rho.x</span></code></pre></div>
+<pre><code>## 
+## Autocorrelations of series &#39;x&#39;, by lag
+## 
+##      0      1      2      3      4      5      6      7      8      9     10 
+##  1.000  0.674  0.401  0.169 -0.023 -0.125 -0.067 -0.064 -0.058  0.005 -0.044 
+##     11     12     13     14     15     16     17     18     19     20 
+## -0.041 -0.017  0.064  0.076  0.160  0.191  0.141  0.081  0.006 -0.132</code></pre>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the first one is rho_hat(0)</span></span>
+<span id="cb196-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb196-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the second one is rho_hat(1)</span></span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rho.x)</span></code></pre></div>
+<pre><code>## [1] &quot;acf&quot;    &quot;type&quot;   &quot;n.used&quot; &quot;lag&quot;    &quot;series&quot; &quot;snames&quot;</code></pre>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb199-1" aria-hidden="true" tabindex="-1"></a>rho.x<span class="sc">$</span>acf</span></code></pre></div>
+<pre><code>## , , 1
+## 
+##               [,1]
+##  [1,]  1.000000000
+##  [2,]  0.673671871
+##  [3,]  0.400891188
+##  [4,]  0.168552826
+##  [5,] -0.023391129
+##  [6,] -0.124632501
+##  [7,] -0.067392830
+##  [8,] -0.064248086
+##  [9,] -0.057717749
+## [10,]  0.005312358
+## [11,] -0.044035976
+## [12,] -0.041121407
+## [13,] -0.017197132
+## [14,]  0.063864970
+## [15,]  0.075575696
+## [16,]  0.159665692
+## [17,]  0.191349965
+## [18,]  0.140967540
+## [19,]  0.080508273
+## [20,]  0.005584061
+## [21,] -0.131559629</code></pre>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the first one is rho_hat(0)</span></span>
+<span id="cb201-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb201-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the second one is rho_hat(1)</span></span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb202-1" aria-hidden="true" tabindex="-1"></a>rho.x<span class="sc">$</span>acf[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## [1] 1.0000000 0.6736719</code></pre>
+</div>
+<p>Questions:</p>
+<ul>
+<li>What happens to the autocorrelations over time? Why do you think this happens?
+<ul>
+<li>From the model <span class="math inline">\(x_t=0.7x_{t-1}+w_t\)</span>, you can see that the auto correlation dies out as the lag term h increases, the main reason is the coefficient 0.7</li>
+</ul></li>
+<li>Is there a positive or negative correlation?
+<ul>
+<li>A positive correlation, again from our model <span class="math inline">\(x_t=0.7x_{t-1}+w_t\)</span>, 0.7&gt;0</li>
+</ul></li>
+<li>At what lags is $(h)$0?
+<ul>
+<li>h=0,1,2. But we don’t care h=0, it’s 1 just by definition.</li>
+</ul></li>
+</ul>
+<p>R plots <span class="math inline">\(\hat{\rho}(0)=1\)</span> by default. This is unnecessary because <span class="math inline">\(\hat{\rho}(0)\)</span> will be 1 for all time series data sets (again, it’s just by definition)! To remove <span class="math inline">\(\hat{\rho}(0)\)</span> from the plot, one can specify the x-axis limit to start at 1. Below is one way this can be done and also illustrates how to use the <code>lag.max</code> argument.</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">xaxs =</span> <span class="st">&quot;i&quot;</span>) </span>
+<span id="cb204-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb204-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove default 4% extra space around  min and max of x-axis</span></span>
+<span id="cb204-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb204-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb204-4"><a href="estimation-and-inference-for-measures-of-dependence.html#cb204-4" aria-hidden="true" tabindex="-1"></a>rho.x2 <span class="ot">&lt;-</span> <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">xlim =</span> </span>
+<span id="cb204-5"><a href="estimation-and-inference-for-measures-of-dependence.html#cb204-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">30</span>), <span class="at">lag.max =</span> <span class="dv">30</span>, <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data </span></span>
+<span id="cb204-6"><a href="estimation-and-inference-for-measures-of-dependence.html#cb204-6" aria-hidden="true" tabindex="-1"></a><span class="st">    simulated from AR(1): &quot;</span>, x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; </span></span>
+<span id="cb204-7"><a href="estimation-and-inference-for-measures-of-dependence.html#cb204-7" aria-hidden="true" tabindex="-1"></a><span class="st">    where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)))</span></code></pre></div>
+<p><img src="06-Estimation-and-Inference_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">xaxs =</span> <span class="st">&quot;r&quot;</span>) <span class="co"># Return to the default: regular pattern</span></span></code></pre></div>
+<p>Note that <span class="math inline">\(\hat{\rho}(0)=1\)</span> is still present but the y-axis at x = 0 hides it.</p>
+<p>While displaying <span class="math inline">\(\hat{\rho}(0)=1\)</span> may seem minor, we will examine these autocorrelations later in the course to determine an appropriate model for a data set. Often, one will forget to ignore the line drawn at lag = 0 and choose an incorrect model.</p>
+<p><strong>You should always ignore the line drawn at lag=0!!! b/c it’s 1 just by definition.</strong></p>
+<p>The autocovariances can also be found using <code>acf()</code>.</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;covariance&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb206-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb206-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] </span>
+<span id="cb206-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb206-3" aria-hidden="true" tabindex="-1"></a>     <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)))</span></code></pre></div>
+<p><img src="06-Estimation-and-Inference_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>To help understand autocorrelations and their relationship with the correlation coefficient better, I decided to look at the “usual” estimated Pearson correlation coefficients between <span class="math inline">\(x_t, x_{t-1}, x_{t-2},\)</span> and <span class="math inline">\(x_{t-3}\)</span>.</p>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine usual ways to check correlation</span></span>
+<span id="cb207-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb207-2" aria-hidden="true" tabindex="-1"></a>x.ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(x)</span>
+<span id="cb207-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb207-3" aria-hidden="true" tabindex="-1"></a>x.ts</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 100 
+## Frequency = 1 
+##   [1]  0.04172680  0.37190682 -0.18545185 -1.38297422 -2.87593652 -2.60017605
+##   [7] -1.10401719 -0.46385116  0.80339069  2.11483585  3.39124978  3.86739194
+##  [13]  2.12733595  0.67590604  0.71429367  0.38928044 -1.22681923  0.02287443
+##  [19] -0.57321924 -2.68376851 -4.80850095 -2.44797633 -1.73921817 -1.48773023
+##  [25]  0.68920966  0.40220308 -1.58781041 -2.07300848 -2.63408197 -3.54333559
+##  [31] -2.74116328 -2.54401750 -3.19570817 -0.02623669  0.41663974 -1.74485791
+##  [37] -3.04847994 -1.64692948 -1.71478199  0.11340965  1.55017869  0.47317192
+##  [43] -0.18521791 -0.05759091 -1.32105323 -1.22071881 -1.53827085  0.01277076
+##  [49] -3.19955388 -3.11022833 -3.30621969 -2.00546537  0.18084415  0.58776479
+##  [55] -0.70238414 -0.34570939  0.94209248 -0.78176791  1.30547320 -1.04054783
+##  [61] -1.06897160 -1.08850000  0.06031172 -0.05724856 -1.14731083 -0.79262221
+##  [67] -0.55565451 -1.55985750 -2.17062644 -1.07776017  0.51569067  2.30660050
+##  [73]  1.53530426  2.55899301  1.83836277  1.08072014  1.34125182 -0.80729300
+##  [79] -1.42735924 -0.42456207 -0.11625003 -0.74807460  0.70052717  0.08557377
+##  [85] -0.06039041  0.04479407 -0.12657328 -1.30097021  0.81586192 -0.13139757
+##  [91]  1.84725644  1.62364752  0.33080663 -0.40824385 -1.56008530 -1.63175408
+##  [97] -1.36418639 -0.37209392 -0.65833401  2.03705932</code></pre>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-1" aria-hidden="true" tabindex="-1"></a>set1 <span class="ot">&lt;-</span> <span class="fu">ts.intersect</span>(x.ts, <span class="at">x.ts1 =</span> <span class="fu">lag</span>(<span class="at">x =</span> x.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">x.ts2 =</span> <span class="fu">lag</span>(<span class="at">x =</span> x.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">2</span>), <span class="at">x.ts3 =</span> <span class="fu">lag</span>(<span class="at">x =</span> x.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">3</span>))</span>
+<span id="cb209-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb209-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-3" aria-hidden="true" tabindex="-1"></a><span class="co"># b/c we use ts.intersect (take intersection), we have the following</span></span>
+<span id="cb209-4"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-4" aria-hidden="true" tabindex="-1"></a><span class="co"># x.ts starts at X4</span></span>
+<span id="cb209-5"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-5" aria-hidden="true" tabindex="-1"></a><span class="co"># x.ts1 starts at X3</span></span>
+<span id="cb209-6"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-6" aria-hidden="true" tabindex="-1"></a><span class="co"># x.ts2 starts at X2</span></span>
+<span id="cb209-7"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-7" aria-hidden="true" tabindex="-1"></a><span class="co"># x.ts3 starts at X1</span></span>
+<span id="cb209-8"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb209-9"><a href="estimation-and-inference-for-measures-of-dependence.html#cb209-9" aria-hidden="true" tabindex="-1"></a>set1</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 4 
+## End = 100 
+## Frequency = 1 
+##            x.ts       x.ts1       x.ts2       x.ts3
+##   4 -1.38297422 -0.18545185  0.37190682  0.04172680
+##   5 -2.87593652 -1.38297422 -0.18545185  0.37190682
+##   6 -2.60017605 -2.87593652 -1.38297422 -0.18545185
+##   7 -1.10401719 -2.60017605 -2.87593652 -1.38297422
+##   8 -0.46385116 -1.10401719 -2.60017605 -2.87593652
+##   9  0.80339069 -0.46385116 -1.10401719 -2.60017605
+##  10  2.11483585  0.80339069 -0.46385116 -1.10401719
+##  11  3.39124978  2.11483585  0.80339069 -0.46385116
+##  12  3.86739194  3.39124978  2.11483585  0.80339069
+##  13  2.12733595  3.86739194  3.39124978  2.11483585
+##  14  0.67590604  2.12733595  3.86739194  3.39124978
+##  15  0.71429367  0.67590604  2.12733595  3.86739194
+##  16  0.38928044  0.71429367  0.67590604  2.12733595
+##  17 -1.22681923  0.38928044  0.71429367  0.67590604
+##  18  0.02287443 -1.22681923  0.38928044  0.71429367
+##  19 -0.57321924  0.02287443 -1.22681923  0.38928044
+##  20 -2.68376851 -0.57321924  0.02287443 -1.22681923
+##  21 -4.80850095 -2.68376851 -0.57321924  0.02287443
+##  22 -2.44797633 -4.80850095 -2.68376851 -0.57321924
+##  23 -1.73921817 -2.44797633 -4.80850095 -2.68376851
+##  24 -1.48773023 -1.73921817 -2.44797633 -4.80850095
+##  25  0.68920966 -1.48773023 -1.73921817 -2.44797633
+##  26  0.40220308  0.68920966 -1.48773023 -1.73921817
+##  27 -1.58781041  0.40220308  0.68920966 -1.48773023
+##  28 -2.07300848 -1.58781041  0.40220308  0.68920966
+##  29 -2.63408197 -2.07300848 -1.58781041  0.40220308
+##  30 -3.54333559 -2.63408197 -2.07300848 -1.58781041
+##  31 -2.74116328 -3.54333559 -2.63408197 -2.07300848
+##  32 -2.54401750 -2.74116328 -3.54333559 -2.63408197
+##  33 -3.19570817 -2.54401750 -2.74116328 -3.54333559
+##  34 -0.02623669 -3.19570817 -2.54401750 -2.74116328
+##  35  0.41663974 -0.02623669 -3.19570817 -2.54401750
+##  36 -1.74485791  0.41663974 -0.02623669 -3.19570817
+##  37 -3.04847994 -1.74485791  0.41663974 -0.02623669
+##  38 -1.64692948 -3.04847994 -1.74485791  0.41663974
+##  39 -1.71478199 -1.64692948 -3.04847994 -1.74485791
+##  40  0.11340965 -1.71478199 -1.64692948 -3.04847994
+##  41  1.55017869  0.11340965 -1.71478199 -1.64692948
+##  42  0.47317192  1.55017869  0.11340965 -1.71478199
+##  43 -0.18521791  0.47317192  1.55017869  0.11340965
+##  44 -0.05759091 -0.18521791  0.47317192  1.55017869
+##  45 -1.32105323 -0.05759091 -0.18521791  0.47317192
+##  46 -1.22071881 -1.32105323 -0.05759091 -0.18521791
+##  47 -1.53827085 -1.22071881 -1.32105323 -0.05759091
+##  48  0.01277076 -1.53827085 -1.22071881 -1.32105323
+##  49 -3.19955388  0.01277076 -1.53827085 -1.22071881
+##  50 -3.11022833 -3.19955388  0.01277076 -1.53827085
+##  51 -3.30621969 -3.11022833 -3.19955388  0.01277076
+##  52 -2.00546537 -3.30621969 -3.11022833 -3.19955388
+##  53  0.18084415 -2.00546537 -3.30621969 -3.11022833
+##  54  0.58776479  0.18084415 -2.00546537 -3.30621969
+##  55 -0.70238414  0.58776479  0.18084415 -2.00546537
+##  56 -0.34570939 -0.70238414  0.58776479  0.18084415
+##  57  0.94209248 -0.34570939 -0.70238414  0.58776479
+##  58 -0.78176791  0.94209248 -0.34570939 -0.70238414
+##  59  1.30547320 -0.78176791  0.94209248 -0.34570939
+##  60 -1.04054783  1.30547320 -0.78176791  0.94209248
+##  61 -1.06897160 -1.04054783  1.30547320 -0.78176791
+##  62 -1.08850000 -1.06897160 -1.04054783  1.30547320
+##  63  0.06031172 -1.08850000 -1.06897160 -1.04054783
+##  64 -0.05724856  0.06031172 -1.08850000 -1.06897160
+##  65 -1.14731083 -0.05724856  0.06031172 -1.08850000
+##  66 -0.79262221 -1.14731083 -0.05724856  0.06031172
+##  67 -0.55565451 -0.79262221 -1.14731083 -0.05724856
+##  68 -1.55985750 -0.55565451 -0.79262221 -1.14731083
+##  69 -2.17062644 -1.55985750 -0.55565451 -0.79262221
+##  70 -1.07776017 -2.17062644 -1.55985750 -0.55565451
+##  71  0.51569067 -1.07776017 -2.17062644 -1.55985750
+##  72  2.30660050  0.51569067 -1.07776017 -2.17062644
+##  73  1.53530426  2.30660050  0.51569067 -1.07776017
+##  74  2.55899301  1.53530426  2.30660050  0.51569067
+##  75  1.83836277  2.55899301  1.53530426  2.30660050
+##  76  1.08072014  1.83836277  2.55899301  1.53530426
+##  77  1.34125182  1.08072014  1.83836277  2.55899301
+##  78 -0.80729300  1.34125182  1.08072014  1.83836277
+##  79 -1.42735924 -0.80729300  1.34125182  1.08072014
+##  80 -0.42456207 -1.42735924 -0.80729300  1.34125182
+##  81 -0.11625003 -0.42456207 -1.42735924 -0.80729300
+##  82 -0.74807460 -0.11625003 -0.42456207 -1.42735924
+##  83  0.70052717 -0.74807460 -0.11625003 -0.42456207
+##  84  0.08557377  0.70052717 -0.74807460 -0.11625003
+##  85 -0.06039041  0.08557377  0.70052717 -0.74807460
+##  86  0.04479407 -0.06039041  0.08557377  0.70052717
+##  87 -0.12657328  0.04479407 -0.06039041  0.08557377
+##  88 -1.30097021 -0.12657328  0.04479407 -0.06039041
+##  89  0.81586192 -1.30097021 -0.12657328  0.04479407
+##  90 -0.13139757  0.81586192 -1.30097021 -0.12657328
+##  91  1.84725644 -0.13139757  0.81586192 -1.30097021
+##  92  1.62364752  1.84725644 -0.13139757  0.81586192
+##  93  0.33080663  1.62364752  1.84725644 -0.13139757
+##  94 -0.40824385  0.33080663  1.62364752  1.84725644
+##  95 -1.56008530 -0.40824385  0.33080663  1.62364752
+##  96 -1.63175408 -1.56008530 -0.40824385  0.33080663
+##  97 -1.36418639 -1.63175408 -1.56008530 -0.40824385
+##  98 -0.37209392 -1.36418639 -1.63175408 -1.56008530
+##  99 -0.65833401 -0.37209392 -1.36418639 -1.63175408
+## 100  2.03705932 -0.65833401 -0.37209392 -1.36418639</code></pre>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(set1)</span></code></pre></div>
+<pre><code>##            x.ts     x.ts1     x.ts2     x.ts3
+## x.ts  1.0000000 0.6824913 0.4065326 0.1710145
+## x.ts1 0.6824913 1.0000000 0.6929638 0.4108375
+## x.ts2 0.4065326 0.6929638 1.0000000 0.6935801
+## x.ts3 0.1710145 0.4108375 0.6935801 1.0000000</code></pre>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="co"># corr matrix</span></span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car) <span class="co">#scatterplot.matrix is in this package </span></span></code></pre></div>
+<pre><code>## Loading required package: carData</code></pre>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb216-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterplotMatrix</span>(<span class="at">formula =</span> <span class="sc">~</span>x.ts <span class="sc">+</span> x.ts1 <span class="sc">+</span> x.ts2 <span class="sc">+</span> x.ts3, <span class="at">data =</span> set1,</span>
+<span id="cb216-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb216-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">diagonal =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">&quot;histogram&quot;</span>), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="06-Estimation-and-Inference_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb217-1" aria-hidden="true" tabindex="-1"></a>set2 <span class="ot">&lt;-</span> <span class="fu">ts.intersect</span>(x.ts, <span class="at">x.ts1 =</span> <span class="fu">lag</span>(<span class="at">x =</span> x.ts, <span class="at">k =</span> <span class="dv">1</span>), <span class="at">x.ts2 =</span> <span class="fu">lag</span>(<span class="at">x =</span> x.ts, <span class="at">k =</span> <span class="dv">2</span>), <span class="at">x.ts3 =</span> <span class="fu">lag</span>(<span class="at">x =</span> x.ts, <span class="at">k =</span> <span class="dv">3</span>))</span>
+<span id="cb217-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb217-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb217-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb217-3" aria-hidden="true" tabindex="-1"></a>set2</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 97 
+## Frequency = 1 
+##           x.ts       x.ts1       x.ts2       x.ts3
+##  1  0.04172680  0.37190682 -0.18545185 -1.38297422
+##  2  0.37190682 -0.18545185 -1.38297422 -2.87593652
+##  3 -0.18545185 -1.38297422 -2.87593652 -2.60017605
+##  4 -1.38297422 -2.87593652 -2.60017605 -1.10401719
+##  5 -2.87593652 -2.60017605 -1.10401719 -0.46385116
+##  6 -2.60017605 -1.10401719 -0.46385116  0.80339069
+##  7 -1.10401719 -0.46385116  0.80339069  2.11483585
+##  8 -0.46385116  0.80339069  2.11483585  3.39124978
+##  9  0.80339069  2.11483585  3.39124978  3.86739194
+## 10  2.11483585  3.39124978  3.86739194  2.12733595
+## 11  3.39124978  3.86739194  2.12733595  0.67590604
+## 12  3.86739194  2.12733595  0.67590604  0.71429367
+## 13  2.12733595  0.67590604  0.71429367  0.38928044
+## 14  0.67590604  0.71429367  0.38928044 -1.22681923
+## 15  0.71429367  0.38928044 -1.22681923  0.02287443
+## 16  0.38928044 -1.22681923  0.02287443 -0.57321924
+## 17 -1.22681923  0.02287443 -0.57321924 -2.68376851
+## 18  0.02287443 -0.57321924 -2.68376851 -4.80850095
+## 19 -0.57321924 -2.68376851 -4.80850095 -2.44797633
+## 20 -2.68376851 -4.80850095 -2.44797633 -1.73921817
+## 21 -4.80850095 -2.44797633 -1.73921817 -1.48773023
+## 22 -2.44797633 -1.73921817 -1.48773023  0.68920966
+## 23 -1.73921817 -1.48773023  0.68920966  0.40220308
+## 24 -1.48773023  0.68920966  0.40220308 -1.58781041
+## 25  0.68920966  0.40220308 -1.58781041 -2.07300848
+## 26  0.40220308 -1.58781041 -2.07300848 -2.63408197
+## 27 -1.58781041 -2.07300848 -2.63408197 -3.54333559
+## 28 -2.07300848 -2.63408197 -3.54333559 -2.74116328
+## 29 -2.63408197 -3.54333559 -2.74116328 -2.54401750
+## 30 -3.54333559 -2.74116328 -2.54401750 -3.19570817
+## 31 -2.74116328 -2.54401750 -3.19570817 -0.02623669
+## 32 -2.54401750 -3.19570817 -0.02623669  0.41663974
+## 33 -3.19570817 -0.02623669  0.41663974 -1.74485791
+## 34 -0.02623669  0.41663974 -1.74485791 -3.04847994
+## 35  0.41663974 -1.74485791 -3.04847994 -1.64692948
+## 36 -1.74485791 -3.04847994 -1.64692948 -1.71478199
+## 37 -3.04847994 -1.64692948 -1.71478199  0.11340965
+## 38 -1.64692948 -1.71478199  0.11340965  1.55017869
+## 39 -1.71478199  0.11340965  1.55017869  0.47317192
+## 40  0.11340965  1.55017869  0.47317192 -0.18521791
+## 41  1.55017869  0.47317192 -0.18521791 -0.05759091
+## 42  0.47317192 -0.18521791 -0.05759091 -1.32105323
+## 43 -0.18521791 -0.05759091 -1.32105323 -1.22071881
+## 44 -0.05759091 -1.32105323 -1.22071881 -1.53827085
+## 45 -1.32105323 -1.22071881 -1.53827085  0.01277076
+## 46 -1.22071881 -1.53827085  0.01277076 -3.19955388
+## 47 -1.53827085  0.01277076 -3.19955388 -3.11022833
+## 48  0.01277076 -3.19955388 -3.11022833 -3.30621969
+## 49 -3.19955388 -3.11022833 -3.30621969 -2.00546537
+## 50 -3.11022833 -3.30621969 -2.00546537  0.18084415
+## 51 -3.30621969 -2.00546537  0.18084415  0.58776479
+## 52 -2.00546537  0.18084415  0.58776479 -0.70238414
+## 53  0.18084415  0.58776479 -0.70238414 -0.34570939
+## 54  0.58776479 -0.70238414 -0.34570939  0.94209248
+## 55 -0.70238414 -0.34570939  0.94209248 -0.78176791
+## 56 -0.34570939  0.94209248 -0.78176791  1.30547320
+## 57  0.94209248 -0.78176791  1.30547320 -1.04054783
+## 58 -0.78176791  1.30547320 -1.04054783 -1.06897160
+## 59  1.30547320 -1.04054783 -1.06897160 -1.08850000
+## 60 -1.04054783 -1.06897160 -1.08850000  0.06031172
+## 61 -1.06897160 -1.08850000  0.06031172 -0.05724856
+## 62 -1.08850000  0.06031172 -0.05724856 -1.14731083
+## 63  0.06031172 -0.05724856 -1.14731083 -0.79262221
+## 64 -0.05724856 -1.14731083 -0.79262221 -0.55565451
+## 65 -1.14731083 -0.79262221 -0.55565451 -1.55985750
+## 66 -0.79262221 -0.55565451 -1.55985750 -2.17062644
+## 67 -0.55565451 -1.55985750 -2.17062644 -1.07776017
+## 68 -1.55985750 -2.17062644 -1.07776017  0.51569067
+## 69 -2.17062644 -1.07776017  0.51569067  2.30660050
+## 70 -1.07776017  0.51569067  2.30660050  1.53530426
+## 71  0.51569067  2.30660050  1.53530426  2.55899301
+## 72  2.30660050  1.53530426  2.55899301  1.83836277
+## 73  1.53530426  2.55899301  1.83836277  1.08072014
+## 74  2.55899301  1.83836277  1.08072014  1.34125182
+## 75  1.83836277  1.08072014  1.34125182 -0.80729300
+## 76  1.08072014  1.34125182 -0.80729300 -1.42735924
+## 77  1.34125182 -0.80729300 -1.42735924 -0.42456207
+## 78 -0.80729300 -1.42735924 -0.42456207 -0.11625003
+## 79 -1.42735924 -0.42456207 -0.11625003 -0.74807460
+## 80 -0.42456207 -0.11625003 -0.74807460  0.70052717
+## 81 -0.11625003 -0.74807460  0.70052717  0.08557377
+## 82 -0.74807460  0.70052717  0.08557377 -0.06039041
+## 83  0.70052717  0.08557377 -0.06039041  0.04479407
+## 84  0.08557377 -0.06039041  0.04479407 -0.12657328
+## 85 -0.06039041  0.04479407 -0.12657328 -1.30097021
+## 86  0.04479407 -0.12657328 -1.30097021  0.81586192
+## 87 -0.12657328 -1.30097021  0.81586192 -0.13139757
+## 88 -1.30097021  0.81586192 -0.13139757  1.84725644
+## 89  0.81586192 -0.13139757  1.84725644  1.62364752
+## 90 -0.13139757  1.84725644  1.62364752  0.33080663
+## 91  1.84725644  1.62364752  0.33080663 -0.40824385
+## 92  1.62364752  0.33080663 -0.40824385 -1.56008530
+## 93  0.33080663 -0.40824385 -1.56008530 -1.63175408
+## 94 -0.40824385 -1.56008530 -1.63175408 -1.36418639
+## 95 -1.56008530 -1.63175408 -1.36418639 -0.37209392
+## 96 -1.63175408 -1.36418639 -0.37209392 -0.65833401
+## 97 -1.36418639 -0.37209392 -0.65833401  2.03705932</code></pre>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb219-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(set2)</span></code></pre></div>
+<pre><code>##            x.ts     x.ts1     x.ts2     x.ts3
+## x.ts  1.0000000 0.6935801 0.4108375 0.1710145
+## x.ts1 0.6935801 1.0000000 0.6929638 0.4065326
+## x.ts2 0.4108375 0.6929638 1.0000000 0.6824913
+## x.ts3 0.1710145 0.4065326 0.6824913 1.0000000</code></pre>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb221-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Another way to see dependence</span></span>
+<span id="cb221-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb221-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lag.plot</span>(<span class="at">x =</span> x, <span class="at">lags =</span> <span class="dv">4</span>, <span class="at">layout =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">main =</span> <span class="st">&quot;x vs. lagged x&quot;</span>,</span>
+<span id="cb221-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb221-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">do.lines =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p><img src="06-Estimation-and-Inference_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<ul>
+<li>The <code>ts()</code> function converts the time series data to an object that R recognizes as a time series.<br />
+</li>
+<li>The <code>lag()</code> function is used to find xt-1, xt-2, and xt-3. The k argument specifies how many time periods to go back. Run <code>lag(x.ts, k = -1)</code> and <code>lag(x.ts, k = 1)</code>to see what happens. To get everything lined up as I wanted with <code>ts.intersect()</code>, I chose to use k = -1.</li>
+</ul>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lag</span>(x.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="co">#shift down one time period(forward)</span></span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 2 
+## End = 101 
+## Frequency = 1 
+##   [1]  0.04172680  0.37190682 -0.18545185 -1.38297422 -2.87593652 -2.60017605
+##   [7] -1.10401719 -0.46385116  0.80339069  2.11483585  3.39124978  3.86739194
+##  [13]  2.12733595  0.67590604  0.71429367  0.38928044 -1.22681923  0.02287443
+##  [19] -0.57321924 -2.68376851 -4.80850095 -2.44797633 -1.73921817 -1.48773023
+##  [25]  0.68920966  0.40220308 -1.58781041 -2.07300848 -2.63408197 -3.54333559
+##  [31] -2.74116328 -2.54401750 -3.19570817 -0.02623669  0.41663974 -1.74485791
+##  [37] -3.04847994 -1.64692948 -1.71478199  0.11340965  1.55017869  0.47317192
+##  [43] -0.18521791 -0.05759091 -1.32105323 -1.22071881 -1.53827085  0.01277076
+##  [49] -3.19955388 -3.11022833 -3.30621969 -2.00546537  0.18084415  0.58776479
+##  [55] -0.70238414 -0.34570939  0.94209248 -0.78176791  1.30547320 -1.04054783
+##  [61] -1.06897160 -1.08850000  0.06031172 -0.05724856 -1.14731083 -0.79262221
+##  [67] -0.55565451 -1.55985750 -2.17062644 -1.07776017  0.51569067  2.30660050
+##  [73]  1.53530426  2.55899301  1.83836277  1.08072014  1.34125182 -0.80729300
+##  [79] -1.42735924 -0.42456207 -0.11625003 -0.74807460  0.70052717  0.08557377
+##  [85] -0.06039041  0.04479407 -0.12657328 -1.30097021  0.81586192 -0.13139757
+##  [91]  1.84725644  1.62364752  0.33080663 -0.40824385 -1.56008530 -1.63175408
+##  [97] -1.36418639 -0.37209392 -0.65833401  2.03705932</code></pre>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lag</span>(x.ts, <span class="at">k =</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 100 
+## Frequency = 1 
+##   [1]  0.04172680  0.37190682 -0.18545185 -1.38297422 -2.87593652 -2.60017605
+##   [7] -1.10401719 -0.46385116  0.80339069  2.11483585  3.39124978  3.86739194
+##  [13]  2.12733595  0.67590604  0.71429367  0.38928044 -1.22681923  0.02287443
+##  [19] -0.57321924 -2.68376851 -4.80850095 -2.44797633 -1.73921817 -1.48773023
+##  [25]  0.68920966  0.40220308 -1.58781041 -2.07300848 -2.63408197 -3.54333559
+##  [31] -2.74116328 -2.54401750 -3.19570817 -0.02623669  0.41663974 -1.74485791
+##  [37] -3.04847994 -1.64692948 -1.71478199  0.11340965  1.55017869  0.47317192
+##  [43] -0.18521791 -0.05759091 -1.32105323 -1.22071881 -1.53827085  0.01277076
+##  [49] -3.19955388 -3.11022833 -3.30621969 -2.00546537  0.18084415  0.58776479
+##  [55] -0.70238414 -0.34570939  0.94209248 -0.78176791  1.30547320 -1.04054783
+##  [61] -1.06897160 -1.08850000  0.06031172 -0.05724856 -1.14731083 -0.79262221
+##  [67] -0.55565451 -1.55985750 -2.17062644 -1.07776017  0.51569067  2.30660050
+##  [73]  1.53530426  2.55899301  1.83836277  1.08072014  1.34125182 -0.80729300
+##  [79] -1.42735924 -0.42456207 -0.11625003 -0.74807460  0.70052717  0.08557377
+##  [85] -0.06039041  0.04479407 -0.12657328 -1.30097021  0.81586192 -0.13139757
+##  [91]  1.84725644  1.62364752  0.33080663 -0.40824385 -1.56008530 -1.63175408
+##  [97] -1.36418639 -0.37209392 -0.65833401  2.03705932</code></pre>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb226-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lag</span>(x.ts, <span class="at">k =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 0 
+## End = 99 
+## Frequency = 1 
+##   [1]  0.04172680  0.37190682 -0.18545185 -1.38297422 -2.87593652 -2.60017605
+##   [7] -1.10401719 -0.46385116  0.80339069  2.11483585  3.39124978  3.86739194
+##  [13]  2.12733595  0.67590604  0.71429367  0.38928044 -1.22681923  0.02287443
+##  [19] -0.57321924 -2.68376851 -4.80850095 -2.44797633 -1.73921817 -1.48773023
+##  [25]  0.68920966  0.40220308 -1.58781041 -2.07300848 -2.63408197 -3.54333559
+##  [31] -2.74116328 -2.54401750 -3.19570817 -0.02623669  0.41663974 -1.74485791
+##  [37] -3.04847994 -1.64692948 -1.71478199  0.11340965  1.55017869  0.47317192
+##  [43] -0.18521791 -0.05759091 -1.32105323 -1.22071881 -1.53827085  0.01277076
+##  [49] -3.19955388 -3.11022833 -3.30621969 -2.00546537  0.18084415  0.58776479
+##  [55] -0.70238414 -0.34570939  0.94209248 -0.78176791  1.30547320 -1.04054783
+##  [61] -1.06897160 -1.08850000  0.06031172 -0.05724856 -1.14731083 -0.79262221
+##  [67] -0.55565451 -1.55985750 -2.17062644 -1.07776017  0.51569067  2.30660050
+##  [73]  1.53530426  2.55899301  1.83836277  1.08072014  1.34125182 -0.80729300
+##  [79] -1.42735924 -0.42456207 -0.11625003 -0.74807460  0.70052717  0.08557377
+##  [85] -0.06039041  0.04479407 -0.12657328 -1.30097021  0.81586192 -0.13139757
+##  [91]  1.84725644  1.62364752  0.33080663 -0.40824385 -1.56008530 -1.63175408
+##  [97] -1.36418639 -0.37209392 -0.65833401  2.03705932</code></pre>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 創建一個時間序列 x.ts</span></span>
+<span id="cb228-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb228-2" aria-hidden="true" tabindex="-1"></a>b.ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>), <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2022</span>, <span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb228-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb228-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb228-4"><a href="estimation-and-inference-for-measures-of-dependence.html#cb228-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 ts.intersect() 函數合併 x.ts 和它的三個 lag 時間序列</span></span>
+<span id="cb228-5"><a href="estimation-and-inference-for-measures-of-dependence.html#cb228-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.intersect</span>(b.ts, <span class="at">b.ts1 =</span> <span class="fu">lag</span>(<span class="at">x =</span> b.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">b.ts2 =</span> <span class="fu">lag</span>(<span class="at">x =</span> b.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">2</span>), <span class="at">b.ts3 =</span> <span class="fu">lag</span>(<span class="at">x =</span> b.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">3</span>))</span></code></pre></div>
+<pre><code>##          b.ts b.ts1 b.ts2 b.ts3
+## Apr 2022   40    30    20    10
+## May 2022   50    40    30    20
+## Jun 2022   60    50    40    30</code></pre>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb230-1" aria-hidden="true" tabindex="-1"></a><span class="co">#b.ts1、b.ts2 和 b.ts3 的時間點是 b.ts 的時間點往後推 1、2、3 個時間單位。</span></span>
+<span id="cb230-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb230-2" aria-hidden="true" tabindex="-1"></a>b.ts1 <span class="ot">=</span> <span class="fu">lag</span>(<span class="at">x =</span> b.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb230-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb230-3" aria-hidden="true" tabindex="-1"></a>b.ts2 <span class="ot">=</span> <span class="fu">lag</span>(<span class="at">x =</span> b.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb230-4"><a href="estimation-and-inference-for-measures-of-dependence.html#cb230-4" aria-hidden="true" tabindex="-1"></a>b.ts3 <span class="ot">=</span> <span class="fu">lag</span>(<span class="at">x =</span> b.ts, <span class="at">k =</span> <span class="sc">-</span><span class="dv">3</span>)</span>
+<span id="cb230-5"><a href="estimation-and-inference-for-measures-of-dependence.html#cb230-5" aria-hidden="true" tabindex="-1"></a>b.ts</span></code></pre></div>
+<pre><code>##      Jan Feb Mar Apr May Jun
+## 2022  10  20  30  40  50  60</code></pre>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb232-1" aria-hidden="true" tabindex="-1"></a>b.ts1</span></code></pre></div>
+<pre><code>##      Feb Mar Apr May Jun Jul
+## 2022  10  20  30  40  50  60</code></pre>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb234-1" aria-hidden="true" tabindex="-1"></a>b.ts2</span></code></pre></div>
+<pre><code>##      Mar Apr May Jun Jul Aug
+## 2022  10  20  30  40  50  60</code></pre>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb236-1" aria-hidden="true" tabindex="-1"></a>b.ts3</span></code></pre></div>
+<pre><code>##      Apr May Jun Jul Aug Sep
+## 2022  10  20  30  40  50  60</code></pre>
+<ul>
+<li>The <code>ts.intersect()</code> function finds the intersection of the four different “variables”.<br />
+</li>
+<li>The<code>cor()</code>function finds the estimated Pearson correlation coefficients between all variable pairs. Notice how close these correlations are to the autocorrelations!<br />
+</li>
+<li>The <code>scatterplotMatrix()</code> function finds a scatter plot matrix. The function is in the car package.</li>
+</ul>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Used for estimation later in course</span></span>
+<span id="cb238-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb238-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-3"><a href="estimation-and-inference-for-measures-of-dependence.html#cb238-3" aria-hidden="true" tabindex="-1"></a>  gamma.x <span class="ot">&lt;-</span> <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;covariance&quot;</span>, <span class="at">main =</span></span>
+<span id="cb238-4"><a href="estimation-and-inference-for-measures-of-dependence.html#cb238-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)))</span></code></pre></div>
+<p><img src="06-Estimation-and-Inference_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb239-1" aria-hidden="true" tabindex="-1"></a>  gamma.x</span></code></pre></div>
+<pre><code>## 
+## Autocovariances of series &#39;x&#39;, by lag
+## 
+##       0       1       2       3       4       5       6       7       8       9 
+##  2.5033  1.6864  1.0036  0.4219 -0.0586 -0.3120 -0.1687 -0.1608 -0.1445  0.0133 
+##      10      11      12      13      14      15      16      17      18      19 
+## -0.1102 -0.1029 -0.0430  0.1599  0.1892  0.3997  0.4790  0.3529  0.2015  0.0140 
+##      20 
+## -0.3293</code></pre>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb241-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(x)</span></code></pre></div>
+<pre><code>## [1] -0.4963419</code></pre>
+<div class="example">
+<p><span id="exm:unlabeled-div-20" class="example"><strong>Example 7.2  </strong></span><strong>OSU enrollment data</strong></p>
+<p>Click <a href="http://www.chrisbilder.com/stat878/sections/2/OSU_enroll.csv">here</a> to download data.</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb243-1" aria-hidden="true" tabindex="-1"></a>  osu.enroll <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&quot;OSU_enroll.csv&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb243-2"><a href="estimation-and-inference-for-measures-of-dependence.html#cb243-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(osu.enroll)</span></code></pre></div>
+<pre><code>##   t Semester Year Enrollment      date
+## 1 1     Fall 1989      20110 8/31/1989
+## 2 2   Spring 1990      19128  2/1/1990
+## 3 3   Summer 1990       7553  6/1/1990
+## 4 4     Fall 1990      19591 8/31/1990
+## 5 5   Spring 1991      18361  2/1/1991
+## 6 6   Summer 1991       6702  6/1/1991</code></pre>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb245-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>(osu.enroll)</span></code></pre></div>
+<pre><code>##     t Semester Year Enrollment      date
+## 35 35   Spring 2001      20004  2/1/2001
+## 36 36   Summer 2001       7558  6/1/2001
+## 37 37     Fall 2001      21872 8/31/2001
+## 38 38   Spring 2002      20922  2/1/2002
+## 39 39   Summer 2002       7868  6/1/2002
+## 40 40     Fall 2002      22992 8/31/2002</code></pre>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb247-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> osu.enroll<span class="sc">$</span>Enrollment</span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb248-1" aria-hidden="true" tabindex="-1"></a>  rho.x <span class="ot">&lt;-</span> <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> <span class="st">&quot;OSU Enrollment series&quot;</span>)</span></code></pre></div>
+<p><img src="06-Estimation-and-Inference_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb249-1" aria-hidden="true" tabindex="-1"></a>  rho.x</span></code></pre></div>
+<pre><code>## 
+## Autocorrelations of series &#39;x&#39;, by lag
+## 
+##      0      1      2      3      4      5      6      7      8      9     10 
+##  1.000 -0.470 -0.425  0.909 -0.438 -0.395  0.822 -0.403 -0.358  0.739 -0.367 
+##     11     12     13     14     15     16 
+## -0.327  0.655 -0.337 -0.297  0.581 -0.309</code></pre>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="estimation-and-inference-for-measures-of-dependence.html#cb251-1" aria-hidden="true" tabindex="-1"></a>  rho.x<span class="sc">$</span>acf[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]</span></code></pre></div>
+<pre><code>## [1]  1.0000000 -0.4702315 -0.4253427  0.9087421 -0.4377336 -0.3946048  0.8224660
+## [8] -0.4025871 -0.3584216</code></pre>
+</div>
+<p>Notes:</p>
+<ul>
+<li>There are some large autocorrelations. This is a characteristic of a nonstationary series (seasonal factor). We will examine this more later.</li>
+<li>Because the series is not stationary, the hypothesis test for <span class="math inline">\(\rho(h)\)</span> = 0 should not be done here using the methods discussed earlier.<br />
+</li>
+<li>There is a pattern among the autocorrelations. What does this correspond to? (seasonal factor) (similar value/behavior happens during specific period of time/months across different years)</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="stationarity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="resolving-non-stationarity-problems.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

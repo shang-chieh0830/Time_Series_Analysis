@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Stationarity | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Stationarity | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Stationarity | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="dependence.html"/>
+<link rel="next" href="estimation-and-inference-for-measures-of-dependence.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="stationarity" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Stationarity<a href="stationarity.html#stationarity" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="stationarity-1" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Stationarity<a href="stationarity.html#stationarity-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Stationarity is a VERY important concept to understand because it allow us to construct time series models.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-11" class="definition"><strong>Definition 6.1  </strong></span><strong>Strictly Stationary</strong></p>
+<p>The probabilistic behavior of <span class="math inline">\(X_{t_1},...,X_{t_k}\)</span> is exactly the same as that of the shifted set <span class="math inline">\(X_{t_{1+h}},...,X_{t_{k+h}}\)</span> for ANY collection of time points t1,…, tk, for ANY k = 1, 2, …, and for ANY shift h = 0, <span class="math inline">\(\pm\)</span> 1, <span class="math inline">\(\pm\)</span> 2, … .</p>
+<p>Let <span class="math inline">\(c_1,…, c_k\)</span> be constants. Then<span class="math display">\[P(X_{t_1}\leq{c_1},...,X_{t_k}\leq{c_k})=P(X_{t_{1+h}}\leq{c_{1}},...,X_{t_{k+h}}\leq{c_k})\]</span></p>
+<p>i.e., the probability distribution is INVARIANT to time shifts.</p>
+</div>
+<p>e.g. <span class="math inline">\(P(X_1\leq{c_1}, X_2\leq{c_2})=P(X_{10}\leq{c_1}, X_{11}\leq{c_2})\)</span></p>
+<p>Requiring a time series to be strictly stationary is VERY restrictive! A less restrictive requirement is weakly stationary.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-12" class="definition"><strong>Definition 6.2  </strong></span><strong>Weakly Stationary</strong></p>
+<p>The first two moments (mean and covariance) of the time series are invariant to time shifts. <span class="math display">\[E(X_t)=\mu, \forall t\]</span> and <span class="math display">\[ \gamma(t,t+h)=\gamma(0,h), \forall t\]</span></p>
+</div>
+<p>Notes:</p>
+<ul>
+<li><p><span class="math inline">\(\mu\)</span> and <span class="math inline">\(\gamma(0,h)\)</span> are NOT functions of t.<br />
+</p></li>
+<li><p>h is the lag<br />
+</p></li>
+<li><p><span class="math inline">\(\gamma(t, t+h)\)</span> = <span class="math inline">\(\gamma(0,h)\)</span> for ALL time t means that the autocovariance function ONLY depends on the number of lags of the time shift. Thus,<span class="math inline">\(\gamma(0,h) = \gamma(1, h+1) = \gamma(2, 2+h) = \gamma(3, 3+h) = …\)</span></p></li>
+<li><p>Because we will generally be dealing with a weakly stationary time series, we can make the following notational change: <span class="math inline">\(\gamma(h)=\gamma(0,h)=\gamma(t, t+h).\)</span><br />
+</p></li>
+<li><p>The variance of <span class="math inline">\(X_t\)</span> is <span class="math inline">\(\gamma(0)\)</span>.</p></li>
+<li><p>The same notational change can be made to the autocorrelation function (ACF). Thus, <span class="math inline">\(\rho(h)\)</span> denotes the ACF at lag h. Note that<span class="math display">\[\rho(h)=\rho(t,t+h)=\frac{\gamma(t,t+h)}{\sqrt{\gamma(t,t)}\sqrt{\gamma(t+h,t+h)}}=\frac{\gamma(h)}{\sqrt{\gamma(0)}\sqrt{\gamma(0)}}=\frac{\gamma(h)}{\gamma(0)}\]</span></p></li>
+<li><p>Strictly stationary implies weakly stationary, but the reverse is not necessarily true.<br />
+</p></li>
+<li><p>Frequently, we will just say “stationary” to refer to weakly stationary and say the full “strictly stationary” to refer to strictly stationary.</p></li>
+</ul>
+<div class="example">
+<p><span id="exm:unlabeled-div-13" class="example"><strong>Example 6.1  </strong></span><strong>White Noise</strong>
+Suppose <span class="math inline">\(w_t \sim ind. N(0,\sigma^2_w ), t=1,…,n.\)</span> Is this a weakly stationary time series?</p>
+<p>Yes – mean is 0 for all wt, variance is constant for all wt, and the covariance is 0 because the random variables are independent. AND, it is also strictly stationary.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-14" class="example"><strong>Example 6.2  </strong></span><strong>Moving Average</strong></p>
+<p>Let <span class="math inline">\(m_t=\frac{w_t+w_{t-1}+w_{t-2}}{3}, w_t \sim ind. N(0,1 ), t=1,…,n\)</span></p>
+<p>Previously, we found that <span class="math inline">\(\mu_t=0, \forall t\)</span> and</p>
+<p><span class="math display">\[\begin{cases}
+  \gamma(s,t)= \frac{3}{9} &amp; \text{if } s=t \\
+  \gamma(s,t)= \frac{2}{9} &amp; \text{if } |s-t|=1\\
+  \gamma(s,t)= \frac{1}{9} &amp; \text{if } |s-t|=2\\
+  \gamma(s,t)= 0 &amp; \text{if } |s-t|\ge 3\\
+\end{cases}\]</span></p>
+<p>Is the time series weakly stationary? Hint: let h=s-t.</p>
+<p>Yes! You can see that <span class="math inline">\(\gamma(s,t)\)</span> only depends on h.</p>
+</div>
+<p>Comments:</p>
+<ul>
+<li><span class="math inline">\(\gamma(h) = \gamma(-h)\)</span> for all h if the series is weakly stationary. This means that it does not matter which way the shift occurs.<br />
+</li>
+<li>Stationarity can also be examined when two time series are of interest. We will examine this in more detail later in the course.</li>
+</ul>
+<p>In summary,</p>
+<ul>
+<li>Both time series must have constant mean</li>
+<li>Both autocovariance functions must depend only on the lag difference</li>
+<li>The “cross-covariance” function, the extension of the autocovariance function for one time series to two time series, must depend only on the lag difference. The cross-covariance function is defined as</li>
+</ul>
+<p><span class="math display">\[\gamma_{xy}(h) = E[(x_{t+h} – \mu_x)(y_t – \mu_y)]\]</span></p>
+<p>Note that <span class="math inline">\(\gamma_{xy}(h)\)</span> is not necessarily equal to <span class="math inline">\(\gamma_{yx}(h)\)</span> (usually will be different).</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-15" class="example"><strong>Example 6.3  </strong></span>Let <span class="math inline">\(x_t = w_t + w_{t-1}\)</span> and <span class="math inline">\(y_t = w_t - w_{t-1}\)</span>, where <span class="math inline">\(w_t \sim \mathrm{ind}N(0,\sigma^2_w )\)</span> for t = 1, …, n</p>
+<p>Claim: <span class="math inline">\(x_t\)</span> and <span class="math inline">\(y_t\)</span> are weakly stationary.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-16" class="proof"><em>Proof</em>. </span></p>
+<ul>
+<li><span class="math inline">\(X_t\)</span></li>
+</ul>
+<p><span class="math inline">\(E(X_t)=E(w_t+w_{t-1})=E(w_t+w_{t-1})=0+0=0\)</span>
+Thus <span class="math inline">\(E(X_t)=\mu_{X_t}=0 \forall t\)</span></p>
+<p><span class="math inline">\(\gamma(s,t)=E[(X_s-\mu_{X_s})(X_t-\mu_{X_t})]\\=E[X_sX_t]=E[(w_s+w_{s+1})(w_t+w_{t+1})]\\=E[w_sw_t+w_{s-1}w_t+w_sw_{t-1}+w_{s-1}w_{t-1}]\)</span></p>
+<p>if s=t, then <span class="math inline">\(\gamma(t,t)=E[w^2_t+ w_{t-1}w_t + w_tw_{t-1} + w^2_{t-1}]\\= Var(w_t) + (E[w_t])^2 + 2E[w_{t-1}]E[w_t] + Var(w_{t-1}) + (E[w_{t-1}])^2\\= \sigma^2_w + 0 + 0 + \sigma^2_w + 0= 2\sigma^2_w\)</span></p>
+<p>if s=t-1, then <span class="math inline">\(\gamma(t-1,t)=E[w_{t-1}w_t+ w_{t-2}w_t + w^2_{t-1} + w_{t-2}w_{t-1}]\\= E[w_{t-1}]E[w_t] + E[w_{t-2}]E[w_t] + Var(w_{t-1}) +(E[w_{t-1}])^2 + E[w_{t-2}]E[w_{t-1}]\\= 0 + 0 + \sigma^2_w + 0+0=\sigma^2_w\)</span></p>
+<p>Note that <span class="math inline">\(\gamma(t - 1, t) = \sigma^2_w\)</span> and <span class="math inline">\(\gamma(s,t) = 0\)</span> for |s - t|&gt;1.</p>
+<p><span class="math display">\[\begin{cases}
+  \gamma(s,t)= 2\sigma^2_w &amp; \text{if } s=t \\
+  \gamma(s,t)= \sigma^2_w &amp; \text{if } |s-t|=1\\
+  \gamma(s,t)= 0 &amp; \text{if } |s-t| &gt; 1\\
+\end{cases}\]</span></p>
+<p><span class="math inline">\(X_t\)</span> is weakly stationary.</p>
+<ul>
+<li><span class="math inline">\(Y_t\)</span></li>
+</ul>
+<p><span class="math inline">\(E(Y_t)=E(w_t-w_{t-1})=E(w_t-w_{t-1})=0-0=0\)</span>
+Thus <span class="math inline">\(E(Y_t)=\mu_{Y_t}=0 \forall t\)</span></p>
+<p><span class="math inline">\(\gamma(s,t)=E[(Y_s-\mu_{Y_s})(Y_t-\mu_{Y_t})]=E[Y_sY_t]\\=E[(w_s-w_{s+1})(w_t-w_{t+1})]=\\E[w_sw_t-w_{s-1}w_t-w_sw_{t-1}+w_{s-1}w_{t-1}]\)</span></p>
+<p>if s=t, then <span class="math inline">\(\gamma(t,t)=E[w^2_t- w_{t-1}w_t - w_tw_{t-1} + w^2_{t-1}]\\= Var(w_t) + (E[w_t])^2 - 2E[w_{t-1}]E[w_t] + Var(w_{t-1}) + (E[w_{t-1}])^2\\= \sigma^2_w + 0 - 0 + \sigma^2_w + 0= 2\sigma^2_w\)</span></p>
+<p>if s=t-1, then <span class="math inline">\(\gamma(t-1,t)=E[w_{t-1}w_t- w_{t-2}w_t - w^2_{t-1} + w_{t-2}w_{t-1}]\\ = E[w_{t-1}]E[w_t] - E[w_{t-2}]E[w_t] - Var(w_{t-1}) -(E[w_{t-1}])^2 + E[w_{t-2}]E[w_{t-1}]\\= 0 - 0 - \sigma^2_w - 0+0=-\sigma^2_w\)</span></p>
+<p>Note that <span class="math inline">\(\gamma(t - 1, t) = -\sigma^2_w\)</span> and <span class="math inline">\(\gamma(s,t) = 0\)</span> for |s - t|&gt;1.</p>
+<p><span class="math display">\[\begin{cases}
+  \gamma(s,t)= 2\sigma^2_w &amp; \text{if } s=t \\
+  \gamma(s,t)= -\sigma^2_w &amp; \text{if } |s-t|=1\\
+  \gamma(s,t)= 0 &amp; \text{if } |s-t| &gt; 1\\
+\end{cases}\]</span></p>
+<p><span class="math inline">\(Y_t\)</span> is weakly stationary.</p>
+</div>
+</div>
+<div id="linear-process" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Linear Process<a href="stationarity.html#linear-process" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The previous examples are special cases of a “linear process”. In general, a linear process can be defined as <span class="math display">\[X_t=\mu+ \sum_{j=-\infty}^{\infty} \psi_jw_{t-j}, \sum_{j=-\infty}^{\infty}|\psi_j|&lt;\infty\]</span> and <span class="math display">\[w_t\sim\mathrm{ind.}N(0,\sigma^2_w)\]</span></p>
+<p>It can be shown that <span class="math inline">\(\gamma(h)=\sigma^2_w\sum_{j=-\infty}^{\infty}\psi_{j+h}\psi_j\)</span> for h <span class="math inline">\(\geq\)</span> 0 provided the series is stationary (remember that and <span class="math inline">\(\gamma(h) = \gamma(-h)\)</span>).</p>
+<div class="proof">
+<p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span>WLOG, let <span class="math inline">\(\mu=0\)</span>, since constants do not affect a covariance.</p>
+<p><span class="math inline">\(E(X_t)=E(\mu+\sum_{j=-\infty}^{\infty} \psi_jw_{t-j})\\=0+\sum_{j=-\infty}^{\infty} \psi_jE(w_{t-j})\\=0+\sum_{j=-\infty}^{\infty} \psi_j0=0\)</span></p>
+<p>Note that <span class="math inline">\(\gamma(h) = Cov(x_t, x_{t+h}) = E(x_tx_{t+h}) – E(x_t)E(x_{t+h}) = E(x_tx_{t+h})\)</span> since <span class="math inline">\(E(x_t) = E(x_{t+h}) = 0\)</span></p>
+<p>Then <span class="math inline">\(E(x_tx_{t+h})=E[(\sum_{i=-\infty}^{\infty}\psi_iw_{t-i})(\sum_{i=-\infty}^{\infty}\psi_jw_{t+h-j})]\\=E[\sum_{i=-\infty}^{\infty}\sum_{j=-\infty}^{\infty}\psi_i\psi_jw_{t-i}w_{t+h-j}]\\=\sum_{i=-\infty}^{\infty}\sum_{j=-\infty}^{\infty}\psi_i\psi_jE(w_{t-i}w_{t+h-j})\\=\sigma^2_w\sum_{k=-\infty}^{\infty}\psi_k\psi_{k+h}\)</span></p>
+<p>Note that <span class="math inline">\(E(w_{t-i}w_{t+h-j})=0, \forall -i\ne{h-j}\)</span> and <span class="math inline">\(E(w_{t-i}w_{t+h-j})=E(w^2_{t-i})=\sigma^2_w ,\forall -i=h-j ( i.e.,j-i=h)\)</span> and <span class="math inline">\(\psi&#39;s\)</span> are constants.</p>
+<p>Hence, <span class="math inline">\(\gamma(h)=\sigma^2_w\sum_{j=-\infty}^{\infty}\psi_{j+h}\psi_j\)</span> for h <span class="math inline">\(\geq\)</span> 0.</p>
+</div>
+<p>Important:</p>
+<p>There is a very important case when weakly stationary implies strictly stationary. This occurs when the time series has a multivariate normal distribution. Remember that a univariate normal distribution is defined only by its mean and variance. The multivariate normal distribution is defined only by its mean vector and covariance matrix.</p>
+<p>Thus, if we can assume a multivariate normal distribution, we ONLY need to check if the time series satisfies the weakly stationary requirements to say the time series is strongly stationary. Thus, notice what the word “stationary” would mean in this case.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-18" class="example"><strong>Example 6.4  </strong></span><strong>Visualizing Stationarity</strong></p>
+<p>Below are a few plots of the observed values of a time series. Identify which plots correspond to a weakly stationary series.</p>
+<p><img src="Stationarity-graph1.png" alt="Structural Change" />
+This graph violates weakly stationary. It seems that there’s a structural change. You can find there are two distinct mean: high mean and low mean.</p>
+<p><img src="Stationarity-graph2.png" alt="Fine" />
+This graph doesn’t seem to violate weakly stationary, as you can see the mean seems to be a constant 0 and the variablity seems to be a constant across different time points.</p>
+<p><img src="Stationarity-graph3.png" alt="Mean Growing" />
+Clearly, this violates weakly stationary. You can see the mean keeps changing.</p>
+<p><img src="Stationarity-graph4.jpg" alt="Variance Growing" />
+Clearly, this violates weakly stationary. You can see the variance keeps changing.</p>
+</div>
+<p>It is important to have stationarity b/c it allows us to estimate the mean and variance and we need consistency to construct a model.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dependence.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="estimation-and-inference-for-measures-of-dependence.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

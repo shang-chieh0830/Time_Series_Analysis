@@ -1,0 +1,785 @@
+# ARCH Models
+
+## ARCH Models- Introduction
+
+Nobel Prize in Economic Sciences: https://www.nobelprize.org/prizes/economic-sciences/2003/summary 
+
+ARCH models are time series models for hetereoscedastic error terms, i.e., models for when $\sigma^2_{w,t}$ depends on t. In this section, $\sigma^2_{w,t}$  will be denoted by $\sigma^2_t$
+
+ARCH stands for autoregressive conditionally hetereoscedastic.  The generalization of these models to be discussed later are GARCH models with the G meaning “generalized”.  
+
+### When to use this models?
+
+Sometimes in a time series plot, the variation is small, then large for a small period of time, then the variation goes back to being small again. Examples of where this happens:
+
+1. stock or bond prices
+2. money exchange rates
+
+
+In the ARIMA modeling framework, what is usually done is the following: 
+
+- Suppose $x_t$ denotes the series that appears to have non-constant variance.  
+- A common method to handle this is to use the natural log of the series, log($x_t$).  
+- This series will often appear to be nonstationary in the mean, so a solution to that problem is first differences: $y_t = log(x_t) – log(x_{t-1})$. Notice that $y_t$ has a mean of 0.    
+- This $y_t$ series ACF and PACF will often look like the ACF and PACF from a white noise process leaving the model to be ARIMA(0,1,0) for $y_t$! This corresponds to the “efficient market hypothesis” discussed in finance that stock prices follow a random walk.    
+
+A closer look at $y_t$ reveals the following, 
+
+$$y_t=log(x_t)-log(x_{t-1})\\=log(x_t/x_{t-1})\\=log(current \quad value/ past \quad value)$$
+
+This is somewhat similar to a “return” for an investment, defined as
+
+$r_t=\frac{x_t-x_{t-1}}{x_{t-1}}$
+
+For example, if a stock price at the end of trading the previous day is 50 and at the end of today it was 60, the return would be: 
+
+$r_t=(60-50)/50=0.2$
+
+Thus, the stock went up 20%.  
+
+Other types of structures are often still present in $y_t$ which would lead to an additional model: 
+
+1. The distribution of $y_t$ has “heavier” tails than a normal distribution (remember the relationship between a t-distribution with say 5 degrees of freedom and a standard normal distribution).  
+2. The $y_t^2$  are correlated and often the correlation is non-negative.  
+3. The changes in $y_t$ tend to be clustered. Because of this clustering, one could say there is dependence in the variability or “volatility” of observed values.
+
+:::{.example}
+
+**Monthly returns of value-weighted S&P 500 Index from 1926 to 1991 (SP500.R)**
+
+This data set is taken from Pena, Tiao, and Tsay’s textbook. The data set is already in the returns rt format. Notice the changes in the variability (and their corresponding dates).    
+
+```{r}
+sp500 <- read.table(file = "sp500.txt",
+          header = FALSE, col.names = "x", sep = "")
+head(sp500)
+
+```
+
+```{r}
+x <- ts(data = sp500$x, start = 1926, deltat = 1/12)
+x
+
+```
+
+```{r}
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+       "l", col = "red",main = "S&P 500 data series")
+points(x = x, pch = 20, col = "blue")
+abline(v = c(1930, 1940, 1950, 1960, 1970, 1980, 1990), 
+         lty = "dotted", col = "gray") 
+abline(h = c(-0.2, 0, 0.2, 0.4), lty = "dotted", col = 
+         "gray") 
+
+```
+
+
+:::
+
+
+:::{.example}
+
+**Simulated ARCH(2) data with $\alpha_0 = 0.1, \alpha_1 = 0.5, \alpha_2 = 0.2, n = 10,000$ (arch2.R)**
+
+
+Data is simulated from the model above. Don’t worry about the name yet! For now, just understand that this series is example of where there is dependence in the variability. See the program for the code (after we do a model fitting example).   
+
+Suppose the series is denoted by $x_t$.
+
+```{r}
+library(fGarch)
+```
+
+```{r}
+set.seed(8111)
+spec <- garchSpec(model = list(omega = 0.1, alpha = c(0.5, 0.2), beta = 0))
+x <- garchSim(spec = spec, n = 10000)
+# write.csv(x = y, file = "arch2.csv", quote = FALSE, row.names = FALSE)
+plot(x = 1:10000, y = x, ylab = expression(x[t]), xlab = "t", type = "l", col = "red",
+     main = "ARCH(2) model simulated data")
+```
+
+
+Around time $\approx$ 2000 and various other places, there is more variability than which appears in the rest of the series.  
+
+```{r}
+par(mfrow = c(2,2))
+acf(x = x, type = "correlation", lag.max = 20, xlim = c(1,20), ylim = c(-1,1), xlab = "h",
+     main = expression(paste("Estimated ACF for ", x[t])))
+pacf(x = x, lag.max = 20, ylim = c(-1,1), xlim = c(1,20), xlab = "h",
+  main = expression(paste("Estimated PACF for ", x[t])))
+acf(x = x^2, type = "correlation", lag.max = 20, xlim = c(1,20), ylim = c(-1,1), xlab = "h",
+     main = expression(paste("Estimated ACF for ", x[t]^2)))
+     
+pacf(x = x^2, lag.max = 20, ylim = c(-1,1), xlim = c(1,20), xlab = "h",
+main = expression(paste("Estimated PACF for ", x[t]^2)))
+```
+
+
+According to the ACF and PACF of $x_t$, the data appear to be white noise! However, take a look at the ACF and PACF of  $x_t^2$. It looks like an AR(3) model would be appropriate to model $x_t^2$! (Note: Actually it should have shown up to be AR(2))
+
+
+:::
+
+
+### ARCH(1) model
+
+Understanding the variability is important in finance because investors expect higher returns as compensation for higher degrees of volatility (think of this as risk).  
+
+Consider a model that allows dependence in the variances of $y_t$, denoted by $\sigma_t^2$. Below is the ARCH(1) model: 
+
+$y_t=\sigma_t\epsilon_t$ where $\sigma_t^2=\alpha_0+\alpha_1y^2_{t-1}$ and $\epsilon_t\sim ind(0,1)$
+
+Notes:
+
+- $y_t$ has a mean of 0. Thus, the time series of interest could be $x_t$ with $y_t = x_t -\mu$. Alternatively, possible values of $y_t$ are $y_t = (1-B)x_t$, $y_t = (1-B)log(x_t)$, or $y_t = (1-B)x_t / x_t = r_t$. 
+- Relate this model to what we would have for an ARMA(0,0) model for $y_t$ before: $y_t = w_t$ where $w_t \sim ind.(0,\sigma^2)$. We could have instead used $y_t = \sigma w_t$ where $w_t \sim ind.(0,1)$. 
+- We could even state the model as 
+
+$x_t = \mu + w_t$
+
+  where $w_t \sim ind.(0, \sigma_t^2), \sigma_t^2= \alpha_0 + \alpha_1y^2_{t-1}, y_t = x_t - \mu$.
+- Because the variance changes, this is where the H part of the ARCH name comes about.  
+- For now, t will be taken as having a normal distribution.
+- The $\alpha_0$ and $\alpha_1$ parameters have constraints on possible values they can take on so that $\sigma_t^2  > 0$. For example, $\alpha_1  > 0$ to make sure   $\sigma_t^2> 0$ for any $\alpha_0$. More specific constraints are given later.
+- One can think of this as $y_t$ is white noise with variance depending on the past. 
+- Also, one may need to find an ARMA model for the original series $x_t$ itself if it has autocorrelation in it. We can then work with the residuals as $y_t$ to find an ARCH model. We will discuss finding an ARMA model and ARCH model together later in the notes.  
+- You could rewrite the model as $y_t=\sqrt{\alpha_0+\alpha_1y^2_{t-1}}\epsilon_t$
+- Conditional on $y_{t-1}$, $y_t$ has a normal distribution, i.e., $y_t|y_{t-1} \sim N(0, \alpha_0+\alpha_1y^2_{t-1})$
+
+  Thus, if you know the value of $y_{t-1}$, $yt$ has a normal distribution with mean 0 and variance $\alpha_0+\alpha_1y^2_{t-1}$ .  
+
+- The above representation means that $Var(y_t|y_{t-1}) = \sigma^2_t  = \alpha_0 + \alpha_1y^2_{t-1}$. Also, because $E(y_t|y_{t-1}) = 0$,
+
+$$Var(y_t|y_{t-1})=E(y_t^2|y_{t-1})-E(y_t|y_{t-1})^2=E(y_t^2|y_{t-1})-0=E(y_t^2|y_{t-1})$$
+  So, $E(y_t^2|y_{t-1})=\alpha_0+\alpha_1y^2_{t-1}.$ Thus, the conditional variance of $y_t$ comes about through previous values of $y^2_{t-1}$ like an AR(1) model! This is where the AR and C parts of the ARCH name come about! 
+  
+  One could also express the model as  
+  
+$$y_t^2=\sigma_t^2+y_t^2-\sigma_t^2\\=(\alpha_0+\alpha_1y^2_{t-1})+(\sigma_t\epsilon_t)^2-\sigma_t^2\\=\alpha_0+\alpha_1y^2_{t-1}+\nu_t$$ where $\nu_t=\sigma_t^2(\epsilon_t^2-1)$
+
+  Again, you can think of the ARCH(1) model as an AR(1) model for $y_t^2$  with $\nu_t$ as the error term. This error term is different from the usual error term found in an AR(1) model. 
+  
+- The “unconditional” mean of $y_t$, $E(y_t)$, is found using the following property:
+
+  Let A and B be two random variables. Then $E_A(A)$, the expected value of A using the marginal distribution of A, can be found using $E_B[E_{A|B}(A|B)]$ where the second expectation is with respect to the conditional distribution of A given B is known. More generally, $E_A[g(A)]=E_B\{E_{A|B}[g(A)|B]\}$ where g() is a function of A. For a proof, see Casella and Berger's textbook.
+  
+  Using this result, $E_{y_t}(y_t)=E_{y_{t-1}}[E_{y_t|y_{t-1}}(y_t|y_{t-1})]=E_{y_{t-1}}[0]=0$
+  
+- One way to find the “unconditional” variance of $y_t$ is the following: 
+
+$$Var_{y_t}(y_t)=E_{y_t}(y_t^2)-E_{y_t}(y_t)\\
+=E_{y_t}(y_t^2)-0\\
+=E_{y_{t-1}}[E_{y_t|y_{t-1}}(y_t^2|y_{t-1})]\\
+=E_{y_{t-1}}[Var_{y_t|y_{t-1}}(y_t|y_{t-1})+E_{y_t|y_{t-1}}(y_t|y_{t-1})^2]\\
+=E_{y_{t-1}}[\alpha_0+\alpha_1y_{t-1}^2+0]\\
+=\alpha_0+\alpha_1E_{y_{t-1}}[y^2_{t-1}]\\
+=\alpha_0+\alpha_1E_{y_t}[y_t^2]$$
+
+  where the last step is the result of $E_{y_t}(y_t^2)$  must be constant through time since  $y_t^2= \alpha_0+\alpha_1y^2_{t-1}  + \nu_t$ is a causal AR(1) process when $0 \le \alpha_1 < 1$ (not future dependent).  
+  
+- The above representation of the variance leads to the following:
+
+  $Var_{y_t}(y_t)=\frac{\alpha_0}{1-\alpha_1}$ 
+  
+  b/c $Var_{y_t}(y_t)=\alpha_0+\alpha_1E_{y_t}[y_t^2]\\=\alpha_0+\alpha_1\{Var_{y_t}[y_t]+(E_{y_t}[y_t])^2\}\\=\alpha_0+\alpha_1\{Var_{y_t}[y_t]+0\}$
+  
+- The kurtosis for a random variable A is defined to be: 
+
+  $\frac{E\{[A-E(A)]^4\}}{E\{[A-E(A)]^2\}^2}=\frac{E\{[A-E(A)]^4\}}{\sigma^4}$
+  
+  It measures the peakedness or flatness of a probability distribution function. The larger the value, the more spread out the distribution is. For a standard normal distribution, this becomes $\frac{E(A^4)}{1^2}=3$
+  
+  One can use the moment generating function of a standard normal distribution to figure this out.  
+  
+  The fourth moment for $y_t$ can be shown to be $E(y_t^4)=\frac{3\alpha_0^2}{(1-\alpha_1)^2}\frac{1-\alpha_1^2}{1-3\alpha_1^2}$  provided that $3\alpha_1^2  < 1$ because the fourth moment must be positive (a random variable to the 4th power is always positive). Because we already have the constraint of $0 \le \alpha_1 < 1$, this means $0 \le \alpha_1 < \sqrt{1/3}$ .  
+  
+  The kurtosis for yt then becomes  $3\frac{1-\alpha_1^2}{1-3\alpha_1^2} > 3$. Thus, the distribution of $y_t$ will always have “fatter” tails than a standard normal. Using the “usual” method of finding outliers will find more of them. Pena, Tiao, and Tsay’s textbook says “this is in agreement with the empirical finding that outliers appear more often in asset returns than that implied by an iid sequence of normal random variates.”  
+
+- Because we have an AR(1) structure for $y_t^2$, then the autocorrelation between $y_t^2$  and  $y_{t-h}^2$ is $\alpha_1^h\ge 0$. The autocorrelation is always greater than 0 because of the constraints on $\alpha_1$. We can look for this behavior in an ACF plot! This positive autocorrelation allows us to model the phenomenon that changes in $y_t$ tend to be clustered (i.e., volatile $y_t$ values lead to more volatile values – think in terms of a stock return).
+
+### Parameter estimation
+
+The likelihood can be written out using $y_t|y_{t-1} \sim ind.N(0, \alpha_0+\alpha_1y^2_{t-1})$. See Shumway and Stoffer’s textbook’s for more on this likelihood function and notice how the first observation is conditioned upon. This function involves writing out a joint probability distribution as a product of conditional probability distributions and one marginal probability distribution. 
+
+Given this likelihood, “conditional” maximum likelihood estimation can proceed in a similar manner as maximum likelihood estimation has done before. Standard likelihood methods can be used to find the covariance matrix for parameter estimates.
+
+### ARCH(m) model
+
+$y_t=\sigma_t\epsilon_t$ where $\sigma_t^2=\alpha_0+\alpha_1y_{t-1}^2+\alpha_2y^2_{t-2}+...+\alpha_my_{t-m}^2$ and $\epsilon_t \sim ind.N(0,1)$
+
+Conditions on the parameters are $\alpha_i \ge 0$ for all i = 1, …, m and $\alpha_1 + ... + \alpha_m < 1$.  
+
+### Weaknesses of ARCH models
+
+1. The model treats positive and negative returns ($y_t$) in the same manner (all $y_{t-1},...,y_{t-m}$ are taking squares).  
+2. The model is restrictive with regard to what values the $\alpha_i$ can take on – see the ARCH(1) example. 
+3. The model does not provide new insight to understanding financial time series; only a mechanical way to describe the variance.   
+4. The model often over predicts the volatility because it responds slowly to isolated large shocks to the return series.  
+
+### GARCH(m,r)
+
+The “G” stands for “Generalized”
+
+$y_t = \sigma_t\epsilon_t$ where $\sigma_t^2= \alpha_0 + \alpha_1y^2_{t-1}  + … + \alpha_my^2_{t-m]}+ \beta_1\sigma^2_{t-1}  + … +\beta_r\sigma_{t-r}^2$ and $\epsilon_t \sim ind.N(0,1)$
+
+The additional parameters help incorporate past variances. **More will be discussed about this model later**
+
+
+## Simulated Example
+
+There are a number of R packages available to work with these models. Packages include: 
+
+1)	 `tseries` and the `garch()` function
+2)	 `fGarch` and the `garchFit()` function 
+3)	 `rugarch` and the `ugarchfit()` function
+
+The finance task view at CRAN (http://cran.r-project.org/web/views/Finance.html) gives a summary of these and other packages available for finance data modeling.  
+
+The `tseries` package has limitations for what can be done with the model so we will focus on `fGarch`. The `rugarch` package works fine as well, so some examples will be provided with it. Code for the `tseries` package is available my corresponding programs when it will work for an example. 
+
+:::{.example}
+
+Generate data from an ARCH(1) model with $\alpha_0=0.1, \alpha_1=0.4$ (arch1.R)
+
+
+Code to simulate data from the model:
+
+```{r}
+set.seed(1532)
+n <- 1100
+a <- c(0.1, 0.4)  #ARCH(1) coefficients - alpha0 and alpha1
+e <- rnorm(n = n, mean = 0, sd = 1)
+y <- numeric(n)   #intializes a vector of y's to be n long
+y[1] <- rnorm(n = 1, mean = 0, sd = sqrt(a[1]/(1.0-a[2]))) 
+                                              #start value
+
+for(i in 2:n)     #Simulate ARCH(1) process
+ {
+  y[i] <- e[i]*sqrt(a[1] + a[2]*y[i-1]^2)
+ }
+y <- y[101:1100]    #Drop the first 100 and just call it y again
+
+save.y <- y
+
+```
+
+The start value for $y_1$ needs to be set outside the loop.  The variance used is $Var(y_t) = \alpha_0/(1-\alpha_1)$ as found previously in the notes.  
+
+Below is a plot of the data. The plot of $y_t$ shows moments of high volatility in comparison to other time points.  
+
+```{r}
+plot(x = y, ylab = expression(y[t]), xlab = "t", type = 
+    "l", col = "red",  main = "ARCH(1) simulaed data", 
+    panel.first=grid(col = "gray", lty = "dotted"))
+points(x = y, pch = 20, col = "blue")
+
+```
+
+While I used “y” here, we would actually find a model for the mean adjusted version of it. 
+
+This data could have been generated more easily by using the `garchSim()` function in the `fGarch` package. 
+
+
+```{r}
+library(fGarch)
+#Note that beta (sigma^2_t-1 part) needs to be set to something due to a default value of 0.8
+set.seed(9129)
+spec <- garchSpec(model = list(omega = 0.1, alpha = 0.4, 
+    beta = 0))
+x <- garchSim(spec = spec, n = 1000)
+head(x)
+
+
+```
+
+```{r}
+tail(x)
+```
+
+- $x_{1000}=-0.6971$
+
+```{r}
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "l", col = "red", main = "ARCH(1) simulated data", 
+    panel.first = grid(col = "gray", lty = "dotted"))
+points(x = x, pch = 20, col = "blue")
+
+```
+
+Notes:
+
+- I am unable to remove the date information produced by `garchSim()`. 
+- The `garchSpec()` model specification can be generalized for other versions of a GARCH model. For example, an ARCH(2) model uses the alpha argument to specify $\alpha_1$ and $\alpha_2$ (use `c()`).
+
+
+:::
+
+In a typical model building situation when you do not know if an ARIMA and/or ARCH model is appropriate, one should find the ACF and PACF for $x_t$ and  $x_t^2$. 
+
+```{r}
+par(mfrow = c(1,2))
+acf(x = x, type = "correlation", main = "Est. ACF for 
+    x", ylim = c(-1,1), panel.first = grid(col = "gray", 
+    lty = "dotted"))
+pacf(x = x, main = "Est. PACF for x", ylim = c(-1,1),
+    panel.first = grid(col = "gray", lty = "dotted"))
+
+
+```
+There is not any strong indication of dependence among $x_t$ for t = 1, …, n. This indicates that an ARIMA model is likely not needed.
+
+
+```{r}
+par(mfrow=c(1,2))
+acf(x = x^2, type = "correlation", main = 
+    expression(paste("Est. ACF for ", x^2)), ylim = 
+    c(-1,1), panel.first = grid(col = "gray", lty = 
+    "dotted"))
+pacf(x = x^2, main = expression(paste("Est. PACF for ", 
+    x^2)), ylim = c(-1,1), panel.first = grid(col = 
+    "gray", lty = "dotted"))
+par(mfrow = c(1,1))
+
+
+```
+
+There are significant ACF and PACF values for $x_t^2$. The patterns in these plots are similar to those for an AR(1). Therefore, an ARCH(1) model should be investigated.
+
+```{r}
+# garch(1,0)=grach(m,r)
+mod.fit <- garchFit(formula= ~ garch(1,0), data=x, include.mean = TRUE)
+summary(mod.fit)
+```
+
+- $\hat \mu=0.0004128$
+
+- $\hat \alpha_0=0.0966540$
+
+- $\hat \alpha_1=0.4244229$
+
+- $\sqrt{\hat Var(\hat \alpha_1)}=0.608$
+
+- t-statistics of $\alpha_1:z=\frac{0.4244}{0.0608}$
+
+- Jarque-Bera and Shapiro-Wilk tests are used to test normality
+
+$H_0: Normal$
+
+$H_1: Not \quad Normal$
+
+- `R` stand for residual itself, `Q(10)` means lags up to lag 10
+
+- `R^2` stands for squared residual
+
+Notes:
+
+- The `garchFit()` function fits the model.  The order of the model is given as **(m,r)** where m is the order of the ARCH part and r is order of the GARCH part. **BE CAREFUL** because textbooks and software are not consistent in their orderings. 
+- Use `trace = FALSE` to reduce the amount of information given when running `garchFit()`. 
+- A warning message is given when running `garchFit()`: 
+
+> Warning message:
+Using formula(x) is deprecated when x is a character vector of length > 1.
+  Consider formula(paste(x, collapse = " ")) instead.
+  
+Code within the function itself needs to be updated by its authors. 
+- The model for the data is 
+
+$x_t=0.0004128+w_t$ with $w_t\sim N(0, \hat \sigma^2_t), \hat \sigma_t^2=0.0967+0.4244y^2_{t-1}$, and $y_t = x_t - 0.0004128$.
+
+Equivalently, we could state the model as $y_t=\hat \sigma_t\epsilon_t$, where $\hat \sigma^2_t=0.0967+0.4244y^2_{t-1}, y_t=x_t-0.0004128$, and $\epsilon_t\sim N(0,1)$
+
+- Notice how close the parameter estimates are to the true parameters (use the standard error to help measure closeness).  
+- The standard tests for whether or not the $\alpha_0 = 0$ or $\alpha_1 = 0$ are given in the coefficients table of the output. Both are significantly different from 0 as would be expected.  Even though the output says “t value” and “Pr(>|t|)”, a normal distribution approximation is made to the sampling distribution of the test statistic. 
+- The Ljung-Box-Pierce test is the same test as discussed before. This test is performed upon the residuals (`R`) and squared residuals (`R^2`) for lags 10, 15, and 20. All of the p-values are larger indicating there is no dependence remaining in the residuals or squared residuals. 
+
+- A model can be fit to the original simulated data as well. The estimated model is $\hat \sigma_t^2=\hat \alpha_0+\hat \alpha_1\tilde y^2_{t-1}=0.0990+0.3550\tilde y^2_{t-1}$ with $\hat \mu = -0.01325$. The code for this estimation is within the program. 
+
+
+```{r}
+#Original series simulated
+  mod.fit.orig <- garchFit(formula = ~ garch(1, 0), data = save.y, trace = FALSE)
+  show(mod.fit.orig)
+```
+
+
+
+To view what is inside of `mod.fit`, we need to use the `slotNames()` function rather than the usual `names()` function.
+
+> Most of R and its corresponding packages are written in a form very similar to the S programming language. This language was first developed in the 1970s at Bell Laboratories with its main designer being John Chambers. Version 3 of S (S3) is emulated most by R, and this is what was used primarily before this example. Version 4 (S4) is used by the `fGarch` and `rugarch` packages. The components of an object in S4 are called “slots”. To access a slot, use the syntax `<object name>@<slot name>`.
+
+i.e., `@` in S4 plays as `$` in S3
+
+```{r}
+# doesn't work
+names(mod.fit)
+```
+
+```{r}
+slotNames(mod.fit)
+```
+
+
+```{r}
+tail(mod.fit@fitted)
+# these are just hat mu
+```
+
+- Recall $x_t=\mu_t+w_t$, so it estimates $\hat \mu$
+
+```{r}
+tail(mod.fit@residuals)
+```
+
+
+```{r}
+tail(x - mod.fit@fitted)
+```
+
+```{r}
+tail(residuals(object = mod.fit))
+```
+ 
+```{r}
+tail(mod.fit@sigma.t)
+```
+ 
+
+ 
+```{r}
+# hat sigma_t
+sqrt(0.0966540+0.4244229*(x[999]-0.0004128)^2)
+```
+ 
+```{r}
+tail(mod.fit@h.t)  #sigma.t^2 for us
+```
+ 
+```{r}
+tail(mod.fit@sigma.t^2)
+```
+ 
+```{r}
+mod.fit@fit$matcoef[,1] # matrix coefficient
+```
+ 
+```{r}
+e <- (x - mod.fit@fit$matcoef[1,1])/mod.fit@sigma.t
+tail(e)
+
+# Note that these residuals are different
+# There residuals are for the ARCH model part itself
+# i.e., e= hat epsilon
+```
+ 
+- Recall $y_t=\sigma_t\epsilon\implies \epsilon=y_t/\sigma_t$ 
+
+```{r}
+tail(residuals(object = mod.fit, standardize = TRUE))
+```
+
+```{r}
+# Can use residuals(object = mod.fit, standardize = TRUE) 
+# for e
+par(mfrow = c(1,2))
+acf(x = e, type = "correlation", lag.max = 20, ylim = 
+    c(-1,1), xlab = "h", main = "ARCH residual ACF") 
+pacf(x = e, lag.max = 20, ylim = c(-1,1), xlab = "h",
+    main = "ARCH residual PACF")
+par(mfrow = c(1,1))
+
+```
+
+Notes:
+
+- Notice the `“@fitted”` values are all equal to $\hat \mu = 0.00041$ Why? 
+- The `“@residuals”` values are the observed time series minus   .  
+- I found estimates of the residuals for the ARCH part of the model as $e_t =  y_t/\hat \sigma_t $. You can also obtain these as well by using the `residuals()` function with the `standardize = TRUE` argument value.
+- The ACF and PACF plots (not shown above) for $e_t$ do not show any significant autocorrelations or partial autocorrelations as expected.  
+
+The `plot()` function with the model fitting object leads to a number of plots that can be produced:
+
+```{r}
+plot(mod.fit, which =1)
+# Selection: 1
+```
+
+```{r}
+plot(mod.fit, which =5)
+# Selection: 5
+```
+
+```{r}
+plot(mod.fit, which =10)
+# Selection: 10
+```
+
+```{r}
+plot(mod.fit, which =11)
+# Selection: 11
+```
+
+```{r}
+plot(mod.fit, which=13)
+# Selection: 13
+```
+
+To produce just one plot, you can use `plot(mod.fit, which = 1)`, where the `which` argument corresponds to the plot number seen in the list.
+
+Forecasting can be done using the `predict()` function:
+
+```{r}
+# Forecasts 
+predict(object = mod.fit, n.ahead = 3, plot = TRUE, nx = 
+    3, conf = 0.95)
+
+```
+
+- $\tilde x^{1000}_{1001}=\hat \mu=0.0004128227$
+
+- $-1.08<x^{1000}_{1001}<1.07959$
+
+- Note that in the graph, 3 on the horizontal axis correponds to 1000, 4 corresponds to 1001,...
+
+How are these forecasts found?
+
+Note: m here represents the number of time points into the future for the forecast, not the order of the `GARCH()` model
+
+We started with $x_t$. There are no $\phi_i$ or $\theta_j$ parameters in the model so forecasted values are $\mu$. We also set $y_t = x_t – \mu$. Note that $\tilde y^n_{n+m}= E(y_{n+m} | I_n) = 0$. Thus, the forecasted value for $x_{n+m}$ is $\hat \mu=0.0004128$ and for $y_{n+m} = 0$. The variance needed for a CI given by $Var(x_{n+m}-\tilde x^n_{n+m})=Var(y_{n+m}-\tilde y^n_{n+m})$ because of the simplicity of the model. Then $Var(y_{n+m}-\tilde y^n_{n+m})=Var(\sigma_{n+m}\epsilon_{n+m})=\sigma^2_{n+m}$ because $y_{n+m}-\tilde y^n_{n+m}=\sigma_{n+m}\epsilon_{n+m}-0=\sigma_{n+m}\epsilon_{n+m}$
+
+Our model for $\sigma_t^2$ is $\sigma_t^2=\alpha_0+\alpha_1y_{t-1}^2$. Thus, $\sigma_{n+1}^2=\alpha_0+\alpha_1y^2_{n-1}$
+
+Substituting the parameter estimates and n = 1000, we obtain 
+
+```{r}
+0.0966540 + 0.4244229*(x[1000]-0.0004128)^2
+```
+
+```{r}
+sqrt(0.3031746)
+```
+
+
+for $\hat \sigma_{1001}^2$ or equivalently $\hat \sigma_{1001}=\sqrt{0.3032}=0.5506$, which matches the “standardDeviation” column in the output. 
+
+The $(1 - \alpha)100%$ C.I. for $x_{n+m}$ is $\tilde x^n_{n+m}\pm Z_{1-\alpha/2}\sqrt{Var(x_{n+m}-\tilde x^n_{n+m})}$
+
+Substituting the parameter estimates and n = 1000,
+
+```{r}
+sigma.1001 <- sqrt(0.0966540 + 0.4244229*(x[1000] - 0.0004128)^2)
+
+0.0004128 - qnorm(p=0.975)*sigma.1001
+0.0004128 + qnorm(p=0.975)*sigma.1001
+
+```
+
+which matches the output. 
+
+For m = 2, we have  $\sigma^2_{n+2}=\alpha_0+\alpha_1y^2_{n+1}$. We saw earlier in the course notes that $E(y_t^2|y_{t-1})= \alpha_0 + \alpha_1y^2_{t-1}$. Using this result, we can write $\sigma_{n+2}^2$ as $\sigma_{n+2}^2=\alpha_0+\alpha_1(\alpha_0+\alpha_1y^2_n)$
+
+We find $\hat \sigma_{1002}$ and the 95% confidence interval for $x_{1002}$ to be
+
+```{r}
+sigma.1002 <- sqrt(0.0966540 + 0.4244229 * sigma.1001^2)
+
+sigma.1002
+
+0.0004128-qnorm(p=0.975)*sigma.1002
+
+0.0004128 + qnorm(p=0.975)*sigma.1002
+```
+
+which matches the output. 
+
+
+The `rugarch` package’s data simulation function `ugarchsim()` needs to use a model fitting object from `ugarchfit()` to simulate data. Below is an example of how to fit a model to the original simulated data (`save.y`) and then to use the resulting model fit object to simulate data.
+
+
+```{r}
+library(rugarch)
+# garchOrder = c(m,r)
+# armaOrder = c(p, q) p = phi, q = theta
+spec <- ugarchspec(variance.model = list(model = 
+   "sGARCH", garchOrder = c(1,0)), mean.model = 
+    list(armaOrder = c(0, 0), include.mean = TRUE, arfima = 
+    FALSE))
+mod.fit <- ugarchfit(spec = spec, data = save.y)
+summary(mod.fit)
+
+```
+
+```{r}
+show(mod.fit)
+# need to use show for S4 instead of summary
+```
+
+Notes: 
+
+- The model specification is different from what we have seen so far. Notice the `arfima = FALSE` argument value. If one wanted to include an ARFIMA model for the original series, this where you can say TRUE. Notice the output says “ARFIMA(0,0,0)” model, but a regular ARIMA model is used unless the `arfima` argument is TRUE. 
+- Notice the use of `show()` rather than `summary()` to obtain a summary of the model fit. 
+- The ARCH(1) model is $y_t =  \hat \sigma_t\epsilon_t$ where $\hat \sigma_t^2=\hat \alpha_0+\hat \alpha_1y^2_{t-1}=0.0991+0.3558y^2_{t-1}$  and $y_t=x_t+0.013252$ . These estimates are VERY similar to those produced by `garchFit()`.    
+Below is an example of simulating new data from this model:
+
+```{r}
+set.seed(1828)
+x.sim <- ugarchsim(fit = mod.fit, n.sim = 1000)
+slotNames(x.sim)
+     
+head(x.sim@simulation$seriesSim)
+
+```
+
+When I try to fit the corresponding model to the data, the model does not converge! I was successful with other simulated data.
+
+## ARCH Models: ARIMA
+
+We previously defined an ARCH(m) model as
+
+$y_t = \sigma_t\epsilon_t$ where  $\sigma_t^2= \alpha_0 + \alpha_1y^2_{t-1}  + \alpha_2y^2_{t-2}  +…+ \alpha_my^2_{t-m}$  and $\epsilon_t \sim ind. N(0,1)$
+
+Conditions on the parameters are $\alpha_i \ge 0$ for all i = 1, …, m and $\alpha_1 + ... + \alpha_m < 1$.
+
+We could also incorporate ARIMA models with this too. For example, we could have 
+
+$\phi(B)(1-B)^dx_t=\theta(B)w_t$
+
+where $w_t\sim ind.(0, \sigma_t^2), \sigma_t^2=\alpha_0+\alpha_1y^2_{t-1}+...+\alpha_my^2_{t-m}$ and $y_t$ represents the residuals from the ARIMA model.
+
+Thus, non-stationarity in the variance can be taken care of by using ARCH models with an ARIMA model. 
+
+### Model Building
+
+1. Build an ARIMA model for the observed time series to remove any autocorrelation in the data. Refer to the residuals as $y_t$. 
+
+2. Examine the squared series, $y_t^2$, to check for heteroscedasticity. This can be done by doing an ACF and PACF plot of the $y_t^2$ values. Remember, we are constructing an AR-like model for $y_t^2$ . What would you expect the PACF to show if an ARCH model is needed? The Ljung-Box-Pierce test can also be performed on the $y_t^2$  values as well.  
+
+3. Decide on the order of the ARCH model for $y_t^2$  and perform maximum likelihood estimation of all parameters.  
+
+:::{.example}
+
+**U.S. GNP (GNP.R)**
+
+Shumway and Stoffer used ARIMA and ARCH models to examine a U.S. GNP data set with quarterly given values. An AR(1) model to the first differenced, log-transformed data was recommended originally by the authors prior to ARCH models being introduced. 
+
+We will estimate the AR(1) and ARCH model all at once using the `garchFit()` and `ugarchfit()` functions. 
+
+Let $x_t$ = GNP at time t for this problem. 
+
+```{r}
+library(astsa)
+head(gnp)
+tail(gnp)
+
+```
+
+```{r}
+x <- gnp
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+       "l", col = "red",  main = "GNP data")
+grid(col = "gray", lty = "dotted") 
+
+```
+
+There is non-stationarity with respect to the mean. Below are the first differences. 
+
+```{r}
+plot(x = diff(x = x, lag = 1, differences = 1), ylab = 
+    expression(x[t] - x[t-1]), xlab = "t", type = "l", col 
+    = "red", main = "First differences of GNP data")
+grid(col = "gray", lty = "dotted")
+
+```
+
+Shumway and Stoffer also work with the log transformation and make this transformation prior to the first differences. This corresponds to our earlier discussion of 
+
+$y_t=log(x_t)-log(x_{t-1})=log(x_t/x_{t-1})=log(current \quad value/ past \quad value)$
+
+being close to a “return” in an investment (although GNP is not an investment). Because I would like to replicate their example, I chose to do the same here for the remainder of this example. 
+
+Below is the estimate of the an AR(1) model along with the usual examinations of model fit. 
+
+```{r}
+# Note that we do differencing outside mod.fit
+gnpgr <- diff(x = log(gnp), lag = 1, differences = 1) 
+mod.fit.ar <- arima(x = gnpgr, order = c(1, 0, 0), 
+    include.mean = TRUE)  
+mod.fit.ar
+
+```
+
+```{r}
+source(file = "examine.mod.R")
+examine.mod(mod.fit.obj = mod.fit.ar, mod.name = 
+   "ARIMA(1,1,0)")
+
+```
+
+The estimated ARIMA model for the series is 
+
+$(1-0.3467B)(1-B)log(x_t)=0.0083+w_t$
+
+Note: 0.0083 represents the drift term.
+
+Notice the ACF and PACF plots of the residuals look like the corresponding plots for white noise. Also, notice the normal Q-Q shows the “fat tails” of the residual distribution. 
+
+The same model could be estimated using 
+
+```{r}
+mod.fit.ar <- arima(x = log(x), order = c(1, 1, 0), xreg 
+      = 1:length(x))
+
+```
+
+
+However, we will not be able to include a value for d in `garchFit()` or `ugarchfit()` when we include the ARCH model component. So, the code used here allows us to see the model fitting process without d. 
+
+Let $y_t$ denote the residuals from the ARIMA model’s fit.  
+
+```{r}
+#Examine ACF and PACF of the squared residuals
+y <- as.numeric(mod.fit.ar$residuals) #Without the 
+    #as.numeric() the values are not spaced correctly 
+    #on the plots
+par(mfrow = c(1,2))
+acf(x = y^2, type = "correlation", lag.max = 20, xlim = 
+    c(1,20), ylim = c(-1,1), xlab = "h", main = 
+    expression(paste("Estimated ACF for ", y[t]^2)))
+pacf(x = y^2, lag.max = 20, ylim = c(-1,1), xlim = 
+    c(1,20), xlab = "h", main = expression(paste( 
+    "Estimated PACF for ", y[t]^2)))
+par(mfrow = c(1,1))
+
+```
+
+There are only marginally significant values in the ACF and PACF for the squared residuals. Shumway and Stoffer say, “it appears there may be some dependence, albeit small, left in the residuals.” I say, “Maybe… “.  Following their example, we can fit an ARMA(1,0) AND ARCH(1) model simultaneously using the `garchFit()` function of the `fGarch` package. Below is the code and output from `garchFit()`: 
+
+```{r}
+library(fGarch)
+# AR(1) and ARCH(1)
+mod.fit <- garchFit(formula = ~ arma(1,0) + garch(1, 0),   
+    data = gnpgr)
+summary(mod.fit)
+```
+
+- $\hat \phi_1=3.666e-01$
+
+- $\hat \alpha_1=1.945e-01$
+
+```{r}
+par(mfrow = c(1,1))
+plot(mod.fit, which = 13)
+
+```
+
+Notes:
+
+- The estimated model is $(1 – 0.3666B)(1 – B)log(x_t) = 0.0053 + w_t$ with $\hat \sigma_t^2=\hat \alpha_0+\hat \alpha_1y^2_{t-1}=0.00007331+0.1945y^2_{t-1}$ 
+
+Note: 0.0053 represents the drift term.
+
+- The hypothesis test for $\alpha_1 = 0$ vs. $\ne 0$ has a p-value of 0.0418 indicating that there is marginal evidence that $\alpha_1  \ne 0$.  
+
+- What do the Jarque Bera Test and the Ljung-Box test suggest about the model? The QQ-plot for the ARCH model residuals suggests a similar conclusion. Shumway and Stoffer mention the problems, but do not explore any resolutions. 
+
+- Why doesn’t `garchFit()` or `ugarchfit()` allow for a value of d? The reason may be due to an investment return being more important that the actual value of an investment on a per share/unit basis. Of course, GNP for this example does not correspond to an investment.

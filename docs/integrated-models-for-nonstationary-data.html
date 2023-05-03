@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 13 Integrated Models for Nonstationary Data | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 13 Integrated Models for Nonstationary Data | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 13 Integrated Models for Nonstationary Data | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="acf-and-pacf-for-arma-models.html"/>
+<link rel="next" href="estimation.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="integrated-models-for-nonstationary-data" class="section level1 hasAnchor" number="13">
+<h1><span class="header-section-number">Chapter 13</span> Integrated Models for Nonstationary Data<a href="integrated-models-for-nonstationary-data.html#integrated-models-for-nonstationary-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We have assumed that <span class="math inline">\(x_t\)</span> is stationary so far. What if <span class="math inline">\(x_t\)</span> is not stationary in the mean? Use differencing to make a transformation stationary in the mean.</p>
+<p><strong>Autoregressive Integrated Moving Average model</strong></p>
+<ul>
+<li>ARIMA(p,d,q) – p is AR order, d is differencing order, and q is MA order</li>
+<li><span class="math inline">\(\phi(B)(1-B)^dx_t = \theta(B)w_t\)</span> where <span class="math inline">\(w_t \sim ind. N(0,\sigma_w^2)\)</span></li>
+<li>Let <span class="math inline">\((1-B)^dx_t = y_t.\)</span> Then <span class="math inline">\(\phi(B)y_t = \theta(B)w_t\)</span> is an ARMA(p,q) model.<br />
+</li>
+<li>The “integrated” name results from transforming back from the <span class="math inline">\(y_t\)</span> to <span class="math inline">\(x_t\)</span> by “integrating” (put together) or “summing” the <span class="math inline">\(y_t\)</span>’s. With first differences, we have <span class="math display">\[\sum_{k=1}^{t}y_k=\sum_{k=1}^{t}x_k-x_{k-1}=x_t-x_0=x_t\]</span> if <span class="math inline">\(x_0=0\)</span></li>
+</ul>
+<p>Because higher order differencing is the result of continuing to apply first differencing, the same process would be done in those cases.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-41" class="example"><strong>Example 13.1  </strong></span><strong>ARIMA(1,1,1) with <span class="math inline">\(\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200\)</span> (arima111_sim.R)</strong></p>
+<p><span class="math inline">\(\phi(B)(1-B^d)x_t=\theta(B)w_t,\)</span> where <span class="math inline">\(w_t \sim ind.N(0.9)\)</span></p>
+<p>This can be rewritten as</p>
+<p><span class="math display">\[(1-\phi_1B)(1-B)x_t=(1+\theta_1B)w_t\\
+\iff (1-\phi_1B)(x_t-x_{t-1})=(1+\theta_1B)w_t\\
+\iff x_t-x_{t-1}-\phi_1x_{t-1}+\phi_1x_{t-2}=w_t+\theta_1w_{t-1}\\
+\iff x_t=(1+\phi_1)x_{t-1}-\phi_1x_{t-2}+w_t+\theta_1w_{t-1}\]</span></p>
+<p>Using the above representation with only <span class="math inline">\(x_t\)</span> on the left side, one could use the <code>for loop</code> to simulate observations from this model. Instead, one can use <code>arima.sim()</code> to do it as follows,</p>
+<div class="sourceCode" id="cb429"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb429-1"><a href="integrated-models-for-nonstationary-data.html#cb429-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Data could be simulated using the following code - notice the use of the order option.  </span></span>
+<span id="cb429-2"><a href="integrated-models-for-nonstationary-data.html#cb429-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb429-3"><a href="integrated-models-for-nonstationary-data.html#cb429-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6632</span>)</span>
+<span id="cb429-4"><a href="integrated-models-for-nonstationary-data.html#cb429-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb429-5"><a href="integrated-models-for-nonstationary-data.html#cb429-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ar=</span><span class="fl">0.7</span>, <span class="at">ma=</span><span class="fl">0.4</span>), <span class="at">n=</span><span class="dv">200</span>, <span class="at">rand.gen=</span>rnorm, <span class="at">sd=</span><span class="dv">3</span>)</span></code></pre></div>
+<p>Notice the addition of the <code>order</code> option to specify p, d, and q.</p>
+<p>I had already simulated observations from the model in the past and put them in the comma delimited file. I am going to use this data for the rest of the example.</p>
+<div class="sourceCode" id="cb430"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb430-1"><a href="integrated-models-for-nonstationary-data.html#cb430-1" aria-hidden="true" tabindex="-1"></a>arima111 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&quot;arima111.csv&quot;</span>)</span>
+<span id="cb430-2"><a href="integrated-models-for-nonstationary-data.html#cb430-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(arima111)</span></code></pre></div>
+<pre><code>##   time         x
+## 1    1 -143.2118
+## 2    2 -142.8908
+## 3    3 -138.0634
+## 4    4 -133.5038
+## 5    5 -132.7496
+## 6    6 -132.2910</code></pre>
+<div class="sourceCode" id="cb432"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb432-1"><a href="integrated-models-for-nonstationary-data.html#cb432-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(arima111)</span></code></pre></div>
+<pre><code>##     time         x
+## 195  195 -469.1263
+## 196  196 -476.6298
+## 197  197 -483.2368
+## 198  198 -483.9744
+## 199  199 -488.2191
+## 200  200 -488.4823</code></pre>
+<div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="integrated-models-for-nonstationary-data.html#cb434-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> arima111<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb435"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb435-1"><a href="integrated-models-for-nonstationary-data.html#cb435-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of the data</span></span>
+<span id="cb435-2"><a href="integrated-models-for-nonstationary-data.html#cb435-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.new(width = 8, height = 6, pointsize = 10)  </span></span>
+<span id="cb435-3"><a href="integrated-models-for-nonstationary-data.html#cb435-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb435-4"><a href="integrated-models-for-nonstationary-data.html#cb435-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb435-5"><a href="integrated-models-for-nonstationary-data.html#cb435-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb435-6"><a href="integrated-models-for-nonstationary-data.html#cb435-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ARIMA </span></span>
+<span id="cb435-7"><a href="integrated-models-for-nonstationary-data.html#cb435-7" aria-hidden="true" tabindex="-1"></a><span class="st">   model: &quot;</span>, (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.7</span><span class="sc">*</span>B)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>B)<span class="sc">*</span>x[t] <span class="sc">==</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span><span class="sc">*</span>B)<span class="sc">*</span>w[t])), </span>
+<span id="cb435-8"><a href="integrated-models-for-nonstationary-data.html#cb435-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb435-9"><a href="integrated-models-for-nonstationary-data.html#cb435-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb435-10"><a href="integrated-models-for-nonstationary-data.html#cb435-10" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="12-Integrated-ARIMA_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="integrated-models-for-nonstationary-data.html#cb436-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ACF and PACF of x_t</span></span>
+<span id="cb436-2"><a href="integrated-models-for-nonstationary-data.html#cb436-2" aria-hidden="true" tabindex="-1"></a><span class="co">#dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb436-3"><a href="integrated-models-for-nonstationary-data.html#cb436-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb436-4"><a href="integrated-models-for-nonstationary-data.html#cb436-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb436-5"><a href="integrated-models-for-nonstationary-data.html#cb436-5" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> </span>
+<span id="cb436-6"><a href="integrated-models-for-nonstationary-data.html#cb436-6" aria-hidden="true" tabindex="-1"></a>     <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated ACF plot </span></span>
+<span id="cb436-7"><a href="integrated-models-for-nonstationary-data.html#cb436-7" aria-hidden="true" tabindex="-1"></a><span class="st">     for &quot;</span>, x[t])))</span>
+<span id="cb436-8"><a href="integrated-models-for-nonstationary-data.html#cb436-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb436-9"><a href="integrated-models-for-nonstationary-data.html#cb436-9" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, </span>
+<span id="cb436-10"><a href="integrated-models-for-nonstationary-data.html#cb436-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated PACF plot for &quot;</span>, </span>
+<span id="cb436-11"><a href="integrated-models-for-nonstationary-data.html#cb436-11" aria-hidden="true" tabindex="-1"></a>      x[t])))</span>
+<span id="cb436-12"><a href="integrated-models-for-nonstationary-data.html#cb436-12" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb436-13"><a href="integrated-models-for-nonstationary-data.html#cb436-13" aria-hidden="true" tabindex="-1"></a><span class="co">#ACF and PACF of first differences</span></span>
+<span id="cb436-14"><a href="integrated-models-for-nonstationary-data.html#cb436-14" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), <span class="at">type =</span> </span>
+<span id="cb436-15"><a href="integrated-models-for-nonstationary-data.html#cb436-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">main =</span> </span>
+<span id="cb436-16"><a href="integrated-models-for-nonstationary-data.html#cb436-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated ACF plot for &quot;</span>, x[t],<span class="st">&quot;-&quot;</span>,x[t<span class="dv">-1</span>])))</span>
+<span id="cb436-17"><a href="integrated-models-for-nonstationary-data.html#cb436-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb436-18"><a href="integrated-models-for-nonstationary-data.html#cb436-18" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), lag.max </span>
+<span id="cb436-19"><a href="integrated-models-for-nonstationary-data.html#cb436-19" aria-hidden="true" tabindex="-1"></a>      <span class="ot">=</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb436-20"><a href="integrated-models-for-nonstationary-data.html#cb436-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated PACF plot for &quot;</span>, x[t],<span class="st">&quot;-&quot;</span>,x[t<span class="dv">-1</span>])))</span>
+<span id="cb436-21"><a href="integrated-models-for-nonstationary-data.html#cb436-21" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb436-22"><a href="integrated-models-for-nonstationary-data.html#cb436-22" aria-hidden="true" tabindex="-1"></a><span class="co">#True ACF and PACF for ARIMA(1,0,1) (without differences)</span></span>
+<span id="cb436-23"><a href="integrated-models-for-nonstationary-data.html#cb436-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb436-24"><a href="integrated-models-for-nonstationary-data.html#cb436-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fl">0.7</span>, <span class="at">ma =</span> <span class="fl">0.4</span>, <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> </span>
+<span id="cb436-25"><a href="integrated-models-for-nonstationary-data.html#cb436-25" aria-hidden="true" tabindex="-1"></a>      <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> </span>
+<span id="cb436-26"><a href="integrated-models-for-nonstationary-data.html#cb436-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">expression</span>(<span class="fu">rho</span>(h)), <span class="at">main =</span> <span class="st">&quot;True ACF for </span></span>
+<span id="cb436-27"><a href="integrated-models-for-nonstationary-data.html#cb436-27" aria-hidden="true" tabindex="-1"></a><span class="st">      ARIMA(1,0,1)&quot;</span>)</span>
+<span id="cb436-28"><a href="integrated-models-for-nonstationary-data.html#cb436-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb436-29"><a href="integrated-models-for-nonstationary-data.html#cb436-29" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb436-30"><a href="integrated-models-for-nonstationary-data.html#cb436-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb436-31"><a href="integrated-models-for-nonstationary-data.html#cb436-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fl">0.7</span>, <span class="at">ma =</span> <span class="fl">0.4</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, pacf </span>
+<span id="cb436-32"><a href="integrated-models-for-nonstationary-data.html#cb436-32" aria-hidden="true" tabindex="-1"></a>      <span class="ot">=</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, ylab </span>
+<span id="cb436-33"><a href="integrated-models-for-nonstationary-data.html#cb436-33" aria-hidden="true" tabindex="-1"></a>      <span class="ot">=</span> <span class="fu">expression</span>(phi1[hh]), <span class="at">main =</span> <span class="st">&quot;True ACF for </span></span>
+<span id="cb436-34"><a href="integrated-models-for-nonstationary-data.html#cb436-34" aria-hidden="true" tabindex="-1"></a><span class="st">      ARIMA(1,0,1)&quot;</span>)</span>
+<span id="cb436-35"><a href="integrated-models-for-nonstationary-data.html#cb436-35" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="12-Integrated-ARIMA_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb437"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb437-1"><a href="integrated-models-for-nonstationary-data.html#cb437-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of the first differences</span></span>
+<span id="cb437-2"><a href="integrated-models-for-nonstationary-data.html#cb437-2" aria-hidden="true" tabindex="-1"></a><span class="co">#dev.new(width = 8, height = 6, pointsize = 10)  </span></span>
+<span id="cb437-3"><a href="integrated-models-for-nonstationary-data.html#cb437-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb437-4"><a href="integrated-models-for-nonstationary-data.html#cb437-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb437-5"><a href="integrated-models-for-nonstationary-data.html#cb437-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), <span class="at">ylab =</span> </span>
+<span id="cb437-6"><a href="integrated-models-for-nonstationary-data.html#cb437-6" aria-hidden="true" tabindex="-1"></a>     <span class="fu">expression</span>(x[t] <span class="sc">-</span> x[t<span class="dv">-1</span>]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, col </span>
+<span id="cb437-7"><a href="integrated-models-for-nonstationary-data.html#cb437-7" aria-hidden="true" tabindex="-1"></a>      <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, <span class="at">main =</span>  <span class="st">&quot;Plot of data after first </span></span>
+<span id="cb437-8"><a href="integrated-models-for-nonstationary-data.html#cb437-8" aria-hidden="true" tabindex="-1"></a><span class="st">      differences&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> </span>
+<span id="cb437-9"><a href="integrated-models-for-nonstationary-data.html#cb437-9" aria-hidden="true" tabindex="-1"></a>     <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb437-10"><a href="integrated-models-for-nonstationary-data.html#cb437-10" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), <span class="at">pch =</span> </span>
+<span id="cb437-11"><a href="integrated-models-for-nonstationary-data.html#cb437-11" aria-hidden="true" tabindex="-1"></a>     <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="12-Integrated-ARIMA_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<p>Notes:</p>
+<ul>
+<li>The <span class="math inline">\(x_t vs. t\)</span> plot shows characteristics of a nonstationary in the mean time series.<br />
+</li>
+<li>The ACF plot shows very large autocorrelations. Remember that this is a characteristic of a nonstationary in the mean time series.<br />
+</li>
+<li>After first differences, the ACF and PACF look like the ACF and PACF from an ARMA(1, 1) with <span class="math inline">\(\phi_1 = 0.7\)</span> and <span class="math inline">\(\theta_1 = 0.4\)</span>. The plot of the first differences themselves now look like a sample from a stationary process.<br />
+</li>
+<li>While we have not talked about how to estimate model parameters, we can still take a quick look at what if the parameters are estimated. The <code>arima()</code> function in R can do it.</li>
+</ul>
+<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="integrated-models-for-nonstationary-data.html#cb438-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model</span></span>
+<span id="cb438-2"><a href="integrated-models-for-nonstationary-data.html#cb438-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb438-3"><a href="integrated-models-for-nonstationary-data.html#cb438-3" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb438-4"><a href="integrated-models-for-nonstationary-data.html#cb438-4" aria-hidden="true" tabindex="-1"></a>mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1))
+## 
+## Coefficients:
+##          ar1     ma1
+##       0.6720  0.4681
+## s.e.  0.0637  0.0904
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1021.36</code></pre>
+<p>These estimates are relatively close to the values used in <code>arima.sim()</code>!</p>
+<div class="sourceCode" id="cb440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb440-1"><a href="integrated-models-for-nonstationary-data.html#cb440-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Covariance matrix</span></span>
+<span id="cb440-2"><a href="integrated-models-for-nonstationary-data.html#cb440-2" aria-hidden="true" tabindex="-1"></a>  mod.fit<span class="sc">$</span>var.coef</span></code></pre></div>
+<pre><code>##              ar1          ma1
+## ar1  0.004060990 -0.003341907
+## ma1 -0.003341907  0.008175261</code></pre>
+<div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="integrated-models-for-nonstationary-data.html#cb442-1" aria-hidden="true" tabindex="-1"></a> <span class="co">#Test statistic for Ho: phi1 = 0 vs. Ha: phi1 ≠ 0</span></span>
+<span id="cb442-2"><a href="integrated-models-for-nonstationary-data.html#cb442-2" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> mod.fit<span class="sc">$</span>coef[<span class="dv">1</span>]<span class="sc">/</span><span class="fu">sqrt</span>(mod.fit<span class="sc">$</span>var.coef[<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb442-3"><a href="integrated-models-for-nonstationary-data.html#cb442-3" aria-hidden="true" tabindex="-1"></a>  z</span></code></pre></div>
+<pre><code>##      ar1 
+## 10.54508</code></pre>
+<div class="sourceCode" id="cb444"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb444-1"><a href="integrated-models-for-nonstationary-data.html#cb444-1" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> z, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## ar1 
+##   0</code></pre>
+<div class="sourceCode" id="cb446"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb446-1"><a href="integrated-models-for-nonstationary-data.html#cb446-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Test statistic for Ho: theta1 = 0 vs. Ha: theta1 &lt;&gt; 0</span></span>
+<span id="cb446-2"><a href="integrated-models-for-nonstationary-data.html#cb446-2" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> mod.fit<span class="sc">$</span>coef[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">sqrt</span>(mod.fit<span class="sc">$</span>var.coef[<span class="dv">2</span>,<span class="dv">2</span>])</span>
+<span id="cb446-3"><a href="integrated-models-for-nonstationary-data.html#cb446-3" aria-hidden="true" tabindex="-1"></a>  z</span></code></pre></div>
+<pre><code>##      ma1 
+## 5.177294</code></pre>
+<div class="sourceCode" id="cb448"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb448-1"><a href="integrated-models-for-nonstationary-data.html#cb448-1" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> <span class="fu">abs</span>(z), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>##          ma1 
+## 2.251269e-07</code></pre>
+<div class="sourceCode" id="cb450"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb450-1"><a href="integrated-models-for-nonstationary-data.html#cb450-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># confidence interval</span></span>
+<span id="cb450-2"><a href="integrated-models-for-nonstationary-data.html#cb450-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">confint</span>(<span class="at">object =</span> mod.fit, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<pre><code>##         2.5 %    97.5 %
+## ar1 0.5470940 0.7968949
+## ma1 0.2909019 0.6453306</code></pre>
+<div class="sourceCode" id="cb452"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb452-1"><a href="integrated-models-for-nonstationary-data.html#cb452-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Shows how to use the xreg option</span></span>
+<span id="cb452-2"><a href="integrated-models-for-nonstationary-data.html#cb452-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb452-3"><a href="integrated-models-for-nonstationary-data.html#cb452-3" aria-hidden="true" tabindex="-1"></a><span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">xreg =</span> <span class="fu">rep</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">times =</span> <span class="fu">length</span>(x)))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1), xreg = rep(x = 1, times = length(x)))
+## 
+## Coefficients:</code></pre>
+<pre><code>## Warning in sqrt(diag(x$var.coef)): NaNs produced</code></pre>
+<pre><code>##          ar1     ma1  rep(x = 1, times = length(x))
+##       0.6720  0.4681                      -243.5336
+## s.e.  0.0637  0.0904                            NaN
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1023.36</code></pre>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="acf-and-pacf-for-arma-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="estimation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

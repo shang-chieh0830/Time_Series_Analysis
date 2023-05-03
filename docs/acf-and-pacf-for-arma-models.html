@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 12 ACF and PACF for ARMA models | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 12 ACF and PACF for ARMA models | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 12 ACF and PACF for ARMA models | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="arma.html"/>
+<link rel="next" href="integrated-models-for-nonstationary-data.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="acf-and-pacf-for-arma-models" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">Chapter 12</span> ACF and PACF for ARMA models<a href="acf-and-pacf-for-arma-models.html#acf-and-pacf-for-arma-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We will examine the ACF and PACF (a new function) for a specific ARMA process. We can compare these values to their corresponding estimated values from an observed time series. Values and patterns that tend to match the best between the ARMA model and the observed time series suggest a particular model to use for the data.</p>
+<div id="acf-for-maq" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> ACF for MA(q)<a href="acf-and-pacf-for-arma-models.html#acf-for-maq" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below is the derivation</p>
+<p><span class="math display">\[x_t=\theta(B)w_t\\
+=(1+\theta_1B+\theta_2B^2+...+\theta_qB^q)\\
+=\sum_{j=0}^{q}\theta_jB^jw_t\]</span> with <span class="math inline">\(\theta_0=1\)</span> and <span class="math inline">\(w_t\sim ind(0,\sigma_w^2)\)</span></p>
+<p>Note that <span class="math inline">\(\gamma(h)=Cov(x_t,x_{t+h})=E(x_tx_{t+h})-E(x_t)E(x_{t+h})=E(x_tx_{t+h})\)</span> since <span class="math inline">\(E(x_t)=E(x_{t+h})=0\)</span></p>
+<p>When 0 <span class="math inline">\(\le\)</span> h <span class="math inline">\(\le\)</span> q,</p>
+<p><span class="math display">\[E(x_tx_{t+h})\\
+=E[(\sum_{i=0}^{q}\theta_iB^iw_t)(\sum_{j=0}^{q}\theta_jB^jw_{t+h})]\\
+=E[\sum_{i=0}^{q}\sum_{j=0}^{q}\theta_i\theta_jw_{t-i}w_{t+h-j}]\\
+=\sum_{i=0}^{q}\sum_{j=0}^{q}\theta_i\theta_jE[w_{t-i}w_{t+h-j}]\\
+=\sigma_w^2\sum_{i=0}^{q-h}\theta_i\theta_{i+h}\]</span></p>
+<p>The last term comes about because <span class="math inline">\(E(w_{t-i}w_{t+h-j}) = 0\)</span> when -i <span class="math inline">\(\ne\)</span> h-j and <span class="math inline">\(E(w_{t-i}w_{t+h-j}) = E(w_{t-i}^2) = \sigma_w^2\)</span> when -i = h-j <span class="math inline">\(\implies\)</span> j = i+h. One can write out the indices for the summation and then try h = 0, h = 1, … to see there are q - h pairs of indices that match up each time.</p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\gamma(h)=
+\begin{cases}
+    \sigma_w^2\sum_{i=0}^{q-h}\theta_i\theta_{i+h} &amp; \text{if } 0 \le h \le q \\
+    \ 0 &amp; \text{if } h&gt;q \\
+\end{cases}
+\]</span></p>
+<p>Note that <span class="math inline">\(\gamma(0)=\sigma_w^2\sum_{i=0}^{q}\theta_i^2.\)</span> The ACF is</p>
+<p><span class="math display">\[
+\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\
+\begin{cases}
+    \frac{\sum_{i=0}^{q-h}\theta_i\theta_{i+h}}{\sum_{i=0}^{q}\theta_i^2} &amp; \text{if } 0 \le h \le q \\
+    \ 0 &amp; \text{if } h&gt;q \\
+\end{cases}
+\]</span></p>
+<p>Notes:</p>
+<ul>
+<li><p>This derivation could have been directly from the linear process result examined earlier; where it can be shown that <span class="math inline">\(\gamma(h)=\sigma_w^2\sum_{-\infty}^{\infty}\psi_{j+h}\psi_j\)</span> for h <span class="math inline">\(\ge\)</span> 0.</p></li>
+<li><p>For a MA(1): <span class="math inline">\(\gamma(h)=\sigma_w^2\sum_{i=0}^{1-h}\theta_i\theta_{i-h}\)</span> for h = 0, 1. Then</p>
+<ul>
+<li><span class="math inline">\(\gamma(0) =\sigma_w^2(\theta_0^2+\theta_1^2)=\sigma_w^2(1+\theta_1^2)\)</span> where <span class="math inline">\(\theta_0 = 1\)</span>,</li>
+<li><span class="math inline">\(\gamma(1) =\sigma_w^2(\theta_0\theta_1)=\sigma_w^2\theta_1\)</span>, and<br />
+</li>
+<li><span class="math inline">\(\gamma(h) = 0\)</span> for h &gt; 1.<br />
+</li>
+<li>The ACF is <span class="math inline">\(\rho(0) = 1, \rho(1) =\frac{\theta_1}{1+\theta_1^2},\)</span> and <span class="math inline">\(\rho(h) = 0\)</span> for h &gt; 1.<br />
+</li>
+<li>Plots from ma1_sim.R using MA(1):</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb375-1"><a href="acf-and-pacf-for-arma-models.html#cb375-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8199</span>)</span>
+<span id="cb375-2"><a href="acf-and-pacf-for-arma-models.html#cb375-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.7</span>)), <span class="at">n =</span> <span class="dv">100</span>, <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb375-3"><a href="acf-and-pacf-for-arma-models.html#cb375-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb375-4"><a href="acf-and-pacf-for-arma-models.html#cb375-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.new</span>(<span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">pointsize =</span> <span class="dv">10</span>)  <span class="co">#Opens up wider plot window than the default (good for time series plots)</span></span>
+<span id="cb375-5"><a href="acf-and-pacf-for-arma-models.html#cb375-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>),</span>
+<span id="cb375-6"><a href="acf-and-pacf-for-arma-models.html#cb375-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(x[t] <span class="sc">==</span> w[t] <span class="sc">+</span> <span class="fl">0.7</span><span class="sc">*</span>w[t<span class="dv">-1</span>], <span class="st">&quot; where &quot;</span>, w[t], </span>
+<span id="cb375-7"><a href="acf-and-pacf-for-arma-models.html#cb375-7" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot; ~ ind.N(0,100)&quot;</span>)), </span>
+<span id="cb375-8"><a href="acf-and-pacf-for-arma-models.html#cb375-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col=</span><span class="st">&quot;gray&quot;</span>,<span class="at">lty=</span><span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb375-9"><a href="acf-and-pacf-for-arma-models.html#cb375-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb375-10"><a href="acf-and-pacf-for-arma-models.html#cb375-10" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb376"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb376-1"><a href="acf-and-pacf-for-arma-models.html#cb376-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>),<span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##      0      1      2      3      4      5      6      7      8      9     10 
+## 1.0000 0.4698 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 
+##     11     12     13     14     15     16     17     18     19     20 
+## 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000</code></pre>
+<div class="sourceCode" id="cb378"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb378-1"><a href="acf-and-pacf-for-arma-models.html#cb378-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>),<span class="dv">4</span>) </span></code></pre></div>
+<pre><code>##       0       1       2       3       4       5       6       7       8       9 
+##  1.0000 -0.4698  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000 
+##      10      11      12      13      14      15      16      17      18      19 
+##  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000 
+##      20 
+##  0.0000</code></pre>
+<div class="sourceCode" id="cb380"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb380-1"><a href="acf-and-pacf-for-arma-models.html#cb380-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb380-2"><a href="acf-and-pacf-for-arma-models.html#cb380-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb380-3"><a href="acf-and-pacf-for-arma-models.html#cb380-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb380-4"><a href="acf-and-pacf-for-arma-models.html#cb380-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb380-5"><a href="acf-and-pacf-for-arma-models.html#cb380-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ACF for MA(1) with &quot;</span>, theta[<span class="dv">1</span>] <span class="sc">==</span> <span class="fl">0.7</span>)))</span>
+<span id="cb380-6"><a href="acf-and-pacf-for-arma-models.html#cb380-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb380-7"><a href="acf-and-pacf-for-arma-models.html#cb380-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb380-8"><a href="acf-and-pacf-for-arma-models.html#cb380-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb380-9"><a href="acf-and-pacf-for-arma-models.html#cb380-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb380-10"><a href="acf-and-pacf-for-arma-models.html#cb380-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ACF for MA(1) with &quot;</span>, theta[<span class="dv">1</span>] <span class="sc">==</span> <span class="sc">-</span><span class="fl">0.7</span>)))</span>
+<span id="cb380-11"><a href="acf-and-pacf-for-arma-models.html#cb380-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="acf-and-pacf-for-arma-models.html#cb381-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb381-2"><a href="acf-and-pacf-for-arma-models.html#cb381-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>),<span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##  [1]  0.4698 -0.2832  0.1856 -0.1260  0.0869 -0.0604  0.0421 -0.0294  0.0206
+## [10] -0.0144  0.0101 -0.0071  0.0049 -0.0035  0.0024 -0.0017  0.0012 -0.0008
+## [19]  0.0006 -0.0004</code></pre>
+<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="acf-and-pacf-for-arma-models.html#cb383-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>),<span class="dv">4</span>) </span></code></pre></div>
+<pre><code>##  [1] -0.4698 -0.2832 -0.1856 -0.1260 -0.0869 -0.0604 -0.0421 -0.0294 -0.0206
+## [10] -0.0144 -0.0101 -0.0071 -0.0049 -0.0035 -0.0024 -0.0017 -0.0012 -0.0008
+## [19] -0.0006 -0.0004</code></pre>
+<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="acf-and-pacf-for-arma-models.html#cb385-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb385-2"><a href="acf-and-pacf-for-arma-models.html#cb385-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb385-3"><a href="acf-and-pacf-for-arma-models.html#cb385-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb385-4"><a href="acf-and-pacf-for-arma-models.html#cb385-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi[hh]),</span>
+<span id="cb385-5"><a href="acf-and-pacf-for-arma-models.html#cb385-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;PACF for MA(1) with &quot;</span>, theta[<span class="dv">1</span>] <span class="sc">==</span> <span class="fl">0.7</span>)))</span>
+<span id="cb385-6"><a href="acf-and-pacf-for-arma-models.html#cb385-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb385-7"><a href="acf-and-pacf-for-arma-models.html#cb385-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb385-8"><a href="acf-and-pacf-for-arma-models.html#cb385-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb385-9"><a href="acf-and-pacf-for-arma-models.html#cb385-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi[hh]),</span>
+<span id="cb385-10"><a href="acf-and-pacf-for-arma-models.html#cb385-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;PACF for MA(1) with &quot;</span>, theta[<span class="dv">1</span>] <span class="sc">==</span> <span class="sc">-</span><span class="fl">0.7</span>)))</span>
+<span id="cb385-11"><a href="acf-and-pacf-for-arma-models.html#cb385-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb385-12"><a href="acf-and-pacf-for-arma-models.html#cb385-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<ul>
+<li>Suppose you observed a time series. The estimated values of the ACF are <span class="math inline">\(\hat{\rho}(1) \ne\)</span> 0 and <span class="math inline">\(\hat{\rho}(h) \approx\)</span> 0 for h &gt; 1. What may be a good model for the data? MA(1)</li>
+<li>For a MA(2):<span class="math inline">\(\gamma(h)=\sigma_w^2\sum_{i=0}^{2-h}\theta_i\theta_{i+h}\)</span>. Then
+<ul>
+<li><span class="math inline">\(\gamma(0) = \sigma_w^2(1+\theta_1^2+\theta_2^2)\)</span>,</li>
+<li><span class="math inline">\(\gamma(1) = \sigma_w^2(\theta_1+\theta_1\theta_2)\)</span>,</li>
+<li><span class="math inline">\(\gamma(2) = \sigma_w^2\theta_2\)</span>, and</li>
+<li><span class="math inline">\(\gamma(h) = 0\)</span> for h&gt;2.<br />
+</li>
+<li>The ACF is <span class="math inline">\(\rho(0) = 1\)</span>, <span class="math inline">\(\rho(1) = \frac{\theta_1+\theta_1\theta_2}{1+\theta_1^2+\theta_2^2}\)</span>, <span class="math inline">\(\rho(2) = \frac{\theta_2}{1+\theta_1^2+\theta_2^2}\)</span>, and <span class="math inline">\(\rho(h) = 0\)</span> for h &gt; 2.<br />
+</li>
+</ul></li>
+<li>For a MA(q): <span class="math inline">\(\rho(h) = 0\)</span> for h &gt; q.<br />
+</li>
+<li>Suppose you observed a time series. The estimated values of the ACF are <span class="math inline">\(\hat{\rho}(1) \ne\)</span> 0,<span class="math inline">\(\hat{\rho}(2) \ne\)</span> 0, and <span class="math inline">\(\hat{\rho}(h) \approx\)</span> 0 for h &gt; 2. What may be a good model for the data? MA(2)</li>
+</ul>
+</div>
+<div id="acf-for-casual-armapq" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> ACF for casual ARMA(p,q)<a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below is the derivation.</p>
+<p>First, rewrite the model as an infinite order MA!</p>
+<p><span class="math display">\[\phi(B)x_t = \theta(B)w_t \implies x_t = \frac{\theta(B)}{\phi(B)}w_t \implies x_t = \psi(B)w_t\]</span></p>
+<p>where <span class="math inline">\(w_t \sim ind(0,\sigma_w^2)\)</span> for t = 1, …, n</p>
+<p><span class="math inline">\(\psi(B) = 1 + B\psi_1 + B^2\psi_2 + …\)</span></p>
+<p>We can re-write the model as <span class="math display">\[x_t=\sum_{i=0}^{\infty}\psi_iB^iw_t\]</span> with <span class="math inline">\(\psi_0=1\)</span></p>
+<p>Note that <span class="math inline">\(E(x_t)=0\)</span>.</p>
+<p>Then <span class="math display">\[\gamma(h)=Cov(x_t,x_{t+h})=E(x_tx_{t+h})\\
+=E[(\sum_{i=0}^{\infty}\psi_iB^iw_t)(\sum_{j=0}^{\infty}\psi_jB^jw_{t+h})]\\
+E[\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}\psi_i\psi_jw_{t-i}w_{t+h-j}]\\
+=\sum_{i=0}^{\infty}\sum_{j=0}^{\infty}\psi_i\psi_jE(w_{t-i}w_{t+h-j})\\
+=\sigma_w^2\sum_{i=0}^{\infty}\psi_i\psi_{i+h}\]</span></p>
+<p>because <span class="math inline">\(E(w_{t-i}w_{t+h-j})=0\)</span> when -i <span class="math inline">\(\ne\)</span> h-j and <span class="math inline">\(E(w_{t-i}w_{t+h-j})=E(w_{t-i}^2)=\sigma_w^2\)</span> when -i=h-j <span class="math inline">\(\implies\)</span> j=i+h</p>
+<p>Look how similar this is to the proof for MA(q) and for a linear process in general!</p>
+<p>To find the autocovariance function for any ARMA process, we can transform the model into an infinite order MA and find the <span class="math inline">\(\psi\)</span>’s!</p>
+<p>Another interesting way to solve for the autocovariance function:</p>
+<p><span class="math display">\[x_t=\sum_{j=1}^{p}\phi_jB^jx_t+\sum_{j=0}^{q}\theta_jB^jw_t\\
+=\sum_{j=1}^{p}\phi_jx_{t-j}+\sum_{j=0}^{q}\theta_jw_{t-j}\]</span> where <span class="math inline">\(\phi_0=1\)</span> and <span class="math inline">\(\theta_0=1\)</span></p>
+<p><span class="math display">\[\gamma(h)=Cov(x_{t+h},x_t)\\
+=E[(\sum_{j=1}^{p}\phi_jx_{t+h-j}+\sum_{j=0}^{q}\theta_jw_{t+h-j})x_t]\]</span></p>
+<p>Because <span class="math display">\[E(x_t)=0, \phi(B)x_t=\theta(B)w_t\iff x_t=\phi_1x_{t-1}+...+\phi_px_{t-p}+w_t+\theta_1w_{t-1}+...+\theta_qw_{t-q}\\
+\implies x_{t+h}=\sum_{j=1}^{p}\phi_jx_{t+h-j}+\sum_{j=0}^{q}\theta_jw_{t+h-j}\]</span></p>
+<p>Then <span class="math display">\[\gamma(h)\\
+=E(\sum_{j=1}^{p}\phi_jx_tx_{t+h-j})+E(\sum_{j=0}^{q}\theta_jx_tw_{t+h-j})\\
+=\sum_{j=1}^{p}\phi_jE(x_tx_{t+h-j})+\sum_{j=0}^{q}\theta_jE(x_tw_{t+h-j})\\
+=\sum_{j=1}^{p}\phi_j\gamma(h-j)+\sum_{j=0}^{q}\theta_jE(w_{t+h-j}\sum_{i=0}^{\infty}\psi_iw_{t-i})\]</span> because <span class="math inline">\(\gamma(h-j)=E(x_tx_{t+h-j})-E(x_t)E(x_{t+h-j})=E(x_tx_{t+h-j})-0\)</span> and <span class="math inline">\(x_t=\psi(B)w_t\)</span></p>
+<p>So <span class="math display">\[\gamma(h)\\
+=\sum_{j=1}^{p}\phi_j\gamma(h-j)+\sigma_w^2\sum_{j=h}^{q}\theta_j\psi_{j-h}\]</span> for h <span class="math inline">\(\ge\)</span> 0, because we only need the non-zero element of <span class="math inline">\(E(w_{t+h-j}\sum_{i=0}^{\infty}\psi_iw_{t-i})\)</span> occurs when -i = h-j <span class="math inline">\(\iff\)</span> i = j-h and <span class="math inline">\(\psi_i = 0\)</span> for i &lt; 0</p>
+<p>Thus, <span class="math inline">\(\gamma(h)=\sum_{j=1}^{p}\phi_j\gamma(h-j)+\sigma_w^2\sum_{j=h}^{q}\theta_j\psi_{j-h}\)</span> for <span class="math inline">\(0 \le h&lt;max(p, q+1)\)</span> and <span class="math inline">\(\gamma(h)=\sum_{j-1}^{p}\phi_j\gamma(h-j)\)</span> for <span class="math inline">\(h \ge max(p,q+1)\)</span></p>
+<p>Note: Dividing the above by <span class="math inline">\(\gamma(0)\)</span> produces <span class="math inline">\(\rho(h)\)</span>!</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-35" class="example"><strong>Example 12.1  </strong></span><strong>ACF from casual ARMA(1,1) </strong></p>
+<ul>
+<li><p><span class="math inline">\((1-B\phi_1)x_t = (1+\theta_1B)w_t\)</span> where <span class="math inline">\(w_t\sim ind.(0, \sigma_w^2)\)</span> for t = 1, …, n</p></li>
+<li><p>Note that <span class="math inline">\(x_t=\frac{1+\theta_1B}{1-\phi_1B}w_t\)</span> can be rewritten as <span class="math inline">\(x_t = \psi(B)w_t.\)</span> Then <span class="math inline">\((1+\psi_1B+\psi_2B^2+…)(1-\phi_1B) = 1+\theta_1B\)</span>. By multiplying out, we obtain</p></li>
+</ul>
+<p><span class="math display">\[1 + \psi_1B + \psi_2B^2 + …
+-\phi_1B - \phi_1\psi_1B^2 - \phi_1\psi_2B^3 - … = 1+\theta_1B\]</span></p>
+<p>Equating terms produces</p>
+<p><span class="math inline">\(B: \theta_1=\psi_1-\phi_1 \implies \psi_1=\theta_1+\phi_1\)</span></p>
+<p><span class="math inline">\(B^2: 0=\psi_2-\phi_1\psi_1 \implies \psi_2= \phi_1(\theta_1+\phi_1)\)</span></p>
+<p><span class="math inline">\(B^3: 0=\psi_3-\phi_1\psi_2 \implies \psi_3= \phi_1[\phi_1(\theta_1+\phi_1)] = \phi_1^2(\theta_1+\phi_1)\)</span></p>
+<p>We can use this result to find the autocovariances:</p>
+<p><span class="math inline">\(\gamma(h)=\sigma_w^2\sum_{i=0}^{\infty}\psi_i\psi_{i+h}\)</span></p>
+<p><span class="math display">\[\gamma(0)=\sigma_w^2\sum_{i=0}^{\infty}\psi_i\psi_{i+0}\\
+=\sigma_w^2[1+(\theta_1+\phi_1)^2+\phi_1^2(\theta_1+\phi_1)^2+\phi_1^4(\theta_1+\phi_1)^2+...]\\
+=\sigma_w^2[1+\frac{(\theta_1+\phi_1)^2}{1-\phi_1^2}]\\
+=\frac{\sigma_w^2}{1-\phi_1^2}[1-\phi_1^2+\theta_1^2+2\theta_1\phi_1+\phi_1^2]\\
+=\frac{\sigma_w^2}{1-\phi_1^2}[1+\theta_1^2+2\theta_1\phi_1]\]</span></p>
+<p><span class="math display">\[\gamma(1)=\sigma_w^2\sum_{i=0}^{\infty}\psi_i\psi_{i+1}=\sigma_w^2(\psi_0\psi_1+\psi_1\psi_2+\psi_2\psi_3+...)\\
+=\sigma_w^2[(\theta_1+\phi_1)+\phi_1(\theta_1+\phi_1)^2+\phi_1^3(\theta_1+\phi_1)^2+...]\\
+=\sigma_w^2[(\theta_1+\phi_1)+\frac{\phi_1(\theta_1+\phi_1)^2}{1-\phi_1^2}]\\=\frac{\sigma_w^2(\theta_1+\phi_1)}{1-\phi_1^2}[1-\phi_1^2+\phi_1\theta_1+\phi_1^2]\\=\frac{\sigma_w^2(\theta_1+\phi_1)(1+\phi_1\theta_1)}{1-\phi_1^2}\]</span></p>
+<ul>
+<li><span class="math inline">\((1-B\phi_1)x_t=(1+\theta_1B)w_t\)</span> can be rewritten as</li>
+</ul>
+<p><span class="math inline">\(x_t = \phi_1x_{t-1} + w_t + \theta_1w_{t-1}\)</span></p>
+<p>Then <span class="math inline">\(\gamma(h)=\sum_{j=i}^{1}\phi_j\gamma(h-j)+\sigma_w^2\sum_{j=h}^{1}\theta_j\psi_{j-h}= \phi_1\gamma(h-1) + \sigma_w^2\sum_{j=h}^{1}\theta_j\psi_{j-h}\)</span> where <span class="math inline">\(\theta_0 = 1\)</span>.</p>
+<p>Thus,</p>
+<p><span class="math display">\[\gamma(0) = \phi_1\gamma(-1) +  \sigma_w^2(\theta_0\psi_0 + \theta_1\psi_1)\\
+= \phi_1\gamma(1) +  \sigma_w^2(1+ \theta_1\psi_1)\\
+= \phi_1\gamma(1) +  \sigma_w^2[1+ \theta_1(\theta_1+\phi_1)]\\
+= \phi_1\gamma(1) +  \sigma_w^2[1+ \theta_1^2 +\theta_1\phi_1]\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\gamma(1) = \phi_1\gamma(0) +  \sigma_w^2\theta_1\psi_0\\
+= \phi_1\gamma(0) +  \sigma_w^2\theta_1\]</span> because <span class="math inline">\(\psi_0 = 1\)</span>.</p>
+<ul>
+<li>Solving for <span class="math inline">\(\gamma(0)\)</span> produces:</li>
+</ul>
+<p><span class="math display">\[\gamma(0)=\phi_1\gamma(1)+\sigma_w^2[1+\theta_1^2+\theta_1\phi_1]\\
+= \phi_1[\phi_1\gamma(0) +  \sigma_w^2\theta_1] +  \sigma_w^2[1+ \theta_1^2 +\theta_1\phi_1] \\
+\implies \gamma(0) -  \phi_1^2\gamma(0) =  \sigma_w^2\phi_1\theta_1 +  \sigma_w^2[1+\theta_1^2+\theta_1\phi_1]\\
+\implies \gamma(0)(1 - \phi_1^2 ) =  \sigma_w^2[\phi_1\theta_1 + 1+ \theta_1^2 +\theta_1\phi_1]\\
+\implies \gamma(0) =  \frac{\sigma_w^2}{1-\phi_1^2}[\theta_1^2+2\theta_1\phi_1+1]\]</span></p>
+<ul>
+<li>Solving for <span class="math inline">\(\gamma(1)\)</span> produces:</li>
+</ul>
+<p><span class="math display">\[\gamma(1) = \phi_1\gamma(0) +  \sigma_w^2\theta_1 \\
+= \phi_1\frac{\sigma_w^2}{1-\phi_1^2}[\theta_1^2+2\theta_1\phi_1+1]+\sigma_w^2\theta_1 \\
+= \sigma_w^2[\frac{\phi_1(\theta_1^2+2\theta_1\phi_1+1)}{1-\phi_1^2}+\theta_1] \\
+= \sigma_w^2[\frac{\phi_1\theta_1^2+2\theta_1\phi_1^2+\phi_1+\theta_1-\theta_1\phi_1^2}{1-\phi_1^2}]\\
+= \sigma_w^2\frac{(1+\theta_1\phi_1)(\phi_1+\theta_1)}{1-\phi_1^2} \]</span></p>
+<ul>
+<li>Note that <span class="math inline">\(\gamma(h) = \sum_{j=1}^{1}\phi_j\gamma(h-j)\)</span>for h <span class="math inline">\(\ge\)</span> max(1, 2). Then <span class="math inline">\(\gamma(2) = \phi_1\gamma(1), \gamma(3) = \phi_1\gamma(2), …\)</span></li>
+</ul>
+<p>Thus,</p>
+<p><span class="math display">\[
+\gamma(h)=
+\begin{cases}
+  \frac{\sigma_w^2}{1-\phi_1^2}[\theta_1^2+2\theta_1\phi_2+1]   &amp; \text{if } h=0 \\
+  \sigma_w^2\phi_1^{h-1}\frac{(1+\theta_1\phi_1)(\phi_1+\theta_1)}{1-\phi_1^2}  &amp; \text{if } h&gt;0 \\
+\end{cases}
+\]</span></p>
+<ul>
+<li>Finally,
+<span class="math display">\[\rho(h) =\frac{\sigma_w^2\phi_1^{h-1}\frac{(1+\theta_1\phi_1)(\phi_1+\theta_1)}{1-\phi_1^2}}{\frac{\sigma_w^2}{1-\phi_1^2}[\theta_1^2+2\theta_1\phi_1+1]}\\
+=\frac{\phi_1^{h-1}(1+\theta_1\phi_1)(\phi_1+\theta_1)}{\theta_1^2+2\theta_1\phi_1+1}\]</span><br />
+for h <span class="math inline">\(\ge\)</span> 1</li>
+</ul>
+</div>
+<p>Notes:</p>
+<ul>
+<li>Unlike the ACF for a MA(q), this is not 0 after a particular lag.<br />
+</li>
+<li>Why do we want to know the ACF of an ARMA(1,1)? If the estimated ACF of a time series data set exhibits similar characteristics (i.e, does not “cut off” to 0, but rather “tails off” to 0), then we may think the time series data set can be modeled with an ARMA(1,1)!</li>
+</ul>
+<div class="example">
+<p><span id="exm:unlabeled-div-36" class="example"><strong>Example 12.2  </strong></span><strong>ACF of an AR(p)</strong></p>
+<ul>
+<li>Because q = 0, the autocovariance function is</li>
+</ul>
+<p><span class="math display">\[\gamma(0) =\sum_{j=1}^{p}\psi_j\gamma(h-j)+\sigma_w^2\sum_{j=0}^{0}\theta_j\psi_{j-0}\\
+=\sum_{j=1}^{p}\phi_k\gamma(h-j)+\sigma_w^2\]</span></p>
+<p>and <span class="math inline">\(\gamma(h) =\sum_{j=1}^{p}\phi_j\gamma(h-j)\)</span> for h <span class="math inline">\(\ge\)</span> 1.</p>
+<ul>
+<li>Suppose p = 1. Then <span class="math inline">\(\gamma(0) =\phi_1\gamma(-1)+\sigma_w^2 = \phi_1\gamma(1)+\sigma_w^2\)</span>,
+<span class="math inline">\(\gamma(1) = \phi_1\gamma(0), \gamma(2) = \phi_1\gamma(1), …\)</span></li>
+</ul>
+<p>Thus, <span class="math inline">\(\gamma(0) = \phi_1\gamma(1)+\sigma_w^2 = \phi_1^2\gamma(0)+\sigma_w^2 \implies \gamma(0)=\frac{\sigma_w^2}{1-\phi_1^2}\)</span>.</p>
+<p>Also, <span class="math inline">\(\gamma(1) =\frac{\phi_1\sigma_w^2}{1-\phi_1^2}, \gamma(2) =\frac{\phi_1^2\sigma_w^2}{1-\phi_1^2}, …\)</span></p>
+<p>Finally, <span class="math inline">\(\gamma(h) = \frac{\phi_1^h\sigma_w^2}{1-\phi_1^2}\)</span></p>
+<p>The ACF is <span class="math inline">\(\rho(h) = \frac{\gamma(h)}{\gamma(0)}=\frac{\frac{\phi_1^h\sigma_w^2}{1-\phi_1^2}}{\frac{\sigma_w^2}{1-\phi_1^2}}=\phi_1^h\)</span></p>
+<p>Remember that -1 &lt; <span class="math inline">\(\phi_1\)</span> &lt; 1 to ensure stationarity. Notice how <span class="math inline">\(\rho(h)\)</span> will slowly “tail off” to 0. While tailing off, it can be alternating between positive and negative values.</p>
+<ul>
+<li>Suppose p=2. Then</li>
+</ul>
+<p><span class="math display">\[\gamma(0)=\sum_{j=1}^{2}\phi_j\gamma(0-j)+\sigma_w^2\sum_{j=0}^{0}\theta_j\psi_{j=0}\\
+=\phi_1\gamma(-1)+\phi_2\gamma(-2)+\sigma_w^2\\
+=\phi_1\gamma(1)+\phi_2\gamma(2)+\sigma_w^2,\]</span></p>
+<p><span class="math inline">\(\gamma(1) = \phi_1\gamma(0) + \phi_2\gamma(-1) = \phi_1\gamma(0) + \phi_2\gamma(1),\)</span></p>
+<p><span class="math inline">\(\gamma(2) = \phi_1\gamma(1) + \phi_2\gamma(0),\)</span></p>
+<p><span class="math inline">\(\gamma(3) = \phi_1\gamma(2) + \phi_2\gamma(1),\)</span></p>
+<p>Then<span class="math inline">\(\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi_1\rho(h-1)+\phi_2\rho(h-2)\)</span> for h <span class="math inline">\(ge\)</span> 1.</p>
+<p>Therefore,
+<span class="math inline">\(\rho(1) = \phi_1\rho(0) + \phi_2\rho(-1) = \phi_1 + \phi_2\rho(1) \implies \rho(1) = \frac{\phi_1}{1-\phi_2}.\)</span></p>
+<p><span class="math inline">\(\rho(2) = \phi_1\rho(1) + \phi_2\rho(0) = \frac{\phi_1^2}{1-\phi_2} + \phi_2 =\frac{\phi_1^2+\phi_2-\phi_2^2}{1-\phi_2}\)</span></p>
+<p>Remember that -1 &lt; <span class="math inline">\(\phi_2\)</span> &lt; 1, <span class="math inline">\(\phi_2 + \phi_1\)</span> &lt; 1, and <span class="math inline">\(\phi_2 - \phi_1\)</span> &lt; 1 to ensure stationarity. Notice how <span class="math inline">\(\rho(h)\)</span> will slowly “tail off” to 0.</p>
+</div>
+<p>Notes:</p>
+<ul>
+<li>Unlike the ACF for a MA(q), the ACF is not 0 after a particular lag.<br />
+</li>
+<li>Table of ACFs for common ARMA models.</li>
+</ul>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="30%" />
+<col width="48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Equation</th>
+<th>Autocorrelation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AR(1)</td>
+<td><span class="math inline">\(x_t=\phi_1x_{t-1}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)=\phi_1^h\)</span></td>
+</tr>
+<tr class="even">
+<td>AR(2)</td>
+<td><span class="math inline">\(x_t=\phi_1x_{t-1}+\phi_2x_{t-2}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)=\phi_1\rho(h-1)+\phi_2\rho(h-2)\)</span> for <span class="math inline">\(h\ge 1\)</span></td>
+</tr>
+<tr class="odd">
+<td>MA(1)</td>
+<td><span class="math inline">\(x_t=\theta_1w_{t-1}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)=\begin{cases} \frac{\theta_1}{1+\theta_1^2} &amp; h=1 \\ 0 &amp; h&gt;1 \end{cases}\)</span></td>
+</tr>
+<tr class="even">
+<td>MA(2)</td>
+<td><span class="math inline">\(x_t=\theta_1w_{t-1}+\theta_2w_{t-2}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)= \begin{cases} \frac{\theta_1(1+\theta_2)}{1+\theta_1^2+\theta_2^2} &amp; h=1 \\ \frac{\theta_2}{1+\theta_1^2+\theta_2^2} &amp; h=2 \\ 0 &amp; h&gt;2 \end{cases}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Remember: “+” signs are used in the moving average operator, <span class="math inline">\(\theta(B)\)</span>. <strong>Many textbooks use “-“ signs so be careful when you examine these book!!!!</strong> Thus, ACFs may be written a different way.</p>
+<p>In summary,</p>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="22%" />
+<col width="35%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>AR(p)</th>
+<th>MA(q)</th>
+<th>ARMA(p,q)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ACF</td>
+<td>Tails off to 0</td>
+<td>Cuts off to 0 after lag q</td>
+<td>Tails off to 0 after lag q</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+<p><span id="exm:unlabeled-div-37" class="example"><strong>Example 12.3  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7, -0.7\)</span></strong></p>
+<div class="sourceCode" id="cb386"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb386-1"><a href="acf-and-pacf-for-arma-models.html#cb386-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate AR(1) using arima.sim()</span></span>
+<span id="cb386-2"><a href="acf-and-pacf-for-arma-models.html#cb386-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7181</span>)</span>
+<span id="cb386-3"><a href="acf-and-pacf-for-arma-models.html#cb386-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb386-4"><a href="acf-and-pacf-for-arma-models.html#cb386-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.7</span>)), <span class="at">n =</span> <span class="dv">100</span>, <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb386-5"><a href="acf-and-pacf-for-arma-models.html#cb386-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb386-6"><a href="acf-and-pacf-for-arma-models.html#cb386-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.new</span>(<span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">pointsize =</span> <span class="dv">10</span>)  <span class="co">#Opens up wider plot window than the default (good for time series plots)</span></span>
+<span id="cb386-7"><a href="acf-and-pacf-for-arma-models.html#cb386-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb386-8"><a href="acf-and-pacf-for-arma-models.html#cb386-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb386-9"><a href="acf-and-pacf-for-arma-models.html#cb386-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~ ind. N(0,100)&quot;</span>)) , </span>
+<span id="cb386-10"><a href="acf-and-pacf-for-arma-models.html#cb386-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb386-11"><a href="acf-and-pacf-for-arma-models.html#cb386-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb386-12"><a href="acf-and-pacf-for-arma-models.html#cb386-12" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb387-1"><a href="acf-and-pacf-for-arma-models.html#cb387-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use ARMAacf() and ARMAtoMA() functions</span></span>
+<span id="cb387-2"><a href="acf-and-pacf-for-arma-models.html#cb387-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##      0      1      2      3      4      5      6      7      8      9     10 
+## 1.0000 0.7000 0.4900 0.3430 0.2401 0.1681 0.1176 0.0824 0.0576 0.0404 0.0282 
+##     11     12     13     14     15     16     17     18     19     20 
+## 0.0198 0.0138 0.0097 0.0068 0.0047 0.0033 0.0023 0.0016 0.0011 0.0008</code></pre>
+<div class="sourceCode" id="cb389"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb389-1"><a href="acf-and-pacf-for-arma-models.html#cb389-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>),<span class="dv">4</span>) </span></code></pre></div>
+<pre><code>##       0       1       2       3       4       5       6       7       8       9 
+##  1.0000 -0.7000  0.4900 -0.3430  0.2401 -0.1681  0.1176 -0.0824  0.0576 -0.0404 
+##      10      11      12      13      14      15      16      17      18      19 
+##  0.0282 -0.0198  0.0138 -0.0097  0.0068 -0.0047  0.0033 -0.0023  0.0016 -0.0011 
+##      20 
+##  0.0008</code></pre>
+<div class="sourceCode" id="cb391"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb391-1"><a href="acf-and-pacf-for-arma-models.html#cb391-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use ARMAacf() and ARMAtoMA() functions</span></span>
+<span id="cb391-2"><a href="acf-and-pacf-for-arma-models.html#cb391-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb391-3"><a href="acf-and-pacf-for-arma-models.html#cb391-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb391-4"><a href="acf-and-pacf-for-arma-models.html#cb391-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ACF for AR(1) with &quot;</span>, phi1[<span class="dv">1</span>] <span class="sc">==</span> <span class="fl">0.7</span>)))</span>
+<span id="cb391-5"><a href="acf-and-pacf-for-arma-models.html#cb391-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb391-6"><a href="acf-and-pacf-for-arma-models.html#cb391-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb392"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb392-1"><a href="acf-and-pacf-for-arma-models.html#cb392-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb392-2"><a href="acf-and-pacf-for-arma-models.html#cb392-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ACF for AR(1) with &quot;</span>, phi1[<span class="dv">1</span>] <span class="sc">==</span> <span class="sc">-</span><span class="fl">0.7</span>)))</span>
+<span id="cb392-3"><a href="acf-and-pacf-for-arma-models.html#cb392-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb392-4"><a href="acf-and-pacf-for-arma-models.html#cb392-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<div class="sourceCode" id="cb393"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb393-1"><a href="acf-and-pacf-for-arma-models.html#cb393-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAtoMA</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##  [1] 0.7000 0.4900 0.3430 0.2401 0.1681 0.1176 0.0824 0.0576 0.0404 0.0282
+## [11] 0.0198 0.0138 0.0097 0.0068 0.0047 0.0033 0.0023 0.0016 0.0011 0.0008</code></pre>
+<div class="sourceCode" id="cb395"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb395-1"><a href="acf-and-pacf-for-arma-models.html#cb395-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Example for AR(2)</span></span>
+<span id="cb395-2"><a href="acf-and-pacf-for-arma-models.html#cb395-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAtoMA</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="sc">-</span><span class="fl">0.4</span>), <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##  [1]  0.7000  0.0900 -0.2170 -0.1879 -0.0447  0.0438  0.0486  0.0165 -0.0079
+## [10] -0.0121 -0.0053  0.0011  0.0029  0.0016 -0.0001 -0.0007 -0.0005  0.0000
+## [19]  0.0001  0.0001</code></pre>
+<div class="sourceCode" id="cb397"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb397-1"><a href="acf-and-pacf-for-arma-models.html#cb397-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb397-2"><a href="acf-and-pacf-for-arma-models.html#cb397-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb397-3"><a href="acf-and-pacf-for-arma-models.html#cb397-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>),<span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##  [1] 0.7 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+## [20] 0.0</code></pre>
+<div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb399-1"><a href="acf-and-pacf-for-arma-models.html#cb399-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]),</span>
+<span id="cb399-2"><a href="acf-and-pacf-for-arma-models.html#cb399-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;PACF for AR(1) with &quot;</span>, phi1[<span class="dv">1</span>] <span class="sc">==</span> <span class="fl">0.7</span>)))</span>
+<span id="cb399-3"><a href="acf-and-pacf-for-arma-models.html#cb399-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb399-4"><a href="acf-and-pacf-for-arma-models.html#cb399-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div class="sourceCode" id="cb400"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb400-1"><a href="acf-and-pacf-for-arma-models.html#cb400-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimated ACF and PACF</span></span>
+<span id="cb400-2"><a href="acf-and-pacf-for-arma-models.html#cb400-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb400-3"><a href="acf-and-pacf-for-arma-models.html#cb400-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.new</span>(<span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">pointsize =</span> <span class="dv">10</span>)</span>
+<span id="cb400-4"><a href="acf-and-pacf-for-arma-models.html#cb400-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb400-5"><a href="acf-and-pacf-for-arma-models.html#cb400-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb400-6"><a href="acf-and-pacf-for-arma-models.html#cb400-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb400-7"><a href="acf-and-pacf-for-arma-models.html#cb400-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb400-8"><a href="acf-and-pacf-for-arma-models.html#cb400-8" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb400-9"><a href="acf-and-pacf-for-arma-models.html#cb400-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">&quot;Estimated ACF&quot;</span>)</span>
+<span id="cb400-10"><a href="acf-and-pacf-for-arma-models.html#cb400-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb400-11"><a href="acf-and-pacf-for-arma-models.html#cb400-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb400-12"><a href="acf-and-pacf-for-arma-models.html#cb400-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb400-13"><a href="acf-and-pacf-for-arma-models.html#cb400-13" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb400-14"><a href="acf-and-pacf-for-arma-models.html#cb400-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">&quot;Estimated PACF&quot;</span>)</span>
+<span id="cb400-15"><a href="acf-and-pacf-for-arma-models.html#cb400-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb400-16"><a href="acf-and-pacf-for-arma-models.html#cb400-16" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span></code></pre></div>
+</div>
+<p>The <code>ARMAacf()</code> function calculated the ACF.</p>
+<p>In an upcoming example with arma_sample.R, we will compare these plots to an estimated ACF plot. For example, we will see how to use <code>arima.sim()</code> to simulate observations from an ARMA process. When <span class="math inline">\(\phi_1 = -0.7\)</span>, this is what occurs for a sample of size 1,000 and <span class="math inline">\(\sigma_w^2=1\)</span>:</p>
+<p>The horizontal lines for the ACF and PACF plots are drawn at <span class="math inline">\(\pm 1.96n^{-1/2} = \pm \frac{1.96}{\sqrt{1000}}\)</span>.</p>
+<p>Try using the <code>ARMAacf()</code> function to see what other ACF plots would look like for different values of <span class="math inline">\(\phi_1\)</span>!</p>
+</div>
+<div id="pacf-for-arma-models" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> PACF for ARMA models<a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The ACF really helps to find the order of a MA(q) model, but does not help much for finding the order of an AR(p) (because the ACF does not “cut-off” to 0, we can not determine the order of AR model by ACF). The partial autocorrelation function (PACF) helps to find the order of an AR(p)!</p>
+<p>Consider the following autoregressive representation:</p>
+<p><span class="math display">\[x_{t+h}=\beta_{h1}x_{t+h-1}+\beta_{h2}x_{t+h-2}+...+\beta_{hh}x_t+w_{t+h}\]</span>
+where <span class="math inline">\(w_{t+h} \sim ind N(0,\sigma^2)\)</span></p>
+<p>NOTE: The different notation is used here to help motivate you to think of this as a regression model.</p>
+<p><strong>Remember the interpretation of a <span class="math inline">\(\beta\)</span> parameter - GIVEN all of the other variables in the model, <span class="math inline">\(\beta\)</span> measures the relationship between its corresponding independent variable and the dependent variable.</strong></p>
+<p>Multiplying both sides by <span class="math inline">\(x_{t+h-j}\)</span> and taking the expectation produces:</p>
+<p><span class="math display">\[E(x_{t+h-j}x_{t+h})=\\
+\beta_{h1}E(x_{t+h-j}x_{t+h-1})+\beta_{h2}E(x_{t+h-j}x_{x+h-2})+...+\beta_{hh}E(x_{t+h-j}x_t)+E(x_{t+h-j}w_{t+h})\]</span></p>
+<p>Note that <span class="math inline">\(E(x_{t+h-j}w_{t+h})= E(x_{t+h-j})E(w_{t+h})\)</span> because <span class="math inline">\(x_{t+h-j}\)</span> and <span class="math inline">\(w_{t+h}\)</span> are independent (<span class="math inline">\(x_{t+h-j}\)</span> has w’s with subscripts lower than t+h). Then <span class="math inline">\(E(x_{t+h-j}w_{t+h}) = E(x_{t+h-j})\times 0 = 0\)</span>.</p>
+<p>Continuing,</p>
+<p><span class="math display">\[E(x_{t+h-j}x_{t+h})=\beta_{h1}E(x_{t+h-j}x_{t+h-1})+\beta_2E(x_{t+h-j}x_{t+h-2})+...+\beta_{hh}E(x_{t+h-j}x_t)+0\\
+\implies \gamma(j)=\beta_{h1}\gamma(1-j)+\beta_{h2}\gamma(2-j)+...+\beta_{hh}\gamma(h-j)\\
+\implies \rho(j)=\beta_{h1}\rho(1-j)+\beta_{h2}\rho(2-j)+...+\beta_{hh}\rho(h-j)\]</span></p>
+<p>Remember <span class="math inline">\(\rho(j)=\frac{\gamma(j)}{\gamma(0)}\)</span></p>
+<p>Then for j=1,…,h:</p>
+<p><span class="math display">\[\rho(1)=\beta_{h1}\rho(0)+\beta_{h2}\rho(1)+...+\beta_{hh}\rho(h-1)\\
+\rho(2)=\beta_{h1}\rho(1)+\beta_{h2}\rho(0)+...+\beta_{hh}\rho(h-2)\\
+\rho(h)=\beta_{h1}\rho(h-1)+\beta_{h2}\rho(h-2)+...+\beta_{hh}\rho(0)\]</span></p>
+<p>Remember that <span class="math inline">\(\rho(-j) = \rho(j)\)</span></p>
+<p>Suppose h = 1, then</p>
+<p><span class="math inline">\(\rho(1) = \beta_{11}\rho(0) \implies \beta_{11} = \rho(1)\)</span> because <span class="math inline">\(\rho(0) = 1\)</span></p>
+<p>Remember if h = 1, the model is <span class="math inline">\(x_{t+1}=\beta_{11}x_t+w_{t+1}\)</span></p>
+<p>Suppose h = 2, then</p>
+<p><span class="math display">\[\rho(1) = \beta_{21}\rho(0) + \beta_{22}\rho(1)\\
+\rho(2) = \beta_{21}\rho(1) + \beta_{22}\rho(0)\\
+\implies \beta_{22} = \frac{\rho(2)-\rho(1)^2}{1-\rho(1)^2}\]</span> from solving the above system of equations.</p>
+<p>Suppose h = 3, then</p>
+<p><span class="math display">\[\rho(1) = \beta_{31}\rho(0) + \beta_{32}\rho(1)+\beta_{33}\rho(2)\\
+\rho(2) = \beta_{31}\rho(1) + \beta_{32}\rho(0)+\beta_{33}\rho(1)\\
+\rho(3) = \beta_{31}\rho(2) + \beta_{32}\rho(1)+\beta_{33}\rho(0)\\
+\implies \beta_{33} = \frac{\rho(3)-\rho(1)^3-\rho(1)^2\rho(3)+\rho(2)^2\rho(1)}{1-\rho(1)^2+\rho(2)^2-\rho(1)\rho(2)-\rho(2)^2\rho(1)+\rho(1)^2\rho(2)}\]</span></p>
+<p>This process can be continued to find <span class="math inline">\(\beta_{hh}\)</span>.</p>
+<p>These <span class="math inline">\(\beta\)</span>’s are called partial autocorrelations because they measure the dependence of <span class="math inline">\(x_t\)</span> on <span class="math inline">\(x_{t+h}\)</span> removing the effect of all the other random variables in between. Thus,</p>
+<p><span class="math display">\[\beta_{11}=Corr(x_t, x_{t+1})\\
+\beta_{22}=Corr(x_t,x_{t+2}| x_{t+1})\\
+\beta_{33}=Corr(x_t, x_{t+3}| x_{t+1}, x_{t+2})\]</span></p>
+<p>Also, these can be treated like “regular” correlations in terms of scale: <span class="math inline">\(-1 \le \beta_{hh} \le 1\)</span>.</p>
+<p>Most textbooks use <span class="math inline">\(\phi_{hh}\)</span> to denote the partial autocorrelations at lag h.</p>
+<p><strong>THIS CAN BE VERY CONFUSING SINCE MOST BOOKS USE <span class="math inline">\(\phi_j\)</span> TO DENOTE A PARAMETER FROM AN AUTOREGRESSIVE MODEL!!!!</strong></p>
+<p>I will use this notation from now on. Thus, <span class="math inline">\(\beta_{hh}\)</span> in the old notation is <span class="math inline">\(\phi_{hh}\)</span> in the new notation!!!</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-38" class="example"><strong>Example 12.4  </strong></span><strong>AR(1)</strong></p>
+<p>We have seen that <span class="math inline">\(\rho(h) = \phi_1^h\)</span>.</p>
+<p><span class="math display">\[\phi_{11} = \rho(1) = \phi_1\\
+\phi_{22} = \frac{\rho(2)-\rho(1)^2}{1-\rho(1)^2} = \frac{\phi_1^2-\phi_1^2}{1-\phi_1^2} = 0\\
+\phi_{33} = 0,…\]</span></p>
+<p>Thus, a AR(1)’s PACF cuts off to 0 after lag 1.</p>
+<p>Suppose <span class="math inline">\(\phi_1\)</span> = 0.7. Using <code>ARMAacf()</code> with the <code>PACF = TRUE</code> option produces</p>
+<div class="sourceCode" id="cb401"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb401-1"><a href="acf-and-pacf-for-arma-models.html#cb401-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ARMAacf</span>(<span class="at">ar=</span><span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max=</span><span class="dv">20</span>, <span class="at">pacf=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>##  [1] 0.7 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+## [20] 0.0</code></pre>
+<div class="sourceCode" id="cb403"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb403-1"><a href="acf-and-pacf-for-arma-models.html#cb403-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span><span class="fu">ARMAacf</span>(<span class="at">ar=</span><span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf=</span><span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, </span>
+<span id="cb403-2"><a href="acf-and-pacf-for-arma-models.html#cb403-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab=</span><span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]), <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;PACF for AR(1) with&quot;</span> , phi1[<span class="dv">1</span>] <span class="sc">==</span> <span class="fl">0.7</span>)))</span>
+<span id="cb403-3"><a href="acf-and-pacf-for-arma-models.html#cb403-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb403-4"><a href="acf-and-pacf-for-arma-models.html#cb403-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Note that the first PACF value given is for h = 1 so the problems encountered earlier with the ACF and the<code>plot()</code> function do not occur here.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-39" class="example"><strong>Example 12.5  </strong></span><strong>AR(2)</strong></p>
+<p>From past notes, we have <span class="math display">\[\rho(h)=\phi_1\rho(h-1)+\phi_2\rho(h-2)\\
+\rho(1)=\frac{\phi_1}{1-\phi_2}\\
+\rho(2)=\frac{\phi_1^2+\phi_2-\phi_2^2}{1-\phi_2}\]</span></p>
+<p>Then <span class="math display">\[\phi_{11}=\rho(1)=\frac{\phi_1}{1-\phi_2}\\
+\phi_{22}=\frac{\rho(2)-\rho(1)^2}{1-\rho(1)^2}=\frac{\frac{\phi_1^2+\phi_2-\phi_2^2}{1-\phi_2}-(\frac{\phi_1}{1-\phi_2})^2}{1-(\frac{\phi_1}{1-\phi_2})^2}\\
+=\frac{(\phi_1^2+\phi_2-\phi_2^2)(1-\phi_2)-\phi_1^2}{(1-\phi_2)^2-\phi_1^2}\\
+=\frac{\phi_2-2\phi_2^2+\phi_2^3-\phi_1^2\phi_2}{(1-\phi_2)^2-\phi_1^2}\\
+=\frac{\phi_2(1-2\phi_2+\phi_2^2-\phi_1^2)}{(1-\phi_2)^2-\phi_1^2}\\
+=\frac{\phi_2[(1-\phi_2)^2-\phi_1^2]}{(1-\phi_2)^2-\phi_1^2}=\phi_2\\
+\phi_{33}=0,...\]</span></p>
+<p>An AR(2)’s PACF cuts off to 0 after lag 2.</p>
+</div>
+<p>Notes:</p>
+<ul>
+<li>ARMA models with q &gt; 0 do not have the partial correlations “cut-off” to 0. Instead, they behave like the ACF does for models with p &gt; 0.</li>
+<li>Verify on your own that</li>
+</ul>
+<p><span class="math display">\[\phi_{hh}=-\frac{(-\theta)^h(1-\theta^2)}{1-\theta^{2(h+1)}}\]</span></p>
+<p>for an MA(1) (see Shumway and Stoffer).</p>
+<p>From ma1_sim.R,</p>
+<div class="sourceCode" id="cb404"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb404-1"><a href="acf-and-pacf-for-arma-models.html#cb404-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb404-2"><a href="acf-and-pacf-for-arma-models.html#cb404-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb404-3"><a href="acf-and-pacf-for-arma-models.html#cb404-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb404-4"><a href="acf-and-pacf-for-arma-models.html#cb404-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb404-5"><a href="acf-and-pacf-for-arma-models.html#cb404-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>),<span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##  [1]  0.4698 -0.2832  0.1856 -0.1260  0.0869 -0.0604  0.0421 -0.0294  0.0206
+## [10] -0.0144  0.0101 -0.0071  0.0049 -0.0035  0.0024 -0.0017  0.0012 -0.0008
+## [19]  0.0006 -0.0004</code></pre>
+<div class="sourceCode" id="cb406"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb406-1"><a href="acf-and-pacf-for-arma-models.html#cb406-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi[hh]),</span>
+<span id="cb406-2"><a href="acf-and-pacf-for-arma-models.html#cb406-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;PACF for MA(1) with &quot;</span>, theta[<span class="dv">1</span>] <span class="sc">==</span> <span class="fl">0.7</span>)))</span>
+<span id="cb406-3"><a href="acf-and-pacf-for-arma-models.html#cb406-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb406-4"><a href="acf-and-pacf-for-arma-models.html#cb406-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb406-5"><a href="acf-and-pacf-for-arma-models.html#cb406-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb406-6"><a href="acf-and-pacf-for-arma-models.html#cb406-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>),<span class="dv">4</span>) </span></code></pre></div>
+<pre><code>##  [1] -0.4698 -0.2832 -0.1856 -0.1260 -0.0869 -0.0604 -0.0421 -0.0294 -0.0206
+## [10] -0.0144 -0.0101 -0.0071 -0.0049 -0.0035 -0.0024 -0.0017 -0.0012 -0.0008
+## [19] -0.0006 -0.0004</code></pre>
+<div class="sourceCode" id="cb408"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb408-1"><a href="acf-and-pacf-for-arma-models.html#cb408-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ma =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi[hh]),</span>
+<span id="cb408-2"><a href="acf-and-pacf-for-arma-models.html#cb408-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;PACF for MA(1) with &quot;</span>, theta[<span class="dv">1</span>] <span class="sc">==</span> <span class="sc">-</span><span class="fl">0.7</span>)))</span>
+<span id="cb408-3"><a href="acf-and-pacf-for-arma-models.html#cb408-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb408-4"><a href="acf-and-pacf-for-arma-models.html#cb408-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<ul>
+<li>Estimating the PACF</li>
+</ul>
+<p><span class="math inline">\(\hat{\phi}_{11}=\hat{\rho}(1)\)</span></p>
+<p><span class="math inline">\(\hat{\phi}_{hh}=\frac{\hat{\rho}-\sum_{j=1}^{h-1}\hat{\phi}_{h-1,j}\hat{\rho}(h-j)}{1-\sum_{j=1}^{h-1}\hat{\phi}_{h-1,j}\hat{\rho}(h-j)}\)</span> for h=2,3,…</p>
+<p>where <span class="math inline">\(\hat{\phi}_{hj}=\hat{\phi}_{h-1,j}-\hat{\phi}_{hh}\hat{\phi}_{h-1,h-j}\)</span> for h=3,4,…;j=1,2,…h-1. For more on this expression, see the exercises of Shumway and Stoffer. We will not calculate these by hand. Rather, we will use the <code>pacf()</code> function in R.</p>
+<p>An approximation for the standard error is <span class="math inline">\(\sigma_{\hat{\phi}_{hh}}=n^{-1/2}\)</span> . To test</p>
+<p><span class="math inline">\(H_0:\phi_{hh} = 0\)</span>
+<span class="math inline">\(Ha:\phi_{hh} \ne 0\)</span></p>
+<p>Reject <span class="math inline">\(H_0\)</span> if <span class="math inline">\(|\frac{\hat{\phi}-0}{n^{-1/2}}| &gt; Z_{1-\frac{\alpha}{2}}\)</span></p>
+<p>we can check if <span class="math inline">\(\hat{\phi}_{hh}\)</span> is within <span class="math inline">\(\pm Z_{1-\alpha/2} \times n^{-1/2}.\)</span></p>
+<ul>
+<li><p>Why would you want to do the above hypothesis test?<br />
+</p></li>
+<li><p>Suppose you observed a time series. The estimated values of the PACF are <span class="math inline">\(\hat{\phi}_{11} \ne 0\)</span> and <span class="math inline">\(\hat{\phi}_{hh} \approx 0\)</span> for h &gt; 1. What may be a good model for the data? AR(1)</p></li>
+<li><p>Suppose you observed a time series. The estimated values of the PACF are <span class="math inline">\(\hat{\phi}_{11} \ne 0\)</span>, <span class="math inline">\(\hat{\phi}_{22} \ne 0\)</span>, and <span class="math inline">\(\hat{\phi}_{hh} \approx 0\)</span> for h &gt; 2. What may be a good model for the data? AR(2)</p></li>
+<li><p>Table of PACFs for common ARMA models</p></li>
+</ul>
+<table>
+<colgroup>
+<col width="55%" />
+<col width="44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>PACF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AR(1): <span class="math inline">\(x_t=\phi_1x_{t-1}+w_t\)</span></td>
+<td><span class="math inline">\(\phi_{hh}=\begin{cases} \rho(1)=\phi_1 &amp; h=1\\ 0 &amp; h&gt;1 \end{cases}\)</span></td>
+</tr>
+<tr class="even">
+<td>AR(2): <span class="math inline">\(x_{t}=\phi_1x_{t-1}+\phi_2x_{t-2}+w_t\)</span></td>
+<td><span class="math inline">\(\phi_{hh}=\begin{cases} \phi_{11}=\rho(1) \\ \phi_{22}=\phi_2\\ \phi_{hh}=0 &amp; h \ge 3 \end{cases}\)</span></td>
+</tr>
+<tr class="odd">
+<td>MA(1): <span class="math inline">\(x_t=\theta_1w_{t-1}+w_t\)</span></td>
+<td><span class="math inline">\(\phi_{hh}=-\frac{(-\theta_1)^h(1-\theta_1^2)}{1-\theta_1^{2(h+1)}}, h \ge1\)</span></td>
+</tr>
+<tr class="even">
+<td>MA(2): <span class="math inline">\(x_t=\theta_1w_{t-1}+\theta_2w_{t-2}+w_t\)</span></td>
+<td><span class="math inline">\(\phi_{hh}=\begin{cases} \rho(1) &amp; h=1 \\ \frac{\rho(2)-\rho(1)^2}{1-\rho(1)^2} &amp; h=2 \\ \frac{\rho(1)^3-\rho(1)\rho(2)(2-\rho(2))}{1-\rho(2)^2-2\rho(1)^2(1-\rho(1))} &amp; h=3 \\ \text{No nice compact form} &amp;h&gt;3 \end{cases}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Remember: “+” signs are used in the moving average operator, <span class="math inline">\(\theta(B)\)</span>. <strong>Many textbooks use “-“ signs so be careful when you examine these book!!!!</strong> Thus, PACFs may be slightly different.</p>
+<p>In summary,</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>AR(p)</th>
+<th>MA(q)</th>
+<th>ARMA(p,q)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PACF</td>
+<td>Cuts off to 0 after lag p</td>
+<td>Tails off to 0</td>
+<td>Tails off to 0 after lag p</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="compare-true-to-estimated-acfs-and-pacfs" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> Compare True to Estimated ACFs and PACFs<a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We can compare the true ACF and PACF for an ARMA model to the estimated ACF and PACF obtained from an observed time series. Values and patterns that tend to match suggest a particular model to use for the data.</p>
+<p>We have the following for some ARMA models:</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="36%" />
+<col width="43%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th><span class="math inline">\(\rho(h)\)</span></th>
+<th><span class="math inline">\(\phi_{hh}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AR(1): <span class="math inline">\(\\x_t=\phi_1x_{t-1}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)=\phi_1^h\)</span></td>
+<td><span class="math inline">\(\phi_{hh}=\begin{cases} \rho(1)=\phi_1 &amp; h=1 \\ 0 &amp; h&gt;1 \end{cases}\)</span></td>
+</tr>
+<tr class="even">
+<td>AR(2):<span class="math inline">\(\\x_t=\\ \phi_1x_{t-1}+\phi_2x_{t-2}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)=\\ \phi_1\rho(h-1)+\phi_2\rho(h-2), \\ h \ge 1\)</span></td>
+<td><span class="math inline">\(\phi_{hh}=\begin{cases} \phi_{11}=\rho(1)\\\phi_{22}=\phi_2 \\ \phi_{hh}=0 &amp; h \ge 3 \end{cases}\)</span></td>
+</tr>
+<tr class="odd">
+<td>MA(1): <span class="math inline">\(\\x_t=\theta_1w_{t-1}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)=\begin{cases} \frac{\theta_1}{1+\theta_1^2} &amp; h=1 \\ 0 &amp; h&gt;1 \end{cases}\)</span></td>
+<td><span class="math inline">\(\phi_{hh}=-\frac{(-\theta_1)^h(1-\theta_1^2)}{1-\theta_1^{2(h+1)}}, h \ge 1\)</span></td>
+</tr>
+<tr class="even">
+<td>MA(2):<span class="math inline">\(\\x_t=\\ \theta_1w_{t-1}+\theta_2w_{t-2}+w_t\)</span></td>
+<td><span class="math inline">\(\rho(h)=\begin{cases} \frac{\theta_1(1+\theta_2)}{1+\theta_1^2+\theta_2^2} &amp; h=1 \\ \frac{\theta_2}{1+\theta_1^2+\theta_2^2} &amp; h=2 \\ 0 &amp; h&gt;2 \end{cases}\)</span></td>
+<td><span class="math inline">\(\phi_{hh} \begin{cases} \rho(1) &amp; h=1 \\ \frac{\rho(2)-\rho(1)^2}{1-\rho(1)^2} &amp; h=2\\ \frac{\rho(1)^3-\rho(1)\rho(2)(2-\rho(2))}{1-\rho(2)^2-2\rho(1)^2(1-\rho(1))} &amp; h=3\\ \text{No nice compact form} &amp; h&gt;3\end{cases}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Remember: “+” signs are used in the moving average operator, <span class="math inline">\(\theta(B)\)</span>. <strong>Many textbooks use “-“ signs so be careful when you examine these book!!!!</strong> Thus, ACFs and PACFs may be slightly different.</p>
+<p>In summary,</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>AR(p)</th>
+<th>MA(q)</th>
+<th>ARMA(p,q)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ACF</td>
+<td>Tails off to 0</td>
+<td>Cuts off to 0 after lag q</td>
+<td>Tails off to 0 after lag q</td>
+</tr>
+<tr class="even">
+<td>PACF</td>
+<td>Cuts off to 0</td>
+<td>Tails off to 0</td>
+<td>Tails off to 0 after lag p</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Intuitive explanation for the ARMA(p,q) result</strong></p>
+<p>Consider an ARMA(2,1) process.</p>
+<ul>
+<li>The AR(2) in the above table says the ACF tails off and the PACF cuts off to 0 after lag 2.<br />
+</li>
+<li>The MA(1) in the above table says the ACF cuts off to 0 after lag 1 and the PACF tails off.</li>
+</ul>
+<p>Putting this information together, we obtain:</p>
+<ul>
+<li>The ACF for the ARMA(2,1) process will look like the ACF from an AR(2) model after lag 1 (because the ACF for MA(1) cuts off to 0 after lag 1).</li>
+<li>The PACF for the ARMA(2,1) will look like the PACF from a MA(1) model after lag 2 (because the PACF for AR(2) cuts off to 0 after lag 2).</li>
+<li>One can think of overlaying the two ACF plots and the two PACF plots from both the AR(2) and MA(1) models.</li>
+</ul>
+<p>Identifying ARMA models can be difficult. Often, it is hard to determine when the “tails off” part begins.</p>
+<p><strong>How can you use this information???</strong></p>
+<p>Examine the ACF and PACF of an observed time series. If it matches any of the above behaviors, choose the corresponding model for the observed time series.</p>
+<p>For example, suppose a hypothesis test for <span class="math inline">\(H_0:\rho(1) = 0 vs. H_a:\rho(1) \ne 0\)</span> rejects <span class="math inline">\(H_0\)</span> for h = 1 and does not reject <span class="math inline">\(H_0\)</span> for h <span class="math inline">\(\ge\)</span> 2. Also, the PACF tends to “tail off”. Then a MA(1) may be appropriate for the time series data.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-40" class="example"><strong>Example 12.6  </strong></span><strong>ACF and PACF plots of ARMA models for simulated data (ARMA_sample.R)</strong></p>
+<p>I used <code>arima.sim()</code> to simulate observations from an ARMA process. The estimated ACF and PACF are calculated and then compared to the true ACF and PACF. For all of the simulated data sets, <span class="math inline">\(\sigma_w^2=1\)</span> and n = 1,000. The horizontal lines for the ACF and PACF plots are drawn at <span class="math inline">\(\pm 1.96n^{-1/2}=\pm \frac{1.96}{\sqrt{1000}}\)</span>.</p>
+<p>Note that I used the same seed each time for each simulated time series data set (usually, you would want to change it)</p>
+<div class="sourceCode" id="cb409"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb409-1"><a href="acf-and-pacf-for-arma-models.html#cb409-1" aria-hidden="true" tabindex="-1"></a>list.ar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>)</span>
+<span id="cb409-2"><a href="acf-and-pacf-for-arma-models.html#cb409-2" aria-hidden="true" tabindex="-1"></a>list.ma <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.5</span>)</span>
+<span id="cb409-3"><a href="acf-and-pacf-for-arma-models.html#cb409-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb409-4"><a href="acf-and-pacf-for-arma-models.html#cb409-4" aria-hidden="true" tabindex="-1"></a>plot.title <span class="ot">&lt;-</span> <span class="st">&quot;AR par=0.8, MA par=0.5&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb410"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb410-1"><a href="acf-and-pacf-for-arma-models.html#cb410-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate the data</span></span>
+<span id="cb410-2"><a href="acf-and-pacf-for-arma-models.html#cb410-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1788</span>)</span>
+<span id="cb410-3"><a href="acf-and-pacf-for-arma-models.html#cb410-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model=</span><span class="fu">list</span>(<span class="at">ar=</span>list.ar, <span class="at">ma=</span>list.ma), <span class="at">n=</span><span class="dv">1000</span>, <span class="at">rand.gen=</span>rnorm, <span class="at">sd=</span><span class="dv">1</span>)</span>
+<span id="cb410-4"><a href="acf-and-pacf-for-arma-models.html#cb410-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb410-5"><a href="acf-and-pacf-for-arma-models.html#cb410-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of the data</span></span>
+<span id="cb410-6"><a href="acf-and-pacf-for-arma-models.html#cb410-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#dev.new(width = 8, height = 6, pointsize = 10)  </span></span>
+<span id="cb410-7"><a href="acf-and-pacf-for-arma-models.html#cb410-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb410-8"><a href="acf-and-pacf-for-arma-models.html#cb410-8" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>), <span class="at">main =</span>  <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, </span>
+<span id="cb410-9"><a href="acf-and-pacf-for-arma-models.html#cb410-9" aria-hidden="true" tabindex="-1"></a>       plot.title), <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> </span>
+<span id="cb410-10"><a href="acf-and-pacf-for-arma-models.html#cb410-10" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb410-11"><a href="acf-and-pacf-for-arma-models.html#cb410-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<div class="sourceCode" id="cb411"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb411-1"><a href="acf-and-pacf-for-arma-models.html#cb411-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Estimated ACF and PACF</span></span>
+<span id="cb411-2"><a href="acf-and-pacf-for-arma-models.html#cb411-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.new(width = 8, height = 6, pointsize = 10)  </span></span>
+<span id="cb411-3"><a href="acf-and-pacf-for-arma-models.html#cb411-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb411-4"><a href="acf-and-pacf-for-arma-models.html#cb411-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb411-5"><a href="acf-and-pacf-for-arma-models.html#cb411-5" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span></span>
+<span id="cb411-6"><a href="acf-and-pacf-for-arma-models.html#cb411-6" aria-hidden="true" tabindex="-1"></a>      <span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, </span>
+<span id="cb411-7"><a href="acf-and-pacf-for-arma-models.html#cb411-7" aria-hidden="true" tabindex="-1"></a>      plot.title))</span>
+<span id="cb411-8"><a href="acf-and-pacf-for-arma-models.html#cb411-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-9"><a href="acf-and-pacf-for-arma-models.html#cb411-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb411-10"><a href="acf-and-pacf-for-arma-models.html#cb411-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-11"><a href="acf-and-pacf-for-arma-models.html#cb411-11" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb411-12"><a href="acf-and-pacf-for-arma-models.html#cb411-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb411-13"><a href="acf-and-pacf-for-arma-models.html#cb411-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-14"><a href="acf-and-pacf-for-arma-models.html#cb411-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb411-15"><a href="acf-and-pacf-for-arma-models.html#cb411-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-16"><a href="acf-and-pacf-for-arma-models.html#cb411-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Note: acf(x = x, type = &quot;partial&quot;) also gives the PACF plot</span></span>
+<span id="cb411-17"><a href="acf-and-pacf-for-arma-models.html#cb411-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb411-18"><a href="acf-and-pacf-for-arma-models.html#cb411-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb411-19"><a href="acf-and-pacf-for-arma-models.html#cb411-19" aria-hidden="true" tabindex="-1"></a><span class="co">#True ACF and PACF</span></span>
+<span id="cb411-20"><a href="acf-and-pacf-for-arma-models.html#cb411-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-21"><a href="acf-and-pacf-for-arma-models.html#cb411-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> </span>
+<span id="cb411-22"><a href="acf-and-pacf-for-arma-models.html#cb411-22" aria-hidden="true" tabindex="-1"></a>       <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> </span>
+<span id="cb411-23"><a href="acf-and-pacf-for-arma-models.html#cb411-23" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)), <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA </span></span>
+<span id="cb411-24"><a href="acf-and-pacf-for-arma-models.html#cb411-24" aria-hidden="true" tabindex="-1"></a><span class="st">       model:&quot;</span>, plot.title))</span>
+<span id="cb411-25"><a href="acf-and-pacf-for-arma-models.html#cb411-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-26"><a href="acf-and-pacf-for-arma-models.html#cb411-26" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb411-27"><a href="acf-and-pacf-for-arma-models.html#cb411-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-28"><a href="acf-and-pacf-for-arma-models.html#cb411-28" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb411-29"><a href="acf-and-pacf-for-arma-models.html#cb411-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-30"><a href="acf-and-pacf-for-arma-models.html#cb411-30" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> </span>
+<span id="cb411-31"><a href="acf-and-pacf-for-arma-models.html#cb411-31" aria-hidden="true" tabindex="-1"></a>       <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> </span>
+<span id="cb411-32"><a href="acf-and-pacf-for-arma-models.html#cb411-32" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]), <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA </span></span>
+<span id="cb411-33"><a href="acf-and-pacf-for-arma-models.html#cb411-33" aria-hidden="true" tabindex="-1"></a><span class="st">       model:&quot;</span>, plot.title))</span>
+<span id="cb411-34"><a href="acf-and-pacf-for-arma-models.html#cb411-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-35"><a href="acf-and-pacf-for-arma-models.html#cb411-35" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb411-36"><a href="acf-and-pacf-for-arma-models.html#cb411-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb411-37"><a href="acf-and-pacf-for-arma-models.html#cb411-37" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<div class="sourceCode" id="cb412"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb412-1"><a href="acf-and-pacf-for-arma-models.html#cb412-1" aria-hidden="true" tabindex="-1"></a>list.ar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>)</span>
+<span id="cb412-2"><a href="acf-and-pacf-for-arma-models.html#cb412-2" aria-hidden="true" tabindex="-1"></a>list.ma <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>)</span>
+<span id="cb412-3"><a href="acf-and-pacf-for-arma-models.html#cb412-3" aria-hidden="true" tabindex="-1"></a>plot.title <span class="ot">&lt;-</span> <span class="st">&quot;AR par = 0.8&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb413"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb413-1"><a href="acf-and-pacf-for-arma-models.html#cb413-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulate the data</span></span>
+<span id="cb413-2"><a href="acf-and-pacf-for-arma-models.html#cb413-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1788</span>)</span>
+<span id="cb413-3"><a href="acf-and-pacf-for-arma-models.html#cb413-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb413-4"><a href="acf-and-pacf-for-arma-models.html#cb413-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma), <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb413-5"><a href="acf-and-pacf-for-arma-models.html#cb413-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb413-6"><a href="acf-and-pacf-for-arma-models.html#cb413-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb413-7"><a href="acf-and-pacf-for-arma-models.html#cb413-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb413-8"><a href="acf-and-pacf-for-arma-models.html#cb413-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of the data</span></span>
+<span id="cb413-9"><a href="acf-and-pacf-for-arma-models.html#cb413-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb413-10"><a href="acf-and-pacf-for-arma-models.html#cb413-10" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb413-11"><a href="acf-and-pacf-for-arma-models.html#cb413-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb413-12"><a href="acf-and-pacf-for-arma-models.html#cb413-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>),  </span>
+<span id="cb413-13"><a href="acf-and-pacf-for-arma-models.html#cb413-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span>  <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title),</span>
+<span id="cb413-14"><a href="acf-and-pacf-for-arma-models.html#cb413-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb413-15"><a href="acf-and-pacf-for-arma-models.html#cb413-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb413-16"><a href="acf-and-pacf-for-arma-models.html#cb413-16" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<div class="sourceCode" id="cb414"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb414-1"><a href="acf-and-pacf-for-arma-models.html#cb414-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Estimated ACF and PACF</span></span>
+<span id="cb414-2"><a href="acf-and-pacf-for-arma-models.html#cb414-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb414-3"><a href="acf-and-pacf-for-arma-models.html#cb414-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb414-4"><a href="acf-and-pacf-for-arma-models.html#cb414-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb414-5"><a href="acf-and-pacf-for-arma-models.html#cb414-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb414-6"><a href="acf-and-pacf-for-arma-models.html#cb414-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb414-7"><a href="acf-and-pacf-for-arma-models.html#cb414-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb414-8"><a href="acf-and-pacf-for-arma-models.html#cb414-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb414-9"><a href="acf-and-pacf-for-arma-models.html#cb414-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb414-10"><a href="acf-and-pacf-for-arma-models.html#cb414-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: acf(x = x, type = &quot;partial&quot;) also gives the PACF plot</span></span>
+<span id="cb414-11"><a href="acf-and-pacf-for-arma-models.html#cb414-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb414-12"><a href="acf-and-pacf-for-arma-models.html#cb414-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb414-13"><a href="acf-and-pacf-for-arma-models.html#cb414-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#True ACF and PACF</span></span>
+<span id="cb414-14"><a href="acf-and-pacf-for-arma-models.html#cb414-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb414-15"><a href="acf-and-pacf-for-arma-models.html#cb414-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb414-16"><a href="acf-and-pacf-for-arma-models.html#cb414-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb414-17"><a href="acf-and-pacf-for-arma-models.html#cb414-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb414-18"><a href="acf-and-pacf-for-arma-models.html#cb414-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]),</span>
+<span id="cb414-19"><a href="acf-and-pacf-for-arma-models.html#cb414-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb414-20"><a href="acf-and-pacf-for-arma-models.html#cb414-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb414-21"><a href="acf-and-pacf-for-arma-models.html#cb414-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div class="sourceCode" id="cb415"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb415-1"><a href="acf-and-pacf-for-arma-models.html#cb415-1" aria-hidden="true" tabindex="-1"></a>list.ar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>)  </span>
+<span id="cb415-2"><a href="acf-and-pacf-for-arma-models.html#cb415-2" aria-hidden="true" tabindex="-1"></a>list.ma <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.5</span>)</span>
+<span id="cb415-3"><a href="acf-and-pacf-for-arma-models.html#cb415-3" aria-hidden="true" tabindex="-1"></a>plot.title <span class="ot">&lt;-</span> <span class="st">&quot;MA par 0.5&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb416"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb416-1"><a href="acf-and-pacf-for-arma-models.html#cb416-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Simulate the data</span></span>
+<span id="cb416-2"><a href="acf-and-pacf-for-arma-models.html#cb416-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1788</span>)</span>
+<span id="cb416-3"><a href="acf-and-pacf-for-arma-models.html#cb416-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma), <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb416-4"><a href="acf-and-pacf-for-arma-models.html#cb416-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## Warning in min(Mod(polyroot(c(1, -model$ar)))): no non-missing arguments to
+## min; returning Inf</code></pre>
+<div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb418-1"><a href="acf-and-pacf-for-arma-models.html#cb418-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Plot of the data</span></span>
+<span id="cb418-2"><a href="acf-and-pacf-for-arma-models.html#cb418-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb418-3"><a href="acf-and-pacf-for-arma-models.html#cb418-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>),  </span>
+<span id="cb418-4"><a href="acf-and-pacf-for-arma-models.html#cb418-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span>  <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title),</span>
+<span id="cb418-5"><a href="acf-and-pacf-for-arma-models.html#cb418-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb418-6"><a href="acf-and-pacf-for-arma-models.html#cb418-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="acf-and-pacf-for-arma-models.html#cb419-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Estimated ACF and PACF</span></span>
+<span id="cb419-2"><a href="acf-and-pacf-for-arma-models.html#cb419-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb419-3"><a href="acf-and-pacf-for-arma-models.html#cb419-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb419-4"><a href="acf-and-pacf-for-arma-models.html#cb419-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb419-5"><a href="acf-and-pacf-for-arma-models.html#cb419-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb419-6"><a href="acf-and-pacf-for-arma-models.html#cb419-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb419-7"><a href="acf-and-pacf-for-arma-models.html#cb419-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb419-8"><a href="acf-and-pacf-for-arma-models.html#cb419-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb419-9"><a href="acf-and-pacf-for-arma-models.html#cb419-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb419-10"><a href="acf-and-pacf-for-arma-models.html#cb419-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: acf(x = x, type = &quot;partial&quot;) also gives the PACF plot</span></span>
+<span id="cb419-11"><a href="acf-and-pacf-for-arma-models.html#cb419-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb419-12"><a href="acf-and-pacf-for-arma-models.html#cb419-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb419-13"><a href="acf-and-pacf-for-arma-models.html#cb419-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#True ACF and PACF</span></span>
+<span id="cb419-14"><a href="acf-and-pacf-for-arma-models.html#cb419-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb419-15"><a href="acf-and-pacf-for-arma-models.html#cb419-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb419-16"><a href="acf-and-pacf-for-arma-models.html#cb419-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb419-17"><a href="acf-and-pacf-for-arma-models.html#cb419-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb419-18"><a href="acf-and-pacf-for-arma-models.html#cb419-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]),</span>
+<span id="cb419-19"><a href="acf-and-pacf-for-arma-models.html#cb419-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb419-20"><a href="acf-and-pacf-for-arma-models.html#cb419-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb419-21"><a href="acf-and-pacf-for-arma-models.html#cb419-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>Overlay of AR(1) (black) and MA(1) (red) ACFs and PACFs. Compare to the ARMA(1,1) ACF and PACF.</p>
+<div class="figure">
+<img src="True-and-Est-ACF-PACF-graph1.png" alt="" />
+<p class="caption">Graph1</p>
+</div>
+<div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="acf-and-pacf-for-arma-models.html#cb420-1" aria-hidden="true" tabindex="-1"></a>list.ar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="sc">-</span><span class="fl">0.5</span>) </span>
+<span id="cb420-2"><a href="acf-and-pacf-for-arma-models.html#cb420-2" aria-hidden="true" tabindex="-1"></a>list.ma <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>)</span>
+<span id="cb420-3"><a href="acf-and-pacf-for-arma-models.html#cb420-3" aria-hidden="true" tabindex="-1"></a>plot.title <span class="ot">&lt;-</span> <span class="st">&quot;AR par = 0.7 -0.5, MA par -0.5&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb421"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb421-1"><a href="acf-and-pacf-for-arma-models.html#cb421-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Simulate the data</span></span>
+<span id="cb421-2"><a href="acf-and-pacf-for-arma-models.html#cb421-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1788</span>)</span>
+<span id="cb421-3"><a href="acf-and-pacf-for-arma-models.html#cb421-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma), <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb421-4"><a href="acf-and-pacf-for-arma-models.html#cb421-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb421-5"><a href="acf-and-pacf-for-arma-models.html#cb421-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb421-6"><a href="acf-and-pacf-for-arma-models.html#cb421-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb421-7"><a href="acf-and-pacf-for-arma-models.html#cb421-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Plot of the data</span></span>
+<span id="cb421-8"><a href="acf-and-pacf-for-arma-models.html#cb421-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb421-9"><a href="acf-and-pacf-for-arma-models.html#cb421-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>),  </span>
+<span id="cb421-10"><a href="acf-and-pacf-for-arma-models.html#cb421-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span>  <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title),</span>
+<span id="cb421-11"><a href="acf-and-pacf-for-arma-models.html#cb421-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb421-12"><a href="acf-and-pacf-for-arma-models.html#cb421-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb422-1"><a href="acf-and-pacf-for-arma-models.html#cb422-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Estimated ACF and PACF</span></span>
+<span id="cb422-2"><a href="acf-and-pacf-for-arma-models.html#cb422-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb422-3"><a href="acf-and-pacf-for-arma-models.html#cb422-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb422-4"><a href="acf-and-pacf-for-arma-models.html#cb422-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb422-5"><a href="acf-and-pacf-for-arma-models.html#cb422-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb422-6"><a href="acf-and-pacf-for-arma-models.html#cb422-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb422-7"><a href="acf-and-pacf-for-arma-models.html#cb422-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb422-8"><a href="acf-and-pacf-for-arma-models.html#cb422-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb422-9"><a href="acf-and-pacf-for-arma-models.html#cb422-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb422-10"><a href="acf-and-pacf-for-arma-models.html#cb422-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: acf(x = x, type = &quot;partial&quot;) also gives the PACF plot</span></span>
+<span id="cb422-11"><a href="acf-and-pacf-for-arma-models.html#cb422-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb422-12"><a href="acf-and-pacf-for-arma-models.html#cb422-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb422-13"><a href="acf-and-pacf-for-arma-models.html#cb422-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#True ACF and PACF</span></span>
+<span id="cb422-14"><a href="acf-and-pacf-for-arma-models.html#cb422-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb422-15"><a href="acf-and-pacf-for-arma-models.html#cb422-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb422-16"><a href="acf-and-pacf-for-arma-models.html#cb422-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb422-17"><a href="acf-and-pacf-for-arma-models.html#cb422-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb422-18"><a href="acf-and-pacf-for-arma-models.html#cb422-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]),</span>
+<span id="cb422-19"><a href="acf-and-pacf-for-arma-models.html#cb422-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb422-20"><a href="acf-and-pacf-for-arma-models.html#cb422-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb422-21"><a href="acf-and-pacf-for-arma-models.html#cb422-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb423-1"><a href="acf-and-pacf-for-arma-models.html#cb423-1" aria-hidden="true" tabindex="-1"></a>list.ar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.8</span>)</span>
+<span id="cb423-2"><a href="acf-and-pacf-for-arma-models.html#cb423-2" aria-hidden="true" tabindex="-1"></a>list.ma <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.6</span>)</span>
+<span id="cb423-3"><a href="acf-and-pacf-for-arma-models.html#cb423-3" aria-hidden="true" tabindex="-1"></a>plot.title <span class="ot">&lt;-</span><span class="st">&quot; AR par = 0.7 -0.5 0.5 -0.8, MA par -0.6&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb424-1"><a href="acf-and-pacf-for-arma-models.html#cb424-1" aria-hidden="true" tabindex="-1"></a> <span class="co">#Simulate the data</span></span>
+<span id="cb424-2"><a href="acf-and-pacf-for-arma-models.html#cb424-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1788</span>)</span>
+<span id="cb424-3"><a href="acf-and-pacf-for-arma-models.html#cb424-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma), <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb424-4"><a href="acf-and-pacf-for-arma-models.html#cb424-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb424-5"><a href="acf-and-pacf-for-arma-models.html#cb424-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb424-6"><a href="acf-and-pacf-for-arma-models.html#cb424-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb424-7"><a href="acf-and-pacf-for-arma-models.html#cb424-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Plot of the data</span></span>
+<span id="cb424-8"><a href="acf-and-pacf-for-arma-models.html#cb424-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb424-9"><a href="acf-and-pacf-for-arma-models.html#cb424-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>),  </span>
+<span id="cb424-10"><a href="acf-and-pacf-for-arma-models.html#cb424-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span>  <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title),</span>
+<span id="cb424-11"><a href="acf-and-pacf-for-arma-models.html#cb424-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb424-12"><a href="acf-and-pacf-for-arma-models.html#cb424-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<div class="sourceCode" id="cb425"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb425-1"><a href="acf-and-pacf-for-arma-models.html#cb425-1" aria-hidden="true" tabindex="-1"></a> <span class="co">#Estimated ACF and PACF</span></span>
+<span id="cb425-2"><a href="acf-and-pacf-for-arma-models.html#cb425-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb425-3"><a href="acf-and-pacf-for-arma-models.html#cb425-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb425-4"><a href="acf-and-pacf-for-arma-models.html#cb425-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb425-5"><a href="acf-and-pacf-for-arma-models.html#cb425-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb425-6"><a href="acf-and-pacf-for-arma-models.html#cb425-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb425-7"><a href="acf-and-pacf-for-arma-models.html#cb425-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb425-8"><a href="acf-and-pacf-for-arma-models.html#cb425-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb425-9"><a href="acf-and-pacf-for-arma-models.html#cb425-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb425-10"><a href="acf-and-pacf-for-arma-models.html#cb425-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: acf(x = x, type = &quot;partial&quot;) also gives the PACF plot</span></span>
+<span id="cb425-11"><a href="acf-and-pacf-for-arma-models.html#cb425-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb425-12"><a href="acf-and-pacf-for-arma-models.html#cb425-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb425-13"><a href="acf-and-pacf-for-arma-models.html#cb425-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#True ACF and PACF</span></span>
+<span id="cb425-14"><a href="acf-and-pacf-for-arma-models.html#cb425-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb425-15"><a href="acf-and-pacf-for-arma-models.html#cb425-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb425-16"><a href="acf-and-pacf-for-arma-models.html#cb425-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb425-17"><a href="acf-and-pacf-for-arma-models.html#cb425-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb425-18"><a href="acf-and-pacf-for-arma-models.html#cb425-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]),</span>
+<span id="cb425-19"><a href="acf-and-pacf-for-arma-models.html#cb425-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb425-20"><a href="acf-and-pacf-for-arma-models.html#cb425-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb425-21"><a href="acf-and-pacf-for-arma-models.html#cb425-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<div class="sourceCode" id="cb426"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb426-1"><a href="acf-and-pacf-for-arma-models.html#cb426-1" aria-hidden="true" tabindex="-1"></a>list.ar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.8</span>)</span>
+<span id="cb426-2"><a href="acf-and-pacf-for-arma-models.html#cb426-2" aria-hidden="true" tabindex="-1"></a>list.ma <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>)</span>
+<span id="cb426-3"><a href="acf-and-pacf-for-arma-models.html#cb426-3" aria-hidden="true" tabindex="-1"></a>plot.title <span class="ot">&lt;-</span> <span class="st">&quot;AR par = -0.7&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb427"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb427-1"><a href="acf-and-pacf-for-arma-models.html#cb427-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulate the data</span></span>
+<span id="cb427-2"><a href="acf-and-pacf-for-arma-models.html#cb427-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">1788</span>)</span>
+<span id="cb427-3"><a href="acf-and-pacf-for-arma-models.html#cb427-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma), <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb427-4"><a href="acf-and-pacf-for-arma-models.html#cb427-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb427-5"><a href="acf-and-pacf-for-arma-models.html#cb427-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb427-6"><a href="acf-and-pacf-for-arma-models.html#cb427-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb427-7"><a href="acf-and-pacf-for-arma-models.html#cb427-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Plot of the data</span></span>
+<span id="cb427-8"><a href="acf-and-pacf-for-arma-models.html#cb427-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb427-9"><a href="acf-and-pacf-for-arma-models.html#cb427-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>),  </span>
+<span id="cb427-10"><a href="acf-and-pacf-for-arma-models.html#cb427-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span>  <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title),</span>
+<span id="cb427-11"><a href="acf-and-pacf-for-arma-models.html#cb427-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb427-12"><a href="acf-and-pacf-for-arma-models.html#cb427-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode" id="cb428"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb428-1"><a href="acf-and-pacf-for-arma-models.html#cb428-1" aria-hidden="true" tabindex="-1"></a> <span class="co">#Estimated ACF and PACF</span></span>
+<span id="cb428-2"><a href="acf-and-pacf-for-arma-models.html#cb428-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb428-3"><a href="acf-and-pacf-for-arma-models.html#cb428-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb428-4"><a href="acf-and-pacf-for-arma-models.html#cb428-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb428-5"><a href="acf-and-pacf-for-arma-models.html#cb428-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb428-6"><a href="acf-and-pacf-for-arma-models.html#cb428-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb428-7"><a href="acf-and-pacf-for-arma-models.html#cb428-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb428-8"><a href="acf-and-pacf-for-arma-models.html#cb428-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb428-9"><a href="acf-and-pacf-for-arma-models.html#cb428-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb428-10"><a href="acf-and-pacf-for-arma-models.html#cb428-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: acf(x = x, type = &quot;partial&quot;) also gives the PACF plot</span></span>
+<span id="cb428-11"><a href="acf-and-pacf-for-arma-models.html#cb428-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb428-12"><a href="acf-and-pacf-for-arma-models.html#cb428-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb428-13"><a href="acf-and-pacf-for-arma-models.html#cb428-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#True ACF and PACF</span></span>
+<span id="cb428-14"><a href="acf-and-pacf-for-arma-models.html#cb428-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">y =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>), <span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">rho</span>(h)),</span>
+<span id="cb428-15"><a href="acf-and-pacf-for-arma-models.html#cb428-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb428-16"><a href="acf-and-pacf-for-arma-models.html#cb428-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb428-17"><a href="acf-and-pacf-for-arma-models.html#cb428-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span>
+<span id="cb428-18"><a href="acf-and-pacf-for-arma-models.html#cb428-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">ARMAacf</span>(<span class="at">ar =</span> list.ar, <span class="at">ma =</span> list.ma, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">pacf =</span> <span class="cn">TRUE</span>), <span class="at">type =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(phi1[hh]),</span>
+<span id="cb428-19"><a href="acf-and-pacf-for-arma-models.html#cb428-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">&quot;ARMA model:&quot;</span>, plot.title))</span>
+<span id="cb428-20"><a href="acf-and-pacf-for-arma-models.html#cb428-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
+<span id="cb428-21"><a href="acf-and-pacf-for-arma-models.html#cb428-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>)</span></code></pre></div>
+<p><img src="11-ACF-PACF-for-ARMA_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+</div>
+<p>Notes:</p>
+<ul>
+<li>Again, we should ignore the ACF plot at h=0 (lag=0). But not for PACF as the PACF plot starts at h=1,</li>
+<li>Run the program a few times on your own with different seeds, samples sizes, and ARMA models to see what changes occur. For example, see what happens with the agreement of the estimated and true ACFs and PACFs as the sample size decreases.<br />
+</li>
+<li>It is not as easy to see where the “cuts off to 0 after lag…” occurs! We will use additional methods to help us decide if a model fits the data well.<br />
+</li>
+<li>Examining the ACF and PACF is one of the first steps to the constructing an ARMA model for a time series data set. This examination allows one to pick a few different candidate models to examine more closely!<br />
+</li>
+<li>On a test, I may give you some of the ACF and PACF plots above (without the model stated) and have you suggest a possible ARMA model.</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="arma.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="integrated-models-for-nonstationary-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

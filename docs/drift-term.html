@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 16 Drift Term | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 16 Drift Term | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 16 Drift Term | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="forecasting.html"/>
+<link rel="next" href="arima-model-building.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="drift-term" class="section level1 hasAnchor" number="16">
+<h1><span class="header-section-number">Chapter 16</span> Drift Term<a href="drift-term.html#drift-term" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="random-walk-model" class="section level2 hasAnchor" number="16.1">
+<h2><span class="header-section-number">16.1</span> Random Walk Model<a href="drift-term.html#random-walk-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A random walk model is simply an ARIMA(0,1,0):</p>
+<p><span class="math inline">\((1-B)x_t=w_t\implies x_t=x_{t-1}+w_t\)</span></p>
+<p>where <span class="math inline">\(w_t \sim ind.(0, \sigma_w^2)\)</span></p>
+<p>The name comes about through <span class="math inline">\(x_t\)</span> being <span class="math inline">\(x_{t-1}\)</span> plus a random “movement”.</p>
+<p>A drift term <span class="math inline">\(\delta\)</span> can be added to the model,</p>
+<p><span class="math inline">\(x_t=\delta+x_{t-1}+w_t\)</span></p>
+<p>This can be rewritten then as a cumulative sum,</p>
+<p><span class="math display">\[x_t=\delta+(\delta+x_{t-2}+w_{t-1})+w_t\\
+=2\delta+x_{t-2}+w_{t-1}+w_t\\
+=2\delta+(\delta+x_{t-3}+w_{t-2})+w_{t-1}+w_t\\
+=3\delta+x_{t-3}+w_{t-2}+w_{t-1}+w_t\\
+\vdots\\
+x_t=\delta t+\sum_{j=1}^{t}w_j\]</span></p>
+<p>One can see that the drift term creates a non-stochastic trend in the series (i.e., allows <span class="math inline">\(x_t\)</span> to drift away from 0).</p>
+<p>Notice the random walk model with a drift term is not stationary because the mean is a function of time.</p>
+<p><span class="math inline">\(E(x_t)=\delta t +\sum_{j=1}^{t}E(w_j)=\delta t\)</span></p>
+</div>
+<div id="estimating-the-drift-term" class="section level2 hasAnchor" number="16.2">
+<h2><span class="header-section-number">16.2</span> Estimating the drift term<a href="drift-term.html#estimating-the-drift-term" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When <code>arima()</code> is used with differencing, the <code>include.mean</code> argument is set to <code>FALSE</code>. This is because differencing removes the trend and allows for the differenced series to have a mean of 0. Note that even if you say <code>include.mean = TRUE</code>, there will be no “mean” estimated. Here’s what R’s <code>arima()</code> help says for the include.mean argument,</p>
+<blockquote>
+<p><code>include.mean</code> Should the ARIMA model include a mean term? The default is TRUE for undifferenced series, FALSE for differenced ones (where a mean would not affect the fit nor predictions).</p>
+</blockquote>
+<p>As shown in the random walk model example, there may be times where you do want to estimate a drift term, like <span class="math inline">\(\delta\)</span>, still. This leads to an ARIMA model with the drift term,</p>
+<p><span class="math display">\[(1-\phi_1B-\phi_2B^2-...-\phi_pB^p)(1-B)^dx_t=\\
+\delta+(1+\theta_1B+\theta_2B^2+...+\theta_qB^q)w_t\\
+\iff \phi(B)(1-B)^dx_t=\delta+\theta(B)w_t\]</span></p>
+<p>Most time series textbooks will not include the constant term in the model when there is differencing. For example, Wei’s textbook says (referring to <span class="math inline">\(\delta\)</span> as <span class="math inline">\(\theta_0\)</span>),</p>
+<blockquote>
+<p>We assume that <span class="math inline">\(\theta_0 = 0\)</span>, unless it is clear from the data or the nature of the problem that a deterministic [non-stochastic] trend is really needed.</p>
+</blockquote>
+<p>This is why R does not include the possible estimation of <span class="math inline">\(\delta\)</span> in the <code>arima()</code> function.</p>
+<p>If you did want to include <span class="math inline">\(\delta\)</span>, there are a few ways to estimate it.</p>
+<ol style="list-style-type: decimal">
+<li>Use <code>xreg = 1:length(x)</code>in <code>arima()</code> where x contains the data used with the <code>arima()</code>.<br />
+</li>
+<li>Use the <code>sarima()</code> and <code>sarima.for()</code> functions in the <code>astsa</code> package for fitting the model and forecasting, respectively. The <code>sarima()</code> name comes from an extension of the ARIMA model that will be discussed later in our course to allow for seasonality.</li>
+<li>Do all differencing needed BEFORE invoking <code>arima()</code>. Use <code>d = 0</code> in <code>arima()</code> and <code>include.mean = TRUE</code>.</li>
+</ol>
+<p>Below are examples of their implementations. Shumway and Stoffer also include an example when finding the best model for their GNP data.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-58" class="example"><strong>Example 16.1  </strong></span><strong>ARIMA(1,1,1) with <span class="math inline">\(\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200\)</span> (arima111_sim.R)</strong></p>
+<p>Of course, <span class="math inline">\(\delta\)</span> should be 0 for this data set since the data were simulated directly from an ARIMA(1,1,1). However, we can still investigate what would happen if <span class="math inline">\(\delta\)</span> was estimated.</p>
+<p>First, the original model’s fit has been reproduced below.</p>
+<div class="sourceCode" id="cb593"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb593-1"><a href="drift-term.html#cb593-1" aria-hidden="true" tabindex="-1"></a>arima111 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&quot;arima111.csv&quot;</span>)</span>
+<span id="cb593-2"><a href="drift-term.html#cb593-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> arima111<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb594"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb594-1"><a href="drift-term.html#cb594-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb594-2"><a href="drift-term.html#cb594-2" aria-hidden="true" tabindex="-1"></a>mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1))
+## 
+## Coefficients:
+##          ar1     ma1
+##       0.6720  0.4681
+## s.e.  0.0637  0.0904
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1021.36</code></pre>
+<div class="sourceCode" id="cb596"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb596-1"><a href="drift-term.html#cb596-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Forecasts 5 time periods into the future</span></span>
+<span id="cb596-2"><a href="drift-term.html#cb596-2" aria-hidden="true" tabindex="-1"></a>fore.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit, <span class="at">n.ahead =</span> <span class="dv">5</span>, se.fit </span>
+<span id="cb596-3"><a href="drift-term.html#cb596-3" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">=</span> <span class="cn">TRUE</span>) </span>
+<span id="cb596-4"><a href="drift-term.html#cb596-4" aria-hidden="true" tabindex="-1"></a>fore.mod</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1] -486.3614 -484.9361 -483.9784 -483.3348 -482.9023
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1]  3.091673  7.303206 11.578890 15.682551 19.534208</code></pre>
+<p>The estimated model is</p>
+<p><span class="math inline">\((1 - 0.6720B)(1 - B)x_t = (1 + 0.4681B)w_t\)</span> with <span class="math inline">\(\hat \sigma_w^2= 9.56\)</span></p>
+<p>Next, the models are fit including an estimate of <span class="math inline">\(\delta\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li>Using <code>xreg = 1:length(x)</code> in <code>arima()</code> where x contains the data</li>
+</ol>
+<div class="sourceCode" id="cb598"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb598-1"><a href="drift-term.html#cb598-1" aria-hidden="true" tabindex="-1"></a>mod.fit2 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">xreg =</span> </span>
+<span id="cb598-2"><a href="drift-term.html#cb598-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x))</span>
+<span id="cb598-3"><a href="drift-term.html#cb598-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb598-4"><a href="drift-term.html#cb598-4" aria-hidden="true" tabindex="-1"></a>mod.fit2</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1), xreg = 1:length(x))
+## 
+## Coefficients:
+##          ar1     ma1  1:length(x)
+##       0.6382  0.4826      -1.6847
+## s.e.  0.0671  0.0894       0.8815
+## 
+## sigma^2 estimated as 9.404:  log likelihood = -506.03,  aic = 1020.05</code></pre>
+<p><span class="math inline">\(\hat \delta=-1.6847, \sqrt{\hat Var(\hat \delta)}=0.8815, \hat \sigma_w^2=9.404\)</span></p>
+<div class="sourceCode" id="cb600"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb600-1"><a href="drift-term.html#cb600-1" aria-hidden="true" tabindex="-1"></a>fore.mod2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit2, <span class="at">n.ahead =</span> <span class="dv">5</span>, </span>
+<span id="cb600-2"><a href="drift-term.html#cb600-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">se.fit =</span> <span class="cn">TRUE</span>, <span class="at">newxreg =</span> (<span class="fu">length</span>(x)<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="fu">length</span>(x)<span class="sc">+</span><span class="dv">5</span>))</span>
+<span id="cb600-3"><a href="drift-term.html#cb600-3" aria-hidden="true" tabindex="-1"></a>fore.mod2</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1] -486.7318 -486.2243 -486.5100 -487.3020 -488.4169
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1]  3.066606  7.190241 11.284195 15.141661 18.709358</code></pre>
+<p>Notice in our example,<code>newxreg = (length(x)+1):(length(x)+5))</code> basically means t=201,…,205.</p>
+<p><span class="math inline">\(H_0: \delta=0\quad vs. \quad H_a: \delta \ne 0\)</span></p>
+<p>Wald statistics: <span class="math inline">\(\frac{\hat \delta-0}{\sqrt{\hat Var(\hat \delta)}}=\frac{-1.6847}{0.8815}\)</span></p>
+<div class="sourceCode" id="cb602"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb602-1"><a href="drift-term.html#cb602-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculating wald statistics for hypothesis testing</span></span>
+<span id="cb602-2"><a href="drift-term.html#cb602-2" aria-hidden="true" tabindex="-1"></a>mod.fit2<span class="sc">$</span>coef[<span class="dv">3</span>]<span class="sc">/</span><span class="fu">sqrt</span>(mod.fit2<span class="sc">$</span>var.coef[<span class="dv">3</span>,<span class="dv">3</span>])</span></code></pre></div>
+<pre><code>## 1:length(x) 
+##   -1.911036</code></pre>
+<div class="sourceCode" id="cb604"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb604-1"><a href="drift-term.html#cb604-1" aria-hidden="true" tabindex="-1"></a><span class="co"># surprisingly, we see delta ≠ 0 statistically significant</span></span></code></pre></div>
+<div class="sourceCode" id="cb605"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb605-1"><a href="drift-term.html#cb605-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x) </span></code></pre></div>
+<pre><code>##   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18
+##  [19]  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36
+##  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54
+##  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72
+##  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90
+##  [91]  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 106 107 108
+## [109] 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126
+## [127] 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144
+## [145] 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162
+## [163] 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180
+## [181] 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198
+## [199] 199 200</code></pre>
+<p>Note the <code>newxreg</code> option used in <code>predict()</code> and the values that I put into it. The estimated model is</p>
+<p><span class="math inline">\((1 - 0.6382B)(1 - B)x_t = -1.6847 + (1 + 0.4826B)w_t\)</span> with <span class="math inline">\(\hat \sigma_w^2=9.404\)</span></p>
+<p>A Wald test was performed for Ho:<span class="math inline">\(\delta\)</span> = 0 vs. Ha:<span class="math inline">\(\delta \ne\)</span> 0, and, surprisingly, <span class="math inline">\(\delta\)</span> is marginally significant. But we simulate our data with <span class="math inline">\(\delta=0\)</span>. This is an example of a type I error!</p>
+<ol start="2" style="list-style-type: decimal">
+<li>The <code>astsa</code> package</li>
+</ol>
+<div class="sourceCode" id="cb607"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb607-1"><a href="drift-term.html#cb607-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span>
+<span id="cb607-2"><a href="drift-term.html#cb607-2" aria-hidden="true" tabindex="-1"></a>mod.fit.SS <span class="ot">&lt;-</span> <span class="fu">sarima</span>(<span class="at">xdata =</span> x, <span class="at">p =</span> <span class="dv">1</span>, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## initial  value 1.695478 
+## iter   2 value 1.257308
+## iter   3 value 1.138015
+## iter   4 value 1.128318
+## iter   5 value 1.125569
+## iter   6 value 1.124216
+## iter   7 value 1.124166
+## iter   8 value 1.124164
+## iter   9 value 1.124163
+## iter  10 value 1.124158
+## iter  11 value 1.124158
+## iter  12 value 1.124158
+## iter  12 value 1.124158
+## iter  12 value 1.124158
+## final  value 1.124158 
+## converged
+## initial  value 1.123918 
+## iter   2 value 1.123906
+## iter   3 value 1.123903
+## iter   4 value 1.123901
+## iter   5 value 1.123901
+## iter   6 value 1.123901
+## iter   7 value 1.123901
+## iter   7 value 1.123901
+## iter   7 value 1.123901
+## final  value 1.123901 
+## converged</code></pre>
+<p><img src="15-Drift_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb609"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb609-1"><a href="drift-term.html#cb609-1" aria-hidden="true" tabindex="-1"></a>mod.fit.SS</span></code></pre></div>
+<pre><code>## $fit
+## 
+## Call:
+## arima(x = xdata, order = c(p, d, q), seasonal = list(order = c(P, D, Q), period = S), 
+##     xreg = constant, transform.pars = trans, fixed = fixed, optim.control = list(trace = trc, 
+##         REPORT = 1, reltol = tol))
+## 
+## Coefficients:
+##          ar1     ma1  constant
+##       0.6382  0.4826   -1.6847
+## s.e.  0.0671  0.0894    0.8815
+## 
+## sigma^2 estimated as 9.404:  log likelihood = -506.03,  aic = 1020.05
+## 
+## $degrees_of_freedom
+## [1] 196
+## 
+## $ttable
+##          Estimate     SE t.value p.value
+## ar1        0.6382 0.0671  9.5105  0.0000
+## ma1        0.4826 0.0894  5.4008  0.0000
+## constant  -1.6847 0.8815 -1.9110  0.0575
+## 
+## $AIC
+## [1] 5.12588
+## 
+## $AICc
+## [1] 5.126498
+## 
+## $BIC
+## [1] 5.192077</code></pre>
+<div class="sourceCode" id="cb611"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb611-1"><a href="drift-term.html#cb611-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mod.fit.SS)</span></code></pre></div>
+<pre><code>## [1] &quot;fit&quot;                &quot;degrees_of_freedom&quot; &quot;ttable&quot;            
+## [4] &quot;AIC&quot;                &quot;AICc&quot;               &quot;BIC&quot;</code></pre>
+<div class="sourceCode" id="cb613"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb613-1"><a href="drift-term.html#cb613-1" aria-hidden="true" tabindex="-1"></a>mod.fit.SS<span class="sc">$</span>fit<span class="sc">$</span>coef</span></code></pre></div>
+<pre><code>##        ar1        ma1   constant 
+##  0.6381503  0.4825974 -1.6846517</code></pre>
+<div class="sourceCode" id="cb615"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb615-1"><a href="drift-term.html#cb615-1" aria-hidden="true" tabindex="-1"></a>mod.fit.SS<span class="sc">$</span>fit<span class="sc">$</span>var.coef</span></code></pre></div>
+<pre><code>##                   ar1           ma1     constant
+## ar1       0.004502355 -3.544069e-03 4.935340e-04
+## ma1      -0.003544069  7.984741e-03 7.767688e-05
+## constant  0.000493534  7.767688e-05 7.771103e-01</code></pre>
+<p>The plot that includes information about the residuals will be discussed later in the course. The estimated model is</p>
+<p><span class="math inline">\((1 - 0.6382B)(1 - B)x_t = -1.6847 + (1 + 0.4826B)w_t\)</span> with <span class="math inline">\(\hat \sigma_w^2=9.404\)</span></p>
+<p>The forecasts are shown below. Use <code>sarima.for</code> to forecast.</p>
+<div class="sourceCode" id="cb617"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb617-1"><a href="drift-term.html#cb617-1" aria-hidden="true" tabindex="-1"></a>save.for <span class="ot">&lt;-</span> <span class="fu">sarima.for</span>(<span class="at">xdata =</span> x, <span class="at">n.ahead =</span> <span class="dv">5</span>, <span class="at">p =</span> <span class="dv">1</span>, d </span>
+<span id="cb617-2"><a href="drift-term.html#cb617-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">1</span>)  </span></code></pre></div>
+<p><img src="15-Drift_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb618"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb618-1"><a href="drift-term.html#cb618-1" aria-hidden="true" tabindex="-1"></a>save.for</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1] -486.7318 -486.2243 -486.5100 -487.3020 -488.4169
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1]  3.066606  7.190241 11.284195 15.141661 18.709358</code></pre>
+<p>The envelope surrounding the forecasts represent <span class="math inline">\(\pm 1\)</span> and <span class="math inline">\(\pm 2\)</span> multiplied by <span class="math inline">\(\sqrt{Var(x_{n+m}-\tilde x^n_{n+m})}\)</span></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Perform the differencing BEFORE invoking <code>arima()</code>, Use <code>d = 0</code> in <code>arima()</code>, and <code>include.mean = TRUE</code>.</li>
+</ol>
+<p>See the program for partial implementation. Methods #1 and #2 are easier, so these will be used in this course.</p>
+<p>If you use method 3, you will forecast <span class="math inline">\(v_t=(1-B)^dx_t\)</span>, so your forecast is not in the scale of <span class="math inline">\(x_t\)</span>. This can be cumbersome.</p>
+<div class="sourceCode" id="cb620"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb620-1"><a href="drift-term.html#cb620-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Do all differencing needed BEFORE invoking arima(). Use d = 0 in arima() and include.mean = TRUE.</span></span>
+<span id="cb620-2"><a href="drift-term.html#cb620-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb620-3"><a href="drift-term.html#cb620-3" aria-hidden="true" tabindex="-1"></a>x.diff <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>)</span>
+<span id="cb620-4"><a href="drift-term.html#cb620-4" aria-hidden="true" tabindex="-1"></a>mod.fit.diff <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x.diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb620-5"><a href="drift-term.html#cb620-5" aria-hidden="true" tabindex="-1"></a>mod.fit.diff</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x.diff, order = c(1, 0, 1))
+## 
+## Coefficients:
+##          ar1     ma1  intercept
+##       0.6382  0.4826    -1.6847
+## s.e.  0.0671  0.0894     0.8815
+## 
+## sigma^2 estimated as 9.404:  log likelihood = -506.03,  aic = 1020.05</code></pre>
+<div class="sourceCode" id="cb622"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb622-1"><a href="drift-term.html#cb622-1" aria-hidden="true" tabindex="-1"></a>fore.mod.diff <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit.diff, <span class="at">n.ahead =</span> <span class="dv">5</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb622-2"><a href="drift-term.html#cb622-2" aria-hidden="true" tabindex="-1"></a>fore.mod.diff</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 200 
+## End = 204 
+## Frequency = 1 
+## [1]  1.7505015  0.5074891 -0.2857396 -0.7919387 -1.1149699
+## 
+## $se
+## Time Series:
+## Start = 200 
+## End = 204 
+## Frequency = 1 
+## [1] 3.066606 4.606115 5.101633 5.290143 5.365013</code></pre>
+<div class="sourceCode" id="cb624"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb624-1"><a href="drift-term.html#cb624-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Problem with doing the above method is the need to get the undifferenced data back</span></span>
+<span id="cb624-2"><a href="drift-term.html#cb624-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#  Would need to do &quot;integrating&quot;</span></span></code></pre></div>
+</div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="forecasting.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="arima-model-building.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

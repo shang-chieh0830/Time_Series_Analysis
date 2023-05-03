@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 15 Forecasting | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 15 Forecasting | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 15 Forecasting | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="estimation.html"/>
+<link rel="next" href="drift-term.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="forecasting" class="section level1 hasAnchor" number="15">
+<h1><span class="header-section-number">Chapter 15</span> Forecasting<a href="forecasting.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="point-estimates" class="section level2 hasAnchor" number="15.1">
+<h2><span class="header-section-number">15.1</span> Point Estimates<a href="forecasting.html#point-estimates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Predict (forecast) future values of a time series, <span class="math inline">\(x_{n+1}, x_{n+2}, …\)</span> based on <span class="math inline">\(x_1, …, x_n\)</span>.</p>
+<p>For m time points into the future, the “minimum mean square error predictor” of <span class="math inline">\(x_{n+m}\)</span> is <span class="math inline">\(x^n_{n+m} = E(x_{n+m}|x_n,x_{n-1},…, x_1)\)</span>. What does this mean?</p>
+<ul>
+<li><p><span class="math inline">\(E(x_{n+m}|x_n,x_{n-1},…, x_1)\)</span> is a conditional expectation. It denotes the expected value of x at m time points into the future, conditional on the time series observed.</p></li>
+<li><p><span class="math inline">\(E(x_{n+m}|x_n,x_{n-1},…, x_1)\)</span> is the value of <span class="math inline">\(g(x_1,..,x_n)\)</span> that minimizes <span class="math inline">\(E[x_{n+m} – g(x_1,..,x_n)]^2\)</span></p></li>
+</ul>
+<p>Instead of using this as a predictor, we will use an approximation <span class="math inline">\(\tilde x^n_{n+m} = E(x_{n+m}|x_n,x_{n-1},…,x_1,…)\)</span>. What is the difference?</p>
+<p><span class="math inline">\(\tilde x^n_{n+m}\)</span> is based on an infinite past and <span class="math inline">\(x_{n+m}^n\)</span> is based on a finite past (which is what we actually have).</p>
+<p>For notational convenience, I will denote <span class="math inline">\(x_n, x_{n-1}, …, x_1,…\)</span> as <span class="math inline">\(I_n\)</span>. This symbolizes all INFORMATION up to time point n from an INFINITE past.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-47" class="example"><strong>Example 15.1  </strong></span><strong>AR(1)</strong></p>
+<p>The model is <span class="math inline">\(x_t = \phi_1x_{t-1} + w_t\)</span> where <span class="math inline">\(w_t \sim ind(0,\sigma_w^2)\)</span>. Taking into account the observed data of <span class="math inline">\(x_1, …, x_n\)</span>, this also essentially means <span class="math inline">\(w_1, …, w_n\)</span> are observed.</p>
+<p>Suppose we have observations up to time n. We want to forecast future values for time n + m (m &gt; 0). Thus, we want <span class="math inline">\(x_{n+m} = \phi_1x_{n+m-1} + w_{n+m}.\)</span></p>
+<p>Let m = 1. Then the “forecasted value at time n + 1 given information up to time n” is</p>
+<p><span class="math display">\[\tilde x^n_{n+1}  = E(x_{n+1}|I_n)\\
+= E(\phi_1x_n + w_{n+1} |I_n)\\
+= E(\phi_1x_n |I_n) + E(w_{n+1} |I_n)\\
+= \phi_1E(x_n |I_n) + 0=\phi_1x_n\]</span></p>
+<p>The last line come about because <span class="math inline">\(w_{n+1}\)</span> is unobserved and the <span class="math inline">\(w_{n+1} \sim ind(0,\sigma_w^2)\)</span>. Also the expectation is found CONDITIONAL on knowing <span class="math inline">\(x_n, x_{n-1},…, x_1,…;\)</span> i.e., we know what <span class="math inline">\(x_n\)</span> is!</p>
+<p>Let m = 2. Then</p>
+<p><span class="math display">\[\tilde x^n_{n+2}  = E(x_{n+2}|I_n)\\
+= E(\phi_1x_{n+1} + w_{n+2} |I_n)\\
+= E(\phi_1x_{n+1} |I_n) + E(w_{n+2} |I_n)\\
+= \phi_1E(x_{n+1} |I_n) + 0=\phi_1\tilde x^n_{n+1}\]</span></p>
+<p>The last equation come aboue because <span class="math inline">\(w_{n+2}\)</span> is unobserved and the <span class="math inline">\(w_{n+2} \sim (0, \sigma_w^2)\)</span></p>
+<p><span class="math inline">\(\tilde x^n_{n+2}\)</span> can be further written as <span class="math inline">\(\phi_1 \tilde x_{n+1}^n =\phi_1^2x_n\)</span></p>
+<p>In summary,</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">m</th>
+<th align="left"><span class="math inline">\(\tilde x^n_{n+m}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left"><span class="math inline">\(\phi_1x_n\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left"><span class="math inline">\(\phi_1 \tilde x_{n+1}^n\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left"><span class="math inline">\(\phi_1 \tilde x_{n+2}^n\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left"><span class="math inline">\(\phi_1 \tilde x_{n+3}^n\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Because the parameters are generally not known, they are replaced with their estimates. Thus, <span class="math inline">\(\tilde x^n_{n+1} = \hat \phi_1x_n , \tilde x^n_{n+2} = \hat\phi_1\tilde x_{n+1}^n,…\)</span> .</p>
+<p>It would be more notationally correct to refer to this as <span class="math inline">\(\hat{\tilde x}^n_{n+1} = \hat \phi_1 x_n , \hat{\tilde x}^n_{n+2} = \hat \phi_1 \hat{\tilde x}^n_{n+1} , …\)</span>, but I chose to follow the notational convention of most textbooks on time series.</p>
+<p>Question: What happens to the forecast as <span class="math inline">\(m \to \infty\)</span>?</p>
+<p>Ans: The forecast goes to 0 because <span class="math inline">\(E(x_t) = 0\)</span>.</p>
+<p>What if <span class="math inline">\(\mu \ne 0\)</span>. Then <span class="math inline">\(x_t = \mu(1-\phi_1) + \phi_1x_{t-1} + w_t\)</span> where <span class="math inline">\(\mu(1-\phi_1) = \alpha\)</span> is a constant term. Then the forecast goes to <span class="math inline">\(\mu(1-\phi_1)\)</span> as <span class="math inline">\(m \to \infty\)</span></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">m</th>
+<th align="left"><span class="math inline">\(\tilde x^n_{n+m}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left"><span class="math inline">\(\mu(1-\phi_1)+\phi_1x_n\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left"><span class="math inline">\(\mu(1-\phi_1)+\phi_1\tilde x^n_{n+1}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left"><span class="math inline">\(\mu(1-\phi_1)+\phi_1\tilde x^n_{n+2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-48" class="example"><strong>Example 15.2  </strong></span><strong>MA(1)</strong></p>
+<p>Suppose we have observations up to time n and we want to forecast future values for time n + m (m &gt; 0).</p>
+<p><span class="math inline">\(x_t=\theta_1w_{t-1}+w_t\)</span> where <span class="math inline">\(w_t \sim ind.(0, \sigma_w^2)\)</span></p>
+<p>Note that at time n + m, <span class="math inline">\(x_{n+m} = \theta_1w_{n+m-1} + w_{n+m}\)</span>.</p>
+<p>Let m = 1. Then</p>
+<p><span class="math display">\[\tilde x^n_{n+1}=E(x_{n+1}| I_n)\\
+=E(\theta_1w_n+w_{n+1}| I_n)\\
+=\theta_1E(w_n| I_n)+ E(w_{n+1}| I_n)\\
+=\theta_1w_n+0=\theta_1w_n\]</span></p>
+<p>This is b/c <span class="math inline">\(w_{n+1}\)</span> is unobserved with
+<span class="math inline">\(w_{n+1} \sim(0,\sigma_w^2)\)</span>; also <span class="math inline">\(x_n = \phi_1x_{n-1} + w_n\)</span> has been observed</p>
+<p>Let m = 2. Then</p>
+<p><span class="math display">\[\tilde x_{n+2}^n=E(x_{n+2}| I_n)\\
+=E(\theta_1w_{n+1}+w_{n+2}| I_n)\\
+=\theta_1E(w_{n+1}| I_n)+E(w_{n+2}|I_n)\\
+=\theta_1 \times 0 +0=0\]</span></p>
+<p>In summary,</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">m</th>
+<th align="left"><span class="math inline">\(\tilde x^n_{n+m}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left"><span class="math inline">\(\theta_1w_n\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Notice how quickly the forecasted value becomes the mean of the series, 0. Of course, you can also have other MA(q) models with a non-zero mean too. Then in this case, you will see the forecasted value quickly becomes the mean of the series.</p>
+<p>Because the parameters are generally not known, they are replaced with their estimates. Thus, <span class="math inline">\(\tilde x^n_{n+1} = \hat \theta_1 \tilde w^n_n.\)</span></p>
+<p>What is <span class="math inline">\(\tilde w^n_n\)</span> ? The answer comes from the residuals!</p>
+<p>How are residuals found? These are symbolically denoted as <span class="math inline">\(\tilde w_t^n\)</span> for t = 1, …, n. </p>
+<p>Now, <span class="math inline">\(w_t = x_t - \theta_1w_{t-1}\)</span>. Let <span class="math inline">\(w_0 = 0\)</span> (remember mean is 0 for white noise). Then</p>
+<p><span class="math display">\[w_1 = x_1 - \theta_1w_0 = x_1     \implies   \tilde w_1^n= x_1\\
+w_2 = x_2 - \theta_1w_1   \implies \tilde w^n_w=x_2-\hat \theta_1\tilde w_1^n\\   
+\vdots\\
+w_n = x_n - \theta_1w_{n-1}  \implies  \tilde w_n^n=x_n-\hat \theta_1\tilde w^n_{n-1}\]</span></p>
+<p>More complicated models follow the same process. See Shumway and Stoffer’s textbook for a ARMA(1,1) example. Alternate methods also include backcasting so that one does not necessarily start <span class="math inline">\(x_t\)</span> and <span class="math inline">\(w_t\)</span> at fixed constant values (like 0) when t &lt; 1.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-49" class="example"><strong>Example 15.3  </strong></span><strong>ARIMA(1,1,1)</strong></p>
+<p>Suppose we have observations up to time n and we want to forecast future values for time n + m (m &gt; 0).</p>
+<p><span class="math inline">\((1-\phi_1B)(1-B)x_t = (1+\theta_1B)w_t\)</span> where <span class="math inline">\(w_t \sim ind(0,\sigma_w^2)\)</span>. This can be rewritten as <span class="math inline">\(x_t = (1+\phi_1)x_{t-1} - \phi_1x_{t-2} + \theta_1w_{t-1} + w_t.\)</span> At time n + m, we have</p>
+<p><span class="math display">\[x_{n+m} = (1+\phi_1)x_{n+m-1} - \phi_1x_{n+m-2} + \theta_1w_{n+m-1} + w_{n+m}\]</span></p>
+<p>Let m = 1. Then</p>
+<p><span class="math display">\[\tilde x^n_{n+1}  = E(x_{n+1}|I_n)\\
+= E[(1+\phi_1)x_n - \phi_1x_{n-1} + \theta_1w_n + w_{n+1}|I_n]\\
+= (1+\phi_1)E(x_n|I_n) - \phi_1E(x_{n-1}|I_n) + \theta_1E(w_n|I_n) + E(w_{n+1}|I_n)\\
+= (1+\phi_1)x_n - \phi_1x_{n-1} + \theta_1w_n + 0\\
+= (1+\phi_1)x_n - \phi_1x_{n-1} + \theta_1w_n\]</span></p>
+<p>Let m = 2. Then</p>
+<p><span class="math display">\[\tilde x^n_{n+2}= E(x_{n+2}|I_n)\\
+= E[(1+\phi_1)x_{n+1} - \phi_1x_n + \theta_1w_{n+1} + w_{n+2}|I_n]\\
+= (1+\phi_1)E(x_{n+1}|I_n) - \phi_1E(x_n|I_n) + \theta_1E(w_{n+1}|I_n) + E(w_{n+2}|I_n)\\
+= (1+\phi_1)\tilde x^n_{n+1}  - \phi_1x_n + \theta_10 + 0 \\
+= (1+\phi_1)\tilde x^n_{n+1}  - \phi_1x_n\]</span></p>
+<p>In summary,</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">m</th>
+<th align="left"><span class="math inline">\(\tilde x^n_{n+m}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left"><span class="math inline">\((1+\phi_1)x_n-\phi_1x_{n-1}+\theta_1w_n\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left"><span class="math inline">\((1+\phi_1)\tilde x^n_{n+1}-\phi_1x_n\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left"><span class="math inline">\((1+\phi_1)\tilde x^n_{n+2}-\phi_1\tilde x^n_{n+1}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left"><span class="math inline">\((1+\phi_1)\tilde x^n_{n+3}-\phi_1\tilde x^n_{n+2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Because the parameters are generally not known, they are replaced with their estimates. Also, <span class="math inline">\(\tilde w^n_n\)</span> replaces <span class="math inline">\(w_n\)</span>.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-50" class="example"><strong>Example 15.4  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7, \mu=0, \sigma_w^2=1\)</span> (fit_AR1.R)</strong></p>
+<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb533-1"><a href="forecasting.html#cb533-1" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;AR1.0.7.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb533-2"><a href="forecasting.html#cb533-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ar1<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb534-1"><a href="forecasting.html#cb534-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb534-2"><a href="forecasting.html#cb534-2" aria-hidden="true" tabindex="-1"></a>mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 0, 0))
+## 
+## Coefficients:
+##          ar1  intercept
+##       0.6854    -0.4322
+## s.e.  0.0730     0.3602
+## 
+## sigma^2 estimated as 1.336:  log likelihood = -156.68,  aic = 319.36</code></pre>
+<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb536-1"><a href="forecasting.html#cb536-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariance matrix</span></span>
+<span id="cb536-2"><a href="forecasting.html#cb536-2" aria-hidden="true" tabindex="-1"></a>mod.fit<span class="sc">$</span>var.coef</span></code></pre></div>
+<pre><code>##                   ar1   intercept
+## ar1       0.005324151 0.001518125
+## intercept 0.001518125 0.129723806</code></pre>
+<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb538-1"><a href="forecasting.html#cb538-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting</span></span>
+<span id="cb538-2"><a href="forecasting.html#cb538-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb538-3"><a href="forecasting.html#cb538-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice class of mod.fit is &quot;Arima&quot;. Therefore, </span></span>
+<span id="cb538-4"><a href="forecasting.html#cb538-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  generic functions, like predict, will actually</span></span>
+<span id="cb538-5"><a href="forecasting.html#cb538-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  call predict.Arima().</span></span>
+<span id="cb538-6"><a href="forecasting.html#cb538-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb538-7"><a href="forecasting.html#cb538-7" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mod.fit)</span></code></pre></div>
+<pre><code>## [1] &quot;Arima&quot;</code></pre>
+<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb540-1"><a href="forecasting.html#cb540-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasts 5 times periods into the future</span></span>
+<span id="cb540-2"><a href="forecasting.html#cb540-2" aria-hidden="true" tabindex="-1"></a>fore.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object=</span>mod.fit, <span class="at">n.ahead =</span> <span class="dv">5</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb540-3"><a href="forecasting.html#cb540-3" aria-hidden="true" tabindex="-1"></a>fore.mod</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 101 
+## End = 105 
+## Frequency = 1 
+## [1]  1.26014875  0.72767770  0.36273810  0.11261952 -0.05880421
+## 
+## $se
+## Time Series:
+## Start = 101 
+## End = 105 
+## Frequency = 1 
+## [1] 1.155698 1.401082 1.502576 1.547956 1.568820</code></pre>
+<p><code>se.fit=TRUE</code> help us calculate the forecast errors <span class="math inline">\(\sqrt{\hat Var(x_{n+m}-\tilde x^n_{n+m})}\)</span></p>
+<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb542-1"><a href="forecasting.html#cb542-1" aria-hidden="true" tabindex="-1"></a><span class="co"># x_100</span></span>
+<span id="cb542-2"><a href="forecasting.html#cb542-2" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">100</span>]</span></code></pre></div>
+<pre><code>## [1] 2.037059</code></pre>
+<p>Esimated model:</p>
+<p><span class="math inline">\((1-0.6854B)x_t=-0.1360+w_t\)</span> where <span class="math inline">\(\hat \sigma_w^2=1.336, \hat \alpha=-0.1360\)</span></p>
+<p>Equivalently,</p>
+<p><span class="math inline">\(x_t=-0.1360+0.6854x_{t-1}+w_t\)</span></p>
+<p>Forecasts:</p>
+<table>
+<colgroup>
+<col width="57%" />
+<col width="42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">m</th>
+<th><span class="math inline">\(\tilde x^{100}_{100+m}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td><span class="math inline">\(\hat \mu(1-\hat \phi_1)+\hat \phi_1x_{100}= -0.1360+0.6854\times2.0371 = 1.2602\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td><span class="math inline">\(\hat \mu(1-\hat \phi_1)+\hat \phi_1 \tilde x^{100}_{101}= -0.1360+0.6854\times1.2602 = 0.7277\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td><span class="math inline">\(\hat \mu(1-\hat \phi_1)+\hat \phi_1 \tilde x^{100}_{102}= -0.1360+0.6854\times0.7277 = 0.3628\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Notice the syntax used in the <code>predict()</code> function! Calculation of the standard errors and confidence intervals for <span class="math inline">\(x_{n+m}\)</span> will be discussed later.</p>
+<p>Below are the residuals.</p>
+<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb544-1"><a href="forecasting.html#cb544-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals</span></span>
+<span id="cb544-2"><a href="forecasting.html#cb544-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb544-3"><a href="forecasting.html#cb544-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mod.fit)</span></code></pre></div>
+<pre><code>##  [1] &quot;coef&quot;      &quot;sigma2&quot;    &quot;var.coef&quot;  &quot;mask&quot;      &quot;loglik&quot;    &quot;aic&quot;      
+##  [7] &quot;arma&quot;      &quot;residuals&quot; &quot;call&quot;      &quot;series&quot;    &quot;code&quot;      &quot;n.cond&quot;   
+## [13] &quot;nobs&quot;      &quot;model&quot;</code></pre>
+<div class="sourceCode" id="cb546"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb546-1"><a href="forecasting.html#cb546-1" aria-hidden="true" tabindex="-1"></a>mod.fit<span class="sc">$</span>residuals</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 100 
+## Frequency = 1 
+##   [1]  0.34512757  0.47929876 -0.30435533 -1.11988088 -1.79209750 -0.49310572
+##   [7]  0.81405525  0.42879914  1.25729050  1.70020635  2.07779534  1.67912191
+##  [13] -0.38726754 -0.64611559  0.38703829  0.03571535 -1.35763007  0.99968954
+##  [19] -0.45290645 -2.15491111 -2.83313677  0.98361535  0.07454116 -0.15973235
+##  [25]  1.84484529  0.06582981 -1.72747803 -0.84878091 -1.07731429 -1.60202506
+##  [31] -0.17667776 -0.52931668 -1.31612511  2.29999548  0.57061181 -1.89441998
+##  [37] -1.71661675  0.57839691 -0.45003600  1.42465971  1.60844137 -0.45328354
+##  [43] -0.37352544  0.20534209 -1.14559193 -0.17931856 -0.56563679  1.20304541
+##  [49] -3.07231635 -0.78136042 -1.03857282  0.39650807  1.69131982  0.59980990
+##  [55] -0.96923016  0.27167373  1.31502150 -1.29145944  1.97726357 -1.79928954
+##  [61] -0.21982128 -0.21986889  0.94232700  0.03740584 -0.97208416  0.12970024
+##  [67]  0.12357507 -1.04303844 -0.96555694  0.54591192  1.39034520  2.08915190
+##  [73]  0.09042012  1.64273203  0.22049641 -0.04324800  0.73654908 -1.59055629
+##  [79] -0.73807475  0.68969711  0.31072223 -0.53241010  1.34922516 -0.25855619
+##  [85]  0.01695015  0.22217406 -0.02128355 -1.07823047  1.84349787 -0.55457448
+##  [91]  2.07330260  0.49358393 -0.64600215 -0.49897850 -1.14429705 -0.42652847
+##  [97] -0.10984115  0.69886850 -0.26732184  2.62425181</code></pre>
+<p><span class="math inline">\(x_t=-0.1360+0.6854x_{t-1}+w_t\\ \implies w_t=x_t+0.1360-0.6854x_{t-1}\)</span></p>
+<p>Below calculates <span class="math inline">\(\tilde w^{100}_{100}\)</span></p>
+<div class="sourceCode" id="cb548"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb548-1"><a href="forecasting.html#cb548-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Last residual </span></span>
+<span id="cb548-2"><a href="forecasting.html#cb548-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as.numeric() removes a leftover label</span></span>
+<span id="cb548-3"><a href="forecasting.html#cb548-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(x[<span class="dv">100</span>]<span class="sc">-</span>mod.fit<span class="sc">$</span>coef[<span class="dv">2</span>]<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>mod.fit<span class="sc">$</span>coef[<span class="dv">1</span>])<span class="sc">-</span>mod.fit<span class="sc">$</span>coef[<span class="dv">1</span>]<span class="sc">*</span>x[<span class="dv">99</span>])</span></code></pre></div>
+<pre><code>## [1] 2.624252</code></pre>
+<p>We can add to the plot of the time series the forecasts t = n, …, m. For visual display, sometimes it is interesting to add the corresponding predicted values for t = 1, …, n. What are these predicted values? A simple computational way to find these in R is use a result from a regression course:</p>
+<p>residual = observed – predicted</p>
+<p>which leads to</p>
+<p>predicted = observed – residual</p>
+<p>Similar to there being multiple ways to find residuals, there are multiple ways to find predicted values. Below is how I used predicted = observed – residual and created the corresponding plot.</p>
+<div class="sourceCode" id="cb550"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb550-1"><a href="forecasting.html#cb550-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Predicted values for t=1,...,100</span></span>
+<span id="cb550-2"><a href="forecasting.html#cb550-2" aria-hidden="true" tabindex="-1"></a>x<span class="sc">-</span>mod.fit<span class="sc">$</span>residuals</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 100 
+## Frequency = 1 
+##   [1] -0.30340077 -0.10739194  0.11890348 -0.26309333 -1.08383902 -2.10707034
+##   [7] -1.91807243 -0.89265030 -0.45389982  0.41462950  1.31345444  2.18827003
+##  [13]  2.51460350  1.32202163  0.32725537  0.35356509  0.13081083 -0.97681511
+##  [19] -0.12031279 -0.52885740 -1.97536418 -3.43159168 -1.81375933 -1.32799788
+##  [25] -1.15563564  0.33637327  0.13966762 -1.22422757 -1.55676769 -1.94131053
+##  [31] -2.56448551 -2.01470082 -1.87958305 -2.32623217 -0.15397206  0.14956207
+##  [37] -1.33186319 -2.22532639 -1.26474600 -1.31125006 -0.05826268  0.92645546
+##  [43]  0.18830752 -0.26293300 -0.17546130 -1.04140025 -0.97263406 -1.19027465
+##  [49] -0.12723753 -2.32886791 -2.26764687 -2.40197343 -1.51047567 -0.01204511
+##  [55]  0.26684602 -0.61738312 -0.37292901  0.50969153 -0.67179037  0.75874171
+##  [61] -0.84915032 -0.86863111 -0.88201528 -0.09465440 -0.17522667 -0.92232245
+##  [67] -0.67922958 -0.51681906 -1.20506949 -1.62367209 -0.87465453  0.21744859
+##  [73]  1.44488414  0.91626098  1.61786635  1.12396813  0.60470274  0.78326329
+##  [79] -0.68928449 -1.11425918 -0.42697226 -0.21566450 -0.64869799  0.34412995
+##  [85] -0.07734055 -0.17737999 -0.10528973 -0.22273974 -1.02763595  0.42317691
+##  [91] -0.22604616  1.13006359  0.97680878  0.09073465 -0.41578825 -1.20522562
+##  [97] -1.25434524 -1.07096242 -0.39101218 -0.58719250</code></pre>
+<div class="sourceCode" id="cb552"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb552-1"><a href="forecasting.html#cb552-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add the forecasts into the first plot with C.I.s</span></span>
+<span id="cb552-2"><a href="forecasting.html#cb552-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb552-3"><a href="forecasting.html#cb552-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb552-4"><a href="forecasting.html#cb552-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;o&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb552-5"><a href="forecasting.html#cb552-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] </span>
+<span id="cb552-6"><a href="forecasting.html#cb552-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)) , </span>
+<span id="cb552-7"><a href="forecasting.html#cb552-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>), xlim </span>
+<span id="cb552-8"><a href="forecasting.html#cb552-8" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">105</span>))</span>
+<span id="cb552-9"><a href="forecasting.html#cb552-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb552-10"><a href="forecasting.html#cb552-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">-</span> mod.fit<span class="sc">$</span>residuals, fore.mod<span class="sc">$</span>pred), lwd </span>
+<span id="cb552-11"><a href="forecasting.html#cb552-11" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>) </span>
+<span id="cb552-12"><a href="forecasting.html#cb552-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Forecast&quot;</span>), </span>
+<span id="cb552-13"><a href="forecasting.html#cb552-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="fu">c</span>(<span class="st">&quot;solid&quot;</span>, <span class="st">&quot;solid&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>), pch </span>
+<span id="cb552-14"><a href="forecasting.html#cb552-14" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">17</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="14-Forecasting_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>The x-axis limits were changed in the <code>plot()</code>function to allow for the forecasts for t = 101, …, 105 to be shown. Notice how I put these predicted values together into one vector for the first <code>lines()</code> function call. We use <code>c(x - mod.fit$residuals, fore.mod$pred)</code> to include both the predicted value for observed data(t=1,…,100) and forecast value for future (unobserved data) (t=101,…,105)</p>
+<p>Below is a zoomed in version of the plot.</p>
+<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="forecasting.html#cb553-1" aria-hidden="true" tabindex="-1"></a><span class="co"># zoom in (only change the xlim)</span></span>
+<span id="cb553-2"><a href="forecasting.html#cb553-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb553-3"><a href="forecasting.html#cb553-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb553-4"><a href="forecasting.html#cb553-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;o&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb553-5"><a href="forecasting.html#cb553-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] </span>
+<span id="cb553-6"><a href="forecasting.html#cb553-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)) , </span>
+<span id="cb553-7"><a href="forecasting.html#cb553-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>), <span class="at">xlim =</span> </span>
+<span id="cb553-8"><a href="forecasting.html#cb553-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">96</span>, <span class="dv">105</span>))</span>
+<span id="cb553-9"><a href="forecasting.html#cb553-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb553-10"><a href="forecasting.html#cb553-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">-</span> mod.fit<span class="sc">$</span>residuals, fore.mod<span class="sc">$</span>pred), lwd </span>
+<span id="cb553-11"><a href="forecasting.html#cb553-11" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>) </span>
+<span id="cb553-12"><a href="forecasting.html#cb553-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb553-13"><a href="forecasting.html#cb553-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Forecast&quot;</span>), </span>
+<span id="cb553-14"><a href="forecasting.html#cb553-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">lty =</span> <span class="fu">c</span>(<span class="st">&quot;solid&quot;</span>, <span class="st">&quot;solid&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>),</span>
+<span id="cb553-15"><a href="forecasting.html#cb553-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">pch=</span><span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">17</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="14-Forecasting_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-51" class="example"><strong>Example 15.5  </strong></span><strong>ARIMA(1,1,1) with <span class="math inline">\(\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200\)</span>(arima111_sim.R)</strong></p>
+<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb554-1"><a href="forecasting.html#cb554-1" aria-hidden="true" tabindex="-1"></a>arima11 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;arima111.csv&quot;</span>)</span>
+<span id="cb554-2"><a href="forecasting.html#cb554-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> arima11<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="forecasting.html#cb555-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb555-2"><a href="forecasting.html#cb555-2" aria-hidden="true" tabindex="-1"></a>mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1))
+## 
+## Coefficients:
+##          ar1     ma1
+##       0.6720  0.4681
+## s.e.  0.0637  0.0904
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1021.36</code></pre>
+<p>The estimated model is</p>
+<p><span class="math inline">\((1 - 0.6720B)(1 - B)x_t = (1+0.4681B)w_t\)</span> with $ _w^2 = 9.56$</p>
+<p>Equivalently,</p>
+<p><span class="math inline">\(x_t=(1 + 0.6720)x_{t-1} – 0.6720x_{t-2} + 0.4681w_{t-1} + w_t\)</span></p>
+<p>Forecasts for t=201,…,205:</p>
+<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="forecasting.html#cb557-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasts 5 time periods into the future</span></span>
+<span id="cb557-2"><a href="forecasting.html#cb557-2" aria-hidden="true" tabindex="-1"></a>fore.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object=</span>mod.fit, <span class="at">n.ahead =</span> <span class="dv">5</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb557-3"><a href="forecasting.html#cb557-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb557-4"><a href="forecasting.html#cb557-4" aria-hidden="true" tabindex="-1"></a>fore.mod</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1] -486.3614 -484.9361 -483.9784 -483.3348 -482.9023
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1]  3.091673  7.303206 11.578890 15.682551 19.534208</code></pre>
+<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="forecasting.html#cb559-1" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">199</span><span class="sc">:</span><span class="dv">200</span>]</span></code></pre></div>
+<pre><code>## [1] -488.2191 -488.4823</code></pre>
+<p>We will discuss later how the standard errors and confidence intervals.</p>
+<p>With the help of the above output, by-hand calculations of the forecasts are shown below. Note that <span class="math inline">\(\tilde w^{200}_{200}\)</span> was found from the R output.</p>
+<table>
+<colgroup>
+<col width="57%" />
+<col width="42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">m</th>
+<th><span class="math inline">\(\tilde x^n_{n+m}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td><span class="math display">\[(1+\hat \phi_1)x_{200} - \hat \phi_1x_{199} +  \hat \theta_1 \tilde w_{200}^{200}\\
+= (1+0.6720)(-488.4823) – (0.6720)(-488.2191) + (0.4681)(4.9086)\\ = -486.36\]</span></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td><span class="math display">\[(1+\hat \phi_1)\tilde x^{200}_{201}  - \hat \phi_1x_{200}\\
+= (1+0.6720)(-486.36) – (0.6720)(-488.4823)\\ = -484.93\]</span></td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td><span class="math display">\[(1+\hat \phi_1)\tilde x^{200}_{202}  -\hat \phi_1 \tilde x^{200}_{201}\\   
+= (1+0.6720)(-484.9216) - (0.6720)(-486.3584)\\ = -483.96
+\]</span></td>
+</tr>
+</tbody>
+</table>
+<p>Below are plots of the forecasts.</p>
+<div class="sourceCode" id="cb561"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb561-1"><a href="forecasting.html#cb561-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasts with C.I.s</span></span>
+<span id="cb561-2"><a href="forecasting.html#cb561-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb561-3"><a href="forecasting.html#cb561-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb561-4"><a href="forecasting.html#cb561-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;o&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb561-5"><a href="forecasting.html#cb561-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ARIMA model: &quot;</span>, (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.7</span><span class="sc">*</span>B)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span></span>
+<span id="cb561-6"><a href="forecasting.html#cb561-6" aria-hidden="true" tabindex="-1"></a>    B)<span class="sc">*</span>x[t] <span class="sc">==</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span><span class="sc">*</span>B)<span class="sc">*</span>w[t])), <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> </span>
+<span id="cb561-7"><a href="forecasting.html#cb561-7" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">205</span>))</span>
+<span id="cb561-8"><a href="forecasting.html#cb561-8" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb561-9"><a href="forecasting.html#cb561-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">-</span> mod.fit<span class="sc">$</span>residuals, fore.mod<span class="sc">$</span>pred), lwd </span>
+<span id="cb561-10"><a href="forecasting.html#cb561-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>) </span>
+<span id="cb561-11"><a href="forecasting.html#cb561-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb561-12"><a href="forecasting.html#cb561-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Forecast&quot;</span>), </span>
+<span id="cb561-13"><a href="forecasting.html#cb561-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="fu">c</span>(<span class="st">&quot;solid&quot;</span>, <span class="st">&quot;solid&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>), pch </span>
+<span id="cb561-14"><a href="forecasting.html#cb561-14" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">17</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="14-Forecasting_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>It is hard to see the observed and forecasted values in the above plot so I zoomed in to create the plot below.</p>
+<div class="sourceCode" id="cb562"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb562-1"><a href="forecasting.html#cb562-1" aria-hidden="true" tabindex="-1"></a><span class="co"># zoom in</span></span>
+<span id="cb562-2"><a href="forecasting.html#cb562-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb562-3"><a href="forecasting.html#cb562-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;o&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb562-4"><a href="forecasting.html#cb562-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ARIMA model: &quot;</span>, (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.7</span><span class="sc">*</span>B)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>         </span>
+<span id="cb562-5"><a href="forecasting.html#cb562-5" aria-hidden="true" tabindex="-1"></a>    B)<span class="sc">*</span>x[t] <span class="sc">==</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span><span class="sc">*</span>B)<span class="sc">*</span>w[t])), <span class="at">panel.first =</span> </span>
+<span id="cb562-6"><a href="forecasting.html#cb562-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">196</span>, </span>
+<span id="cb562-7"><a href="forecasting.html#cb562-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">205</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">540</span>, <span class="sc">-</span><span class="dv">440</span>))</span>
+<span id="cb562-8"><a href="forecasting.html#cb562-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb562-9"><a href="forecasting.html#cb562-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">-</span> mod.fit<span class="sc">$</span>residuals, fore.mod<span class="sc">$</span>pred), lwd </span>
+<span id="cb562-10"><a href="forecasting.html#cb562-10" aria-hidden="true" tabindex="-1"></a>   <span class="ot">=</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>) </span>
+<span id="cb562-11"><a href="forecasting.html#cb562-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb562-12"><a href="forecasting.html#cb562-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb562-13"><a href="forecasting.html#cb562-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Forecast&quot;</span>),</span>
+<span id="cb562-14"><a href="forecasting.html#cb562-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">lty =</span> <span class="fu">c</span>(<span class="st">&quot;solid&quot;</span>, <span class="st">&quot;solid&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>), <span class="at">pch =</span> </span>
+<span id="cb562-15"><a href="forecasting.html#cb562-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">17</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="14-Forecasting_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+</div>
+<div id="inference" class="section level2 hasAnchor" number="15.2">
+<h2><span class="header-section-number">15.2</span> Inference<a href="forecasting.html#inference" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>It was shown earlier how to write an ARIMA process as an infinite order MA process. To find the standard error of ARIMA forecasts, this needs to be done again.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-52" class="example"><strong>Example 15.6  </strong></span><strong>AR(1) with <span class="math inline">\(\mu=0\)</span></strong></p>
+<p><span class="math inline">\(x_t=\frac{1}{1-\phi_1B}w_t=(1+\phi_1B+\phi_1^2B^2+...)w_t\)</span></p>
+<p>Then</p>
+<p><span class="math display">\[\tilde x^n_{n+m}=E(x_{n+m}| I_n)\\
+=E[(1+\phi_1B+\phi_1^2B^2+...)w_{n+m}|I_n]\\
+=E[w_{n+m}+\phi_1w_{n+m-1}+\phi_1^2w_{n+m-2}+...| I_n]\]</span></p>
+<p>Let m=1. Then</p>
+<p><span class="math display">\[\tilde x^n_{n+1}=E(x_{n+1}| I_n)\\
+=E[w_{n+1}+\phi_1w_n+\phi_1^2w_{n-1}+...| I_n]\\
+=0+\phi_1w_n+\phi_1^2w_{n-1}+...\]</span></p>
+<p>Note that <span class="math display">\[\phi_1w_n+\phi_1^2w_{n-1}+...\\
+\phi_1(x_n-\phi_1x_{n-1})+\phi_1^2(x_{n-1}-\phi_1x_{n-2})+...\\
+\phi_1x_n-\phi_1^2x_{n-1}+\phi_1^2x_{n-1}-\phi_1^3x_{n-2}+...\\
+=\phi_1x_n\]</span></p>
+<p>which is the same value of <span class="math inline">\(\tilde x^n_{n+1}\)</span> shown earlier.</p>
+<p>Let m=2. Then</p>
+<p><span class="math display">\[\tilde x^n_{n+2}=E(x_{n+2}| I_n)\\
+=E(w_{n+2}+\phi_1w_{n+1}+\phi_1^2w_n+\phi^3_1w_{n-1}+...| I_n)\\
+=\phi_1^2w_n+\phi_1^3w_{n-1}+...\]</span></p>
+<p>Let m=3. Then</p>
+<p><span class="math display">\[\tilde x^n_{n+3}=E(x_{n+3}| I_n)\\
+=E(w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1}+\phi^3_1w_{n}+...| I_n)\\
+=\phi_1^3w_n+\phi_1^4w_{n-1}+...\]</span></p>
+</div>
+<p><strong>Forecast error: <span class="math inline">\(x_{n+m}-\tilde x^n_{n+m}=\)</span> observed-forecast</strong></p>
+<p>The variance of the forecast error is: <span class="math inline">\(Var(x_{n+m}-\tilde x^n_{n+m})\)</span></p>
+<p>Shumway and Stoffer denote the variance of the forecast error symbolically as <span class="math inline">\(P^n_{n+m}\)</span>.</p>
+<p><strong>Approximate (1-<span class="math inline">\(\alpha\)</span>)100% C.I. for <span class="math inline">\(x_{n+m}\)</span></strong></p>
+<p><span class="math display">\[\tilde x^n_{n+m} \pm Z_{1-\alpha/2}\sqrt{ \hat Var(x_{n+m}-\tilde x^n_{n+m})}\]</span></p>
+<p>where <span class="math inline">\(Z_{1-\alpha/2}\)</span> is the <span class="math inline">\(1-\alpha/2\)</span> quantile of a standard normal distribution.</p>
+<p><span class="math inline">\(1-\alpha=P(-Z_{1-\alpha/2}&lt; \frac{x_{n+m}-\tilde x^n_{n+m}}{\sqrt{\hat Var(x_{n+m}-\tilde x^n_{n+m})}}&lt;Z_{1-\alpha/2})\)</span></p>
+<p>I refer to this a “confidence interval”. Others may prefer to call this a prediction interval due to adopting the often used naming convention of “prediction intervals” are for random variables and “confidence intervals” are for parameters. In the end, all frequentist-based intervals are confidence intervals. If you want to differentiate between the names, you may. I will just call them confidence intervals or C.I.s for short.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-53" class="example"><strong>Example 15.7  </strong></span><strong>AR(1) with <span class="math inline">\(\mu=0\)</span></strong></p>
+<p>For m=1:</p>
+<p><span class="math display">\[x_{n+1}-\tilde x^n_{n+1}=(w_{n+1}+\phi_1w_n+\phi_1^2w_{n-1}+...)-(\phi_1w_n+\phi_1^2w_{n-1}+...)\\=w_{n+1}\]</span></p>
+<p>For m=2:</p>
+<p><span class="math display">\[x_{n+2}-\tilde x^n_{n+2}=(w_{n+2}+\phi_1w_{n+1}+\phi_1^2w_n+...)-(\phi_1^2w_n+\phi_1^3w_{n-1}+...)\\=w_{n+2}+\phi_1w_{n+1}\]</span>
+For m=3:</p>
+<p><span class="math display">\[x_{n+3}-\tilde x^n_{n+3}=(w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1}+...)-(\phi_1^3w_n+\phi_1^4w_{n-1}+...)\\w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1}\]</span></p>
+<p>Note that <span class="math inline">\(wt \sim ind (0, \sigma_w^2)\)</span>. Then</p>
+<p><span class="math display">\[Var(x_{n+1}-\tilde x^n_{n+1})=Var(w_{n+1})=\sigma_w^2\\
+Var(x_{n+2}-\tilde x^n_{n+2})=Var(w_{n+2}+\phi_1w_{n+1})=\sigma_w^2+\phi_1^2\sigma_w^2\\
+Var(x_{n+3}-\tilde x^n_{n+3})=Var(w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1})=\\
+\sigma_w^2+\phi_1^2\sigma_w^2+\phi_1^4\sigma_w^2=\\
+\sigma_w^2(1+\phi_1^2+\phi_1^4)\]</span></p>
+<p>In general for an AR(1) process:</p>
+<p><span class="math inline">\(Var(x_{n+m}-\tilde x^n_{n+m})=\sigma_w^2\sum_{i=1}^{m}(\phi_1^2)^{i-1}\)</span></p>
+<p>The approximate (1-<span class="math inline">\(\alpha\)</span>)100% C.I. for <span class="math inline">\(x_{n+m}\)</span> is</p>
+<p><span class="math display">\[\tilde x^n_{n+m} \pm Z_{1-\alpha/2} \sqrt{ \hat Var(x_{n+m}-\tilde x^n_{n+m}) }\\
+\implies \tilde x^n_{n+m} \pm Z_{1-\alpha/2} \hat \sigma_w \sqrt{\sum_{i=1}^{m}(\hat \phi_1^2)^{i-1}}\]</span></p>
+<p>Notice what happens to the confidence interval as m increases – it gets WIDER (although not by much for larger values of m). Why does it make sense for the confidence interval to get wider? Well, we are more uncertain as we go gurther and further from our observed data.</p>
+</div>
+<p>In general for an ARIMA(p,d,q), the formulas for the forecast error, variance of the forecast error, and the C.I. can be derived using the infinite order MA representation.</p>
+<p><span class="math inline">\(\phi(B)(1-B)^dx_t=\theta(B)w_t\)</span> can be rewritten as</p>
+<p><span class="math inline">\(x_t=\frac{\theta(B)}{\phi(B)(1-B)^d}w_t=\psi(B)w_t\)</span></p>
+<p>where <span class="math inline">\(\psi(B)=(1+\psi_1B+\psi_2B^2+...)=\frac{\theta(B)}{\phi(B)(1-B)^d}\)</span></p>
+<p>The forecast error is <span class="math inline">\(x_{n+m}-\tilde x^n_{n+m} = \sum_{i=0}^{m-1}\psi_iw_{n+m-i}\)</span> where <span class="math inline">\(\psi_0 = 1\)</span>. For example, with an AR(1) and m = 1, $ x_{n+m}-x^n_{n+m} = w_{n+1}$ which matches our previous result.</p>
+<p>The variance of the forecast error is</p>
+<p><span class="math inline">\(Var[x_{n+m}-\tilde x^n_{n+m}]=\sigma_w^2\sum_{i=0}^{m-1}\psi_i^2\)</span></p>
+<p>The approximate (1-<span class="math inline">\(\alpha\)</span>)100% C.I. used in practice is</p>
+<p><span class="math inline">\(\tilde x^n_{n+m} \pm Z_{1-\alpha/2}\hat\sigma_w\sqrt{\sum_{i=0}^{m-1}\hat \psi_i^2}\)</span></p>
+<div class="example">
+<p><span id="exm:unlabeled-div-54" class="example"><strong>Example 15.8  </strong></span><strong>MA(1)</strong></p>
+<p>The process can be written as <span class="math inline">\(x_t = (1 + \theta_1B)w_t\)</span></p>
+<p>Translating this to <span class="math inline">\(x_t = \psi(B)w_t\)</span> produces <span class="math inline">\(\psi_1 = \theta_1\)</span> and <span class="math inline">\(\psi_i = 0\)</span> for i &gt; 1. Then</p>
+<p><span class="math display">\[Var[x_{n+m}-\tilde x^n_{n+m}]=\sigma_w^2\sum_{i=0}^{m-1}\psi_i^2=\begin{cases} \sigma_w^2 &amp; m=1 \\ \sigma_w^2(1+\theta_1^2) &amp; m \ge 2 \end{cases}\]</span></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-55" class="example"><strong>Example 15.9  </strong></span><strong>ARIMA(1,1,1)</strong></p>
+<p><span class="math display">\[(1-\phi_1B)(1-B)x_t=(1+\theta_1B)w_t\\
+\iff x_t=\frac{(1+\theta_1B)}{(1-\phi_1B)(1-B)}w_t=\psi(B)w_t\]</span></p>
+<p>Then <span class="math display">\[(1-\phi_1B)(1-B)(1+\psi_1B+\psi_2B^2+\psi_3B^3+...)=(1+\theta_1B)\\
+\iff [1-B(1+\phi_1)+\phi_1B^2](1+\psi_1B+\psi_2B^2+\psi_2B^3+...)=(1+\theta_1B)\\
+\iff 1+\psi_1B+\psi_2B^2+\psi_3B^3+...\\
+-(1+\phi_1)B-\psi_1(1+\phi_1)B^2-\psi_2(1+\phi_1)B^3-\psi_3(1+\phi_1)B^4-...\\
+\phi_1B^2+\psi_1\phi_1B^3+\psi_2\phi_1B^4+\psi_3\phi_1B^5=(1+\theta_1B)\]</span></p>
+<p><span class="math display">\[B: \psi_1-(1+\phi_1)=\theta_1\implies \psi_1=1+\phi_1+\theta_1\\
+B^2: \psi_2-\psi_1(1+\phi_1)+\phi_1=0\implies \psi_2=\psi_1(1+\phi_1)-\phi_1\\
+B^3: \psi_3-\psi_2(1+\phi_1)+\phi_1\psi_1=0\implies \psi_3=\psi_2(1+\phi_1)-\phi_1\psi_1\\
+\vdots\\
+B^j: \psi_j=\psi_{j-1}(1+\phi_1)-\phi_1\psi_{j-2}\]</span></p>
+<p><span class="math display">\[Var[x_{n+1}-\tilde x^n_{n+1}]=\sigma_w^2\sum_{i=0}^{1-1}\psi_i^2=\sigma_w^2\\
+Var[x_{n+2}-\tilde x^n_{n+2}]=\sigma_w^2\sum_{i=0}^{2-1}\psi_i^2=\sigma_w^2[1+(1+\phi_1+\theta_1)^2]\\
+\vdots\]</span></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-56" class="example"><strong>Example 15.10  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7, \mu=0, \sigma_w^2=1\)</span> (fit_AR1.R)</strong></p>
+<p>From the previous R code and output, it was found that <span class="math inline">\(\hat \sigma_w^2 = 1.335638\)</span> and <span class="math inline">\(\hat \phi_1 = 0.6853698\)</span>. The forecasts and standard errors, <span class="math inline">\(\sqrt{Var(x_{n+m}-\tilde x^n_{n+m})}\)</span> , are automatically calculated by the <code>predict()</code> function:</p>
+<div class="sourceCode" id="cb563"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb563-1"><a href="forecasting.html#cb563-1" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">&quot;AR1.0.7.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb563-2"><a href="forecasting.html#cb563-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ar1)</span></code></pre></div>
+<pre><code>##   t          x
+## 1 1  0.0417268
+## 2 2  0.3719068
+## 3 3 -0.1854518
+## 4 4 -1.3829742
+## 5 5 -2.8759365
+## 6 6 -2.6001761</code></pre>
+<div class="sourceCode" id="cb565"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb565-1"><a href="forecasting.html#cb565-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ar1<span class="sc">$</span>x</span>
+<span id="cb565-2"><a href="forecasting.html#cb565-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb565-3"><a href="forecasting.html#cb565-3" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">method =</span> <span class="st">&quot;CSS-ML&quot;</span>, <span class="at">include.mean =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb566"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb566-1"><a href="forecasting.html#cb566-1" aria-hidden="true" tabindex="-1"></a>fore.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object=</span>mod.fit, <span class="at">n.ahead =</span> <span class="dv">5</span>, se.fit </span>
+<span id="cb566-2"><a href="forecasting.html#cb566-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="cn">TRUE</span>) </span>
+<span id="cb566-3"><a href="forecasting.html#cb566-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb566-4"><a href="forecasting.html#cb566-4" aria-hidden="true" tabindex="-1"></a>fore.mod</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 101 
+## End = 105 
+## Frequency = 1 
+## [1]  1.26014875  0.72767770  0.36273810  0.11261952 -0.05880421
+## 
+## $se
+## Time Series:
+## Start = 101 
+## End = 105 
+## Frequency = 1 
+## [1] 1.155698 1.401082 1.502576 1.547956 1.568820</code></pre>
+<p>You can see the forecast values are <code>1.26014875  0.72767770  0.36273810  0.11261952 -0.05880421</code>, and the <span class="math inline">\(\sqrt{\hat Var(x_{n+m}-\tilde x^n_{n+m})}\)</span> are <code>1.155698 1.401082 1.502576 1.547956 1.568820</code></p>
+<p>In particular, <span class="math inline">\(\sqrt{\hat Var(x_{101}-\tilde x^{100}_{101})}=1.155698\)</span></p>
+<p>The 95% confidence intervals were found using
+<span class="math inline">\(\tilde x^n_{n+m}\pm Z_{1-\alpha/2} \hat \sigma_w \sqrt{\sum_{i=1}^{m}(\hat \phi_1^2)^{i-1}}\)</span> to produce</p>
+<div class="sourceCode" id="cb568"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb568-1"><a href="forecasting.html#cb568-1" aria-hidden="true" tabindex="-1"></a>fore.mod<span class="sc">$</span>pred <span class="co"># a vector of length 5</span></span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 101 
+## End = 105 
+## Frequency = 1 
+## [1]  1.26014875  0.72767770  0.36273810  0.11261952 -0.05880421</code></pre>
+<div class="sourceCode" id="cb570"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb570-1"><a href="forecasting.html#cb570-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate 95% C.I.s </span></span>
+<span id="cb570-2"><a href="forecasting.html#cb570-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb570-3"><a href="forecasting.html#cb570-3" aria-hidden="true" tabindex="-1"></a>low <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> </span>
+<span id="cb570-4"><a href="forecasting.html#cb570-4" aria-hidden="true" tabindex="-1"></a>         <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb570-5"><a href="forecasting.html#cb570-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb570-6"><a href="forecasting.html#cb570-6" aria-hidden="true" tabindex="-1"></a>up <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> </span>
+<span id="cb570-7"><a href="forecasting.html#cb570-7" aria-hidden="true" tabindex="-1"></a>         <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb570-8"><a href="forecasting.html#cb570-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb570-9"><a href="forecasting.html#cb570-9" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(low, up)</span></code></pre></div>
+<pre><code>##         low       up
+## 1 -1.004978 3.525276
+## 2 -2.018392 3.473748
+## 3 -2.582258 3.307734
+## 4 -2.921319 3.146558
+## 5 -3.133634 3.016026</code></pre>
+<p>Doing the calculations by hand produces:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="21%" />
+<col width="21%" />
+<col width="28%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>m</th>
+<th><span class="math inline">\(\tilde x^{100}_{100+m}\)</span></th>
+<th><span class="math inline">\(Var(x_{100+m}-\tilde x^{100}_{100+m})\)</span></th>
+<th>95% C.I.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1.2601</td>
+<td><span class="math inline">\(\hat \sigma_w^2\sum_{i=1}^{1}(\hat \phi_1^2)^{i-1}=\sigma_w^2=1.336\)</span></td>
+<td><span class="math inline">\(1.2601\pm 1.96 \sqrt{1.336} = (-1.005, 3.525)\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0.7277</td>
+<td><span class="math inline">\(\hat \sigma_w^2\sum_{i=1}^{2}(\hat \phi_1^2)^{i-1}=\sigma_w^2(1+\hat \phi_1^2)\\=1.336(1+0.6854^2)=1.963\)</span></td>
+<td><span class="math inline">\(0.7277\pm 1.96\sqrt{1.963}= (-2.018, 3.473)\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>0.3627</td>
+<td><span class="math inline">\(\hat \sigma_w^2\sum_{i=1}^{3}(\hat \phi_1^2)^{i-1}=\sigma_w^2(1+\hat \phi_1^2+\hat \phi_1^4)\\=1.336(1+0.6854^2+0.6854^4)\\=2.258\)</span></td>
+<td><span class="math inline">\(0.3627\pm 1.96 \sqrt{2.258} = (-2.582, 3.308)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Forecast plots:</p>
+<div class="sourceCode" id="cb572"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb572-1"><a href="forecasting.html#cb572-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb572-2"><a href="forecasting.html#cb572-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;o&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb572-3"><a href="forecasting.html#cb572-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] </span>
+<span id="cb572-4"><a href="forecasting.html#cb572-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)) , </span>
+<span id="cb572-5"><a href="forecasting.html#cb572-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>), xlim </span>
+<span id="cb572-6"><a href="forecasting.html#cb572-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">105</span>))</span>
+<span id="cb572-7"><a href="forecasting.html#cb572-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb572-8"><a href="forecasting.html#cb572-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">-</span> mod.fit<span class="sc">$</span>residuals, fore.mod<span class="sc">$</span>pred), lwd </span>
+<span id="cb572-9"><a href="forecasting.html#cb572-9" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>) </span>
+<span id="cb572-10"><a href="forecasting.html#cb572-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">y =</span> low, <span class="at">x =</span> <span class="dv">101</span><span class="sc">:</span><span class="dv">105</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, </span>
+<span id="cb572-11"><a href="forecasting.html#cb572-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) </span>
+<span id="cb572-12"><a href="forecasting.html#cb572-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">y =</span> up, <span class="at">x =</span> <span class="dv">101</span><span class="sc">:</span><span class="dv">105</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, </span>
+<span id="cb572-13"><a href="forecasting.html#cb572-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) </span>
+<span id="cb572-14"><a href="forecasting.html#cb572-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb572-15"><a href="forecasting.html#cb572-15" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Forecast&quot;</span>, </span>
+<span id="cb572-16"><a href="forecasting.html#cb572-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;95% C.I.&quot;</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="st">&quot;solid&quot;</span>, <span class="st">&quot;solid&quot;</span>, <span class="st">&quot;dashed&quot;</span>),</span>
+<span id="cb572-17"><a href="forecasting.html#cb572-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">20</span>, </span>
+<span id="cb572-18"><a href="forecasting.html#cb572-18" aria-hidden="true" tabindex="-1"></a>    <span class="dv">17</span>, <span class="cn">NA</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="14-Forecasting_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<div class="sourceCode" id="cb573"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb573-1"><a href="forecasting.html#cb573-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No pch for C.I., that&#39;s why we use NA, of course you can use others</span></span></code></pre></div>
+<div class="sourceCode" id="cb574"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb574-1"><a href="forecasting.html#cb574-1" aria-hidden="true" tabindex="-1"></a><span class="co"># zoom in</span></span>
+<span id="cb574-2"><a href="forecasting.html#cb574-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb574-3"><a href="forecasting.html#cb574-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb574-4"><a href="forecasting.html#cb574-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;o&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb574-5"><a href="forecasting.html#cb574-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] </span>
+<span id="cb574-6"><a href="forecasting.html#cb574-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)) , </span>
+<span id="cb574-7"><a href="forecasting.html#cb574-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>), <span class="at">xlim =</span> </span>
+<span id="cb574-8"><a href="forecasting.html#cb574-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">96</span>, <span class="dv">105</span>))</span>
+<span id="cb574-9"><a href="forecasting.html#cb574-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb574-10"><a href="forecasting.html#cb574-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">-</span> mod.fit<span class="sc">$</span>residuals, fore.mod<span class="sc">$</span>pred), lwd </span>
+<span id="cb574-11"><a href="forecasting.html#cb574-11" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>) </span>
+<span id="cb574-12"><a href="forecasting.html#cb574-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">y =</span> low, <span class="at">x =</span> <span class="dv">101</span><span class="sc">:</span><span class="dv">105</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, </span>
+<span id="cb574-13"><a href="forecasting.html#cb574-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) </span>
+<span id="cb574-14"><a href="forecasting.html#cb574-14" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">y =</span> up, <span class="at">x =</span> <span class="dv">101</span><span class="sc">:</span><span class="dv">105</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, </span>
+<span id="cb574-15"><a href="forecasting.html#cb574-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) </span>
+<span id="cb574-16"><a href="forecasting.html#cb574-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb574-17"><a href="forecasting.html#cb574-17" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Forecast&quot;</span>, </span>
+<span id="cb574-18"><a href="forecasting.html#cb574-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;95% C.I.&quot;</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="st">&quot;solid&quot;</span>, <span class="st">&quot;solid&quot;</span>, <span class="st">&quot;dashed&quot;</span>), col </span>
+<span id="cb574-19"><a href="forecasting.html#cb574-19" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">17</span>, </span>
+<span id="cb574-20"><a href="forecasting.html#cb574-20" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NA</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="14-Forecasting_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-57" class="example"><strong>Example 15.11  </strong></span><strong>ARIMA(1,1,1) with <span class="math inline">\(\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200\)</span> (arima111_sim.R)</strong></p>
+<p>From the previous R code and output:</p>
+<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb575-1"><a href="forecasting.html#cb575-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Data could be simulated using the following code - notice the use of the order option.  </span></span>
+<span id="cb575-2"><a href="forecasting.html#cb575-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6632</span>)</span>
+<span id="cb575-3"><a href="forecasting.html#cb575-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ar =</span> <span class="fl">0.7</span>, <span class="at">ma =</span> <span class="fl">0.4</span>), <span class="at">n =</span> <span class="dv">200</span>, <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb576"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb576-1"><a href="forecasting.html#cb576-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Instead, here data that I had simulated earlier using the same model.  </span></span>
+<span id="cb576-2"><a href="forecasting.html#cb576-2" aria-hidden="true" tabindex="-1"></a>  arima111 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&quot;arima111.csv&quot;</span>)</span>
+<span id="cb576-3"><a href="forecasting.html#cb576-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb576-4"><a href="forecasting.html#cb576-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(arima111)</span></code></pre></div>
+<pre><code>##   time         x
+## 1    1 -143.2118
+## 2    2 -142.8908
+## 3    3 -138.0634
+## 4    4 -133.5038
+## 5    5 -132.7496
+## 6    6 -132.2910</code></pre>
+<div class="sourceCode" id="cb578"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb578-1"><a href="forecasting.html#cb578-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>(arima111)</span></code></pre></div>
+<pre><code>##     time         x
+## 195  195 -469.1263
+## 196  196 -476.6298
+## 197  197 -483.2368
+## 198  198 -483.9744
+## 199  199 -488.2191
+## 200  200 -488.4823</code></pre>
+<div class="sourceCode" id="cb580"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb580-1"><a href="forecasting.html#cb580-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> arima111<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb581"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb581-1"><a href="forecasting.html#cb581-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb581-2"><a href="forecasting.html#cb581-2" aria-hidden="true" tabindex="-1"></a>mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1))
+## 
+## Coefficients:
+##          ar1     ma1
+##       0.6720  0.4681
+## s.e.  0.0637  0.0904
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1021.36</code></pre>
+<div class="sourceCode" id="cb583"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb583-1"><a href="forecasting.html#cb583-1" aria-hidden="true" tabindex="-1"></a>fore.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit, <span class="at">n.ahead =</span> <span class="dv">5</span>, se.fit  </span>
+<span id="cb583-2"><a href="forecasting.html#cb583-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="cn">TRUE</span>) </span>
+<span id="cb583-3"><a href="forecasting.html#cb583-3" aria-hidden="true" tabindex="-1"></a>fore.mod</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1] -486.3614 -484.9361 -483.9784 -483.3348 -482.9023
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 205 
+## Frequency = 1 
+## [1]  3.091673  7.303206 11.578890 15.682551 19.534208</code></pre>
+<div class="sourceCode" id="cb585"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb585-1"><a href="forecasting.html#cb585-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate 95% C.I.s </span></span>
+<span id="cb585-2"><a href="forecasting.html#cb585-2" aria-hidden="true" tabindex="-1"></a>low <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> </span>
+<span id="cb585-3"><a href="forecasting.html#cb585-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb585-4"><a href="forecasting.html#cb585-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb585-5"><a href="forecasting.html#cb585-5" aria-hidden="true" tabindex="-1"></a>up <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> </span>
+<span id="cb585-6"><a href="forecasting.html#cb585-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb585-7"><a href="forecasting.html#cb585-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb585-8"><a href="forecasting.html#cb585-8" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(low, up)</span></code></pre></div>
+<pre><code>##         low        up
+## 1 -492.4209 -480.3018
+## 2 -499.2502 -470.6221
+## 3 -506.6726 -461.2842
+## 4 -514.0720 -452.5976
+## 5 -521.1886 -444.6159</code></pre>
+<p>Doing the calculations by hand produces:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="21%" />
+<col width="21%" />
+<col width="28%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>m</th>
+<th><span class="math inline">\(\tilde x^{200}_{200+m}\)</span></th>
+<th><span class="math inline">\(Var(x_{200+m}-\tilde x^{200}_{200+m})\)</span></th>
+<th>95% C.I.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>-486.36</td>
+<td><span class="math inline">\(\hat\sigma_w^2\sum_{i=0}^{1-1}\hat\psi_i^2=\hat \sigma_w=9.558\)</span></td>
+<td><span class="math inline">\(-486.36\pm 1.96\sqrt{9.558} = \\(-492.42, -480.30)\)</span></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>-484.94</td>
+<td><span class="math inline">\(\hat\sigma_w^2\sum_{i=0}^{2-1}\hat\psi_i^2=\hat \sigma_w(1+\hat \psi_w^2)\\=\hat \sigma_w^2(1+(1+\hat \phi_1+\hat \theta_1)^2)\\=9.558(1+(1+0.6720+0.4681)^2)\\=53.334\)</span></td>
+<td><span class="math inline">\(-484.94\pm 1.96 \sqrt{53.334}=\\ (-499.25, -470.62)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Because the data is being simulated from an ARIMA(1,1,1) process, 210 observations were actually simulated originally so that one could determine how good the forecasts are for the last 10 time points. Below are the new observations with their forecasts.</p>
+<div class="sourceCode" id="cb587"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb587-1"><a href="forecasting.html#cb587-1" aria-hidden="true" tabindex="-1"></a>  fore.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit, <span class="at">n.ahead =</span> <span class="dv">10</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb587-2"><a href="forecasting.html#cb587-2" aria-hidden="true" tabindex="-1"></a>  fore.mod</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = 201 
+## End = 210 
+## Frequency = 1 
+##  [1] -486.3614 -484.9361 -483.9784 -483.3348 -482.9023 -482.6116 -482.4163
+##  [8] -482.2851 -482.1969 -482.1376
+## 
+## $se
+## Time Series:
+## Start = 201 
+## End = 210 
+## Frequency = 1 
+##  [1]  3.091673  7.303206 11.578890 15.682551 19.534208 23.118991 26.449369
+##  [8] 29.548210 32.441002 35.152348</code></pre>
+<div class="sourceCode" id="cb589"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb589-1"><a href="forecasting.html#cb589-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Calculate 95% C.I.s </span></span>
+<span id="cb589-2"><a href="forecasting.html#cb589-2" aria-hidden="true" tabindex="-1"></a>  low <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb589-3"><a href="forecasting.html#cb589-3" aria-hidden="true" tabindex="-1"></a>  up <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb589-4"><a href="forecasting.html#cb589-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(low, up)</span></code></pre></div>
+<pre><code>##          low        up
+## 1  -492.4209 -480.3018
+## 2  -499.2502 -470.6221
+## 3  -506.6726 -461.2842
+## 4  -514.0720 -452.5976
+## 5  -521.1886 -444.6159
+## 6  -527.9240 -437.2993
+## 7  -534.2562 -430.5765
+## 8  -540.1985 -424.3717
+## 9  -545.7801 -418.6137
+## 10 -551.0350 -413.2403</code></pre>
+<div class="sourceCode" id="cb591"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb591-1"><a href="forecasting.html#cb591-1" aria-hidden="true" tabindex="-1"></a><span class="co">#When I originally simulated the data, 210 observations were actually simulated.  </span></span>
+<span id="cb591-2"><a href="forecasting.html#cb591-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#  I did this so that I could examine how well the confidence intervals captured the true future values</span></span>
+<span id="cb591-3"><a href="forecasting.html#cb591-3" aria-hidden="true" tabindex="-1"></a>x.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">494.85</span>, <span class="sc">-</span><span class="fl">506.44</span>, <span class="sc">-</span><span class="fl">517.70</span>, <span class="sc">-</span><span class="fl">526.64</span>, <span class="sc">-</span><span class="fl">529.10</span>, <span class="sc">-</span><span class="fl">530.94</span>, <span class="sc">-</span><span class="fl">532.52</span>, <span class="sc">-</span><span class="fl">537.46</span>, <span class="sc">-</span><span class="fl">540.39</span>, <span class="sc">-</span><span class="fl">541.43</span>)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="17%" />
+<col width="17%" />
+<col width="23%" />
+<col width="23%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>m</th>
+<th><span class="math inline">\(\tilde x^{200}_{200+m}\)</span></th>
+<th>95% C.I. lower limit</th>
+<th>95% C.I. upper limit</th>
+<th><span class="math inline">\(x_{200+m}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>-486.36</td>
+<td>-492.42</td>
+<td>-480.30</td>
+<td>-494.85</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>-484.94</td>
+<td>-499.25</td>
+<td>-470.62</td>
+<td>-506.44</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>-483.98</td>
+<td>-506.67</td>
+<td>-461.28</td>
+<td>-517.70</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>-483.33</td>
+<td>-514.07</td>
+<td>-452.60</td>
+<td>-526.64</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>-482.90</td>
+<td>-521.19</td>
+<td>-444.62</td>
+<td>-529.10</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>-482.61</td>
+<td>-527.92</td>
+<td>-437.30</td>
+<td>-530.94</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>-482.42</td>
+<td>-534.26</td>
+<td>-430.58</td>
+<td>-532.52</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>-482.29</td>
+<td>-540.20</td>
+<td>-424.37</td>
+<td>-537.46</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>-482.20</td>
+<td>-545.78</td>
+<td>-418.61</td>
+<td>-540.39</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>-482.14</td>
+<td>-551.04</td>
+<td>-413.24</td>
+<td>-541.43</td>
+</tr>
+</tbody>
+</table>
+<p>Below is plot of these values. See the program for the code.</p>
+<div class="sourceCode" id="cb592"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb592-1"><a href="forecasting.html#cb592-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of forecasts, C.I.s, and true future values.</span></span>
+<span id="cb592-2"><a href="forecasting.html#cb592-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb592-3"><a href="forecasting.html#cb592-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb592-4"><a href="forecasting.html#cb592-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb592-5"><a href="forecasting.html#cb592-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ARIMA model: &quot;</span>, (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.7</span><span class="sc">*</span>B)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>B)<span class="sc">*</span>x[t] <span class="sc">==</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span><span class="sc">*</span>B)<span class="sc">*</span>w[t])), </span>
+<span id="cb592-6"><a href="forecasting.html#cb592-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">196</span>, <span class="dv">210</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">580</span>, <span class="sc">-</span><span class="dv">400</span>))</span>
+<span id="cb592-7"><a href="forecasting.html#cb592-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb592-8"><a href="forecasting.html#cb592-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="fu">c</span>(x <span class="sc">-</span> mod.fit<span class="sc">$</span>residuals, fore.mod<span class="sc">$</span>pred), <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">17</span>) </span>
+<span id="cb592-9"><a href="forecasting.html#cb592-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb592-10"><a href="forecasting.html#cb592-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">y =</span> low, <span class="at">x =</span> <span class="dv">201</span><span class="sc">:</span><span class="dv">210</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) </span>
+<span id="cb592-11"><a href="forecasting.html#cb592-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb592-12"><a href="forecasting.html#cb592-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">y =</span> up, <span class="at">x =</span> <span class="dv">201</span><span class="sc">:</span><span class="dv">210</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) </span>
+<span id="cb592-13"><a href="forecasting.html#cb592-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb592-14"><a href="forecasting.html#cb592-14" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">y =</span> x.extra, <span class="at">x =</span> <span class="dv">201</span><span class="sc">:</span><span class="dv">210</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;solid&quot;</span>, <span class="at">type =</span> <span class="st">&quot;o&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>) </span>
+<span id="cb592-15"><a href="forecasting.html#cb592-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb592-16"><a href="forecasting.html#cb592-16" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Forecast&quot;</span>, <span class="st">&quot;95% C.I.&quot;</span>, <span class="st">&quot;Actual future values&quot;</span>), </span>
+<span id="cb592-17"><a href="forecasting.html#cb592-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">lty =</span> <span class="fu">c</span>(<span class="st">&quot;solid&quot;</span>, <span class="st">&quot;solid&quot;</span>, <span class="st">&quot;dashed&quot;</span>, <span class="st">&quot;solid&quot;</span>),</span>
+<span id="cb592-18"><a href="forecasting.html#cb592-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">17</span>, <span class="cn">NA</span>, <span class="dv">20</span>), <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="14-Forecasting_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p>Notice that most of the 10 extra observations are outside of the C.I. bounds. Also, notice that the width of the C.I. increases as the time from t = 200 increases.</p>
+<p>A few other realizations were simulated to see if the above was an anomaly and indeed the above was an anomaly. The forecast C.I.s did contain the 10 extra observations!</p>
+</div>
+<p>All forecasts and associated inferences assume that what has occurred in the past will occur in the future. Thus, trends seen in the past will continue in the future. What could happen if this does not occur?</p>
+<p>Well, then you can just throw away what you just learned!!</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="drift-term.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

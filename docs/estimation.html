@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 14 Estimation | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 14 Estimation | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 14 Estimation | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="integrated-models-for-nonstationary-data.html"/>
+<link rel="next" href="forecasting.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimation" class="section level1 hasAnchor" number="14">
+<h1><span class="header-section-number">Chapter 14</span> Estimation<a href="estimation.html#estimation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Estimate the parameters (<span class="math inline">\(\phi\)</span>’s, <span class="math inline">\(\theta\)</span>’s, <span class="math inline">\(\mu\)</span>, and <span class="math inline">\(\sigma_w^2\)</span>) of an ARIMA model. Hat notation (^) is placed above parameters to denote estimated quantities.</p>
+<div id="method-of-moments-estimates" class="section level2 hasAnchor" number="14.1">
+<h2><span class="header-section-number">14.1</span> Method of moments estimates<a href="estimation.html#method-of-moments-estimates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Sample moments (for example, the sample mean, sample variance,…) are substituted for their corresponding population counterparts to find parameter estimates.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-42" class="example"><strong>Example 14.1  </strong></span><strong>Exponential(<span class="math inline">\(\theta\)</span>)</strong></p>
+<p>Let <span class="math inline">\(X_1, …, X_n \sim ind. Exponential(\theta)\)</span>
+i.e. <span class="math inline">\(f(x)=\theta e^{-\theta x}\)</span> for 0 &lt; x &lt; <span class="math inline">\(\infty\)</span>.</p>
+<p>One can show that <span class="math inline">\(\mu = E(X) = 1/\theta\)</span>. This implies that <span class="math inline">\(\theta = 1/\mu\)</span>. Let <span class="math inline">\(\bar{X}\)</span> denote the sample mean. Then <span class="math inline">\(\hat{\theta}=\frac{1}{\bar{X}}\)</span>.</p>
+</div>
+<p>In deriving the PACF, we examined an autoregressive representation of <span class="math display">\[x_t=\phi_1x_{t-1}+\phi_2x_{t-2}+...+\phi_px_{t-p}+w_t\]</span></p>
+<p>where <span class="math inline">\(w_t \sim ind.(0,\sigma_w^2)\)</span></p>
+<p>This led to</p>
+<p><span class="math display">\[\rho(1)=\phi_1\rho(0)+\phi_2\rho(1)+...+\phi_p\rho(p-1)\\
+\rho(2)=\phi_1\rho(1)+\phi_2\rho(0)+...+\phi_p\rho(p-2)\\
+...\\
+\rho(p)=\phi_1\rho(p-1)+\phi_2\rho(p-2)+...+\phi_p\rho(0)\]</span></p>
+<p>Note: These are called the Yule-Walker equations.</p>
+<p>For a specific p, we can solve the <span class="math inline">\(\phi\)</span>’s:</p>
+<p>Note that of course <span class="math inline">\(\rho(0)=1\)</span></p>
+<ul>
+<li><p>Suppose p = 1, then <span class="math display">\[\rho(1)=\phi_1\rho(0)\implies \phi_1=\rho(1)\implies \hat{\phi_1}=\hat{\rho}(1)\]</span></p></li>
+<li><p>Suppose p = 2, then <span class="math display">\[\phi_1=\frac{\rho(1)[1-\rho(2)]}{1-\rho(1)^2},\\  \phi_2=\frac{\rho(2)-\rho(1)^2}{1-\rho(1)^2}\]</span>
+<span class="math display">\[\implies \hat{\phi_1}=\frac{\hat{\rho}(1)[1-\hat{\rho}(2)]}{1-\hat{\rho}(1)^2}, \hat{\phi}_2=\frac{\hat{\rho}(2)-\hat{\rho}(1)^2}{1-\hat{\rho}(1)^2}\]</span></p></li>
+</ul>
+<p>In addition, <span class="math inline">\(\hat{\sigma}_w^2=\hat{\gamma}(0)[1-\hat{\phi}_1\hat{\rho}(1)-...-\hat{\phi}_p\hat{\rho}(p)]\)</span> where the estimate of <span class="math inline">\(\sigma_w^2\)</span> results from:</p>
+<p><span class="math display">\[\gamma(0)=E(x_tx_t)=E[x_t(\phi_1x_{t-1}+\phi_2x_{t-2}+...+\phi_px_{t-p}+w_t)]\\
+=E[\phi_1x_tx_{t-1}+\phi_2x_tx_{t-2}+...+\phi_px_tx_{t-p}+x_tw_t]\\
+=\phi_1E(x_tx_{t-1})+\phi_2E(x_tx_{t-2})+...+\phi_pE(x_tx_{t-p})+E(x_tw_t)\\
+=\phi_1\gamma(1)+\phi_2\gamma(2)+...+\phi_p\gamma(p)+\sigma_w^2\]</span></p>
+<p>Note that <span class="math inline">\(E(x_tw_t)=E[(\phi_1x_{t-1}+...+\phi_px_{t-p}+w_t)w_t]=E(w_t^2)=\sigma_w^2\)</span></p>
+<p><span class="math display">\[\implies \sigma_w^2=\gamma(0)-\phi_1\gamma(1)-\phi_2\gamma(2)-...-\phi_p\gamma(p)\\
+\implies \sigma_w^2=\gamma(0)(1-\phi_1\rho(1)-\phi_2\rho(2)-...-\phi_p\rho(p))\\
+\implies \hat{\sigma}_w^2=\hat{\gamma}(0)(1-\hat{\phi}_1\hat{\rho}(1)-\hat{\phi}_2\hat{\rho}(2)-...-\hat{\phi}_p\hat{\rho}(p))\]</span></p>
+<p>Suppose <span class="math inline">\(E(x_t) = \mu \ne 0\)</span>. Then <span class="math inline">\(\hat{\mu}=\bar{x}\)</span> and <span class="math inline">\(\hat{\alpha}=\hat{\mu}(1-\hat{\phi}_1-...-\hat{\phi}_p)\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-43" class="example"><strong>Example 14.2  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7\)</span>, <span class="math inline">\(\mu=0\)</span>, and <span class="math inline">\(\sigma_w^2=1\)</span> (fit_AR1.R)</strong></p>
+<p>Data was simulated from an AR(1) model of the form <span class="math inline">\(x_t = 0.7x_{t-1} + w_t\)</span> where <span class="math inline">\(w_t \sim ind.N(0,1).\)</span></p>
+<div class="sourceCode" id="cb456"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb456-1"><a href="estimation.html#cb456-1" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">&quot;AR1.0.7.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb456-2"><a href="estimation.html#cb456-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ar1)</span></code></pre></div>
+<pre><code>##   t          x
+## 1 1  0.0417268
+## 2 2  0.3719068
+## 3 3 -0.1854518
+## 4 4 -1.3829742
+## 5 5 -2.8759365
+## 6 6 -2.6001761</code></pre>
+<div class="sourceCode" id="cb458"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb458-1"><a href="estimation.html#cb458-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ar1<span class="sc">$</span>x</span></code></pre></div>
+<p>The data is in <code>x</code>.</p>
+<div class="sourceCode" id="cb459"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb459-1"><a href="estimation.html#cb459-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.new(width = 8, height = 6, pointsize = 10)  #Opens up wider plot window than the default (good for time series plots)</span></span>
+<span id="cb459-2"><a href="estimation.html#cb459-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span> , </span>
+<span id="cb459-3"><a href="estimation.html#cb459-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)) , </span>
+<span id="cb459-4"><a href="estimation.html#cb459-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb459-5"><a href="estimation.html#cb459-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="13-Estimation_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb460-1"><a href="estimation.html#cb460-1" aria-hidden="true" tabindex="-1"></a>rho.x <span class="ot">&lt;-</span> <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb460-2"><a href="estimation.html#cb460-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)))</span></code></pre></div>
+<p><img src="13-Estimation_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb461"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb461-1"><a href="estimation.html#cb461-1" aria-hidden="true" tabindex="-1"></a>rho.x</span></code></pre></div>
+<pre><code>## 
+## Autocorrelations of series &#39;x&#39;, by lag
+## 
+##      0      1      2      3      4      5      6      7      8      9     10 
+##  1.000  0.674  0.401  0.169 -0.023 -0.125 -0.067 -0.064 -0.058  0.005 -0.044 
+##     11     12     13     14     15     16     17     18     19     20 
+## -0.041 -0.017  0.064  0.076  0.160  0.191  0.141  0.081  0.006 -0.132</code></pre>
+<div class="sourceCode" id="cb463"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb463-1"><a href="estimation.html#cb463-1" aria-hidden="true" tabindex="-1"></a>gamma.x <span class="ot">&lt;-</span> <span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;covariance&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb463-2"><a href="estimation.html#cb463-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Data simulated from AR(1): &quot;</span>, </span>
+<span id="cb463-3"><a href="estimation.html#cb463-3" aria-hidden="true" tabindex="-1"></a>    x[t] <span class="sc">==</span> <span class="fl">0.7</span><span class="sc">*</span>x[t<span class="dv">-1</span>] <span class="sc">+</span> w[t], <span class="st">&quot; where &quot;</span>, w[t], <span class="st">&quot;~N(0,1)&quot;</span>)))</span></code></pre></div>
+<p><img src="13-Estimation_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb464-1"><a href="estimation.html#cb464-1" aria-hidden="true" tabindex="-1"></a>gamma.x</span></code></pre></div>
+<pre><code>## 
+## Autocovariances of series &#39;x&#39;, by lag
+## 
+##       0       1       2       3       4       5       6       7       8       9 
+##  2.5033  1.6864  1.0036  0.4219 -0.0586 -0.3120 -0.1687 -0.1608 -0.1445  0.0133 
+##      10      11      12      13      14      15      16      17      18      19 
+## -0.1102 -0.1029 -0.0430  0.1599  0.1892  0.3997  0.4790  0.3529  0.2015  0.0140 
+##      20 
+## -0.3293</code></pre>
+<div class="sourceCode" id="cb466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb466-1"><a href="estimation.html#cb466-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x)</span></code></pre></div>
+<pre><code>## [1] -0.4963419</code></pre>
+<p>Therefore, <span class="math inline">\(\hat{\gamma}(0)= 2.5033\)</span>, <span class="math inline">\(\hat{\rho}(1)= 0.6737\)</span>, and <span class="math inline">\(\bar{x}= -0.4963\)</span>. From the previous derivation, note that <span class="math inline">\(\hat{\phi_1}=\hat{\rho}(1)\)</span> . Thus, the estimated model can be written as <span class="math inline">\((1 -\hat{\phi}_1B)x_t = \hat{\alpha}+ w_t\)</span> where <span class="math inline">\(w_t \sim ind.(0,\sigma_w^2)\)</span></p>
+<p><span class="math inline">\(\implies (1-0.6437B)x_t=-0.16+w_t\)</span> where <span class="math inline">\(w_t \sim ind.N(0,1.3671)\)</span></p>
+<p><span class="math inline">\(\hat{\sigma}_w^2=\hat{\gamma}(0)[1-\hat\phi_1\rho(1)]=2.5033[1-(0.6737)^2]=1.3671\)</span></p>
+<p>Note: We would use <span class="math inline">\(\hat\mu=-0.4963\)</span> if we believed that <span class="math inline">\(E(x_t) \ne 0\)</span>. In most applications, you will not know it is 0! I included here using <span class="math inline">\(\hat\alpha=\hat\mu(1-\hat\phi_1)\)</span> .</p>
+<p>Compare the estimates to the actual <span class="math inline">\(\phi_1 = 0.7\)</span>, <span class="math inline">\(\mu = 0\)</span>, and <span class="math inline">\(\sigma_w^2= 1\)</span> used to generate the data.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-44" class="example"><strong>Example 14.3  </strong></span><strong>MA(1)</strong></p>
+<p>Remember that <span class="math inline">\(\rho(1)=\frac{\theta_1}{1+\theta_1^2}\)</span>. Then this equation can be solved for <span class="math inline">\(\theta_1\)</span>. Substituting estimates for the parameters produces:</p>
+<p><span class="math display">\[\hat\theta_1=\frac{1\pm \sqrt{1-4\hat\rho(1)^2}}{2\hat\rho(1)}\]</span></p>
+<p>from the quadratic formula which gives two different solutions. Choose the solution that satisfies the invertibility condition (i.e., -1 &lt; <span class="math inline">\(\theta_1\)</span> &lt; 1).</p>
+<p>Suppose <span class="math inline">\(|\hat\rho(1)| &gt; 0.5\)</span>. Then an estimate cannot be found!<br />
+From earlier in the course, <span class="math inline">\(\gamma(0)=\sigma_w^2(1+\theta_1^2)\)</span> . Therefore, <span class="math inline">\(\hat\sigma_w^2=\frac{\hat\gamma(0)}{1+\hat\theta_1^2}\)</span></p>
+</div>
+<p>Notes:</p>
+<ul>
+<li>We do not NEED to assume that <span class="math inline">\(w_t\)</span> has a normal distribution!</li>
+<li>Method of moment estimators usually are not used as “final” estimates for the parameters. Instead, they are often used as initial estimates for iterative parameter estimating procedures.<br />
+</li>
+<li>Estimates for AR only models are “optimal”. Estimates for models containing MA parameters are not “optimal”. Optimal here refers to having smallest variance.<br />
+</li>
+<li>The R function, <code>ar()</code>, will do the Yule-Walker estimation method for autoregressive models (see <code>method = "yule-walker"</code> argument). It uses Akaike’s information criterion to choose a “best” model.</li>
+</ul>
+</div>
+<div id="maximum-likelihood" class="section level2 hasAnchor" number="14.2">
+<h2><span class="header-section-number">14.2</span> Maximum Likelihood<a href="estimation.html#maximum-likelihood" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Parameter estimation for ARIMA models</strong></p>
+<ol style="list-style-type: decimal">
+<li>Method of moments</li>
+<li>Unconditional least squares (ULS)</li>
+<li>Conditional least squares (CLS)</li>
+<li>Maximum likelihood estimation (MLE)</li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>Method of moments can provide initial estimates for iterative procedures</li>
+<li>ULS, CLS, and MLE are iterative methods</li>
+<li>ULS and CLS are approximations to MLE</li>
+<li>Which estimation method to use? From Box, Jenkins, and Reinsel’s textbook:</li>
+</ul>
+<p>Generally, the conditional and unconditional least squares estimators serve as satisfactory approximations to the maximum likelihood estimator for large sample sizes. However, simulation evidence suggests a preference for the maximum likelihood estimator for small or moderate sample sizes, especially if the moving average operator has a root close to the boundary of the invertibility region.</p>
+</div>
+<div id="likelihood-function" class="section level2 hasAnchor" number="14.3">
+<h2><span class="header-section-number">14.3</span> Likelihood function<a href="estimation.html#likelihood-function" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If you need a review of maximum likelihood estimation, please see my separate videos and notes from a mathematical statistics course. These notes show mathematical derivations for a few examples and show how to use Sage (a symbolic mathematical software package) to perform these derivations as well.</p>
+<p>Consider the following ARMA(p,q) model.</p>
+<p><span class="math inline">\(x_t-\phi_1x_{t-1}-..-\phi_px_{t-p}=w_t+\theta_1w_{t-1}+...+\theta_qw_{t-q},\)</span> where <span class="math inline">\(w_t \sim ind. N(0, \sigma_w^2)\)</span> for t=1,…,n</p>
+<p>Comments:</p>
+<ul>
+<li>If we had an ARIMA model instead, let <span class="math inline">\(x_t = (1-B)^dv_t\)</span> for a nonstationary in the mean process <span class="math inline">\(v_t\)</span>.</li>
+<li>The normal distribution assumption is needed for these maximum likelihood estimation methods.<br />
+</li>
+<li>If we do not assume <span class="math inline">\(E(x_t) = \mu = 0\)</span>, then</li>
+</ul>
+<p><span class="math display">\[(x_t-\mu)-\phi_1(x_{t-1}-\mu)-...-\phi_p(x_{t-p}-\mu)=\\
+w_t+\theta_1w_{t-1}+...+\theta_qw_{t-q}\\
+\implies x_t-\phi_1x_{t-1}-...-\phi_px_{t-p}=\alpha+w_t+\theta_1w_{t-1}+...+\theta_qw_{t-q}\]</span> with <span class="math inline">\(\alpha=\mu(1-\phi_1-...-\phi_p)\)</span></p>
+<p>This can be rewritten as</p>
+<p><span class="math display">\[w_t=x_t-\phi_1x_{t-1}-...-\phi_px_{t-p}-\theta_1w_{t-1}-..-\theta_qw_{t-q}-\alpha\]</span>
+Conditional on past <span class="math inline">\(x_t\)</span> values, the likelihood can then be written in the form</p>
+<p><span class="math display">\[L(\boldsymbol \phi,\boldsymbol \theta, \mu, \sigma_w^2|\boldsymbol w)=\prod_{t=1}^{n}\frac{1}{\sqrt{2\pi}\sigma_w}e^{-\frac{w_t^2}{2\sigma_w^2}}=\frac{1}{(2\pi)^{n/2}\sigma_w^n}e^{-\frac{\sum w_t^2}{2\sigma_w^2}}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol w=(w_1,...,w_n)&#39;, \boldsymbol \phi=(\phi_1,...,\phi_p)&#39;, \boldsymbol \theta=(\theta_1,...,\theta_q)&#39;\)</span> are vectors of parameters. Additional details are provided in Shumway and Stoffer’s section on estimation.</p>
+<p>The log likelihood function can be found by <span class="math inline">\(\mathcal l(\boldsymbol \phi,\boldsymbol \theta,\mu,\sigma_w^2 |\boldsymbol w) = log[L(\boldsymbol \phi,\boldsymbol \theta, \mu, \sigma_w^2|\boldsymbol w)]\)</span>. Values of the parameters that maximize this equation are the maximum likelihood estimates (MLEs).</p>
+<p>To find parameter estimates, iterative numerical methods must be used to find these estimates. A common method often used is the Newton-Raphson method.</p>
+</div>
+<div id="newton-raphson-method" class="section level2 hasAnchor" number="14.4">
+<h2><span class="header-section-number">14.4</span> Newton-Raphson method<a href="estimation.html#newton-raphson-method" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let <span class="math inline">\((\phi_1, …, \phi_p, \theta_1, …, \theta_q,\sigma_w^2,\mu)&#39;\)</span> be rewritten as a vector of <span class="math inline">\(\beta\)</span>’s: <span class="math inline">\(\boldsymbol \beta= (\beta_1,…,\beta_k)&#39;\)</span> where k = p + q + 2.</p>
+<p>Let <span class="math inline">\(\frac{\partial \mathcal l(\boldsymbol \beta) }{\partial \beta_i}\)</span> denote the first partial derivative taken with respect to <span class="math inline">\(\beta_i\)</span>. Let <span class="math inline">\(\mathcal l^{(1)}(\boldsymbol \beta)= (\frac{\partial \mathcal l(\boldsymbol \beta) }{\partial \beta_1},..., \frac{\partial \mathcal l(\boldsymbol \beta) }{\partial \beta_k})\)</span> be a k x 1 vector of these first partial derivatives.</p>
+<p>Let <span class="math inline">\(\frac{\partial^2 \mathcal l (\boldsymbol \beta)}{\partial \beta_i \partial \beta_j}\)</span> be the second partial derivative taken with respect to <span class="math inline">\(\beta_i\)</span> and <span class="math inline">\(\beta_j\)</span>. Let <span class="math inline">\(\mathcal l^{(2)}(\boldsymbol \beta)\)</span> be a k x k matrix of these second partial derivatives and assume it is nonsingular. This matrix is often referred to as a “Hessian” matrix.</p>
+<p>Iterative estimates of <span class="math inline">\(\boldsymbol \beta\)</span> can be found using the following equation:</p>
+<p><span class="math display">\[\boldsymbol{\hat{\beta}}_{(g)}=\boldsymbol{\hat{\beta}}_{(g-1)}-[\mathcal l^{(2)}(\boldsymbol{\hat{\beta}}_{(g-1)})]^{-1}\mathcal l^{(1)}(\boldsymbol{\hat{\beta}}_{(g-1)})\]</span> for g=1,2,…</p>
+<p>Remember that <span class="math inline">\(\boldsymbol{\hat{\beta}}_{(g)}\)</span> is a k x 1 vector. The iteration process stops when these <span class="math inline">\(\boldsymbol{\hat{\beta}}_{(g)}\)</span>’s converge to <span class="math inline">\(\boldsymbol{\hat{\beta}}\)</span>. This is said to happen when <span class="math inline">\(|\boldsymbol{\hat{\beta}}_{(g)}-\boldsymbol{\hat{\beta}}_{(g-1)}|&lt; \epsilon\)</span> for some small number <span class="math inline">\(\epsilon\)</span> &gt; 0 (there are other definitions of convergence).</p>
+</div>
+<div id="covariance-matrix-for-the-estimators" class="section level2 hasAnchor" number="14.5">
+<h2><span class="header-section-number">14.5</span> Covariance matrix for the estimators<a href="estimation.html#covariance-matrix-for-the-estimators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The covariance matrix is <span class="math inline">\(-[\mathcal l^{(2)}(\boldsymbol{\hat{\beta}})]^{-1}\)</span> (inverse of the observed Fisher information matrix). The estimated covariance matrix will have the form <span class="math display">\[\begin{bmatrix} \hat Var(\hat\beta_1) &amp; \hat Cov(\hat\beta_1,\hat\beta_2) &amp;\dots &amp; \hat Cov(\hat\beta_1\hat\beta_k) \\
+\hat Cov(\hat\beta_1,\hat\beta_2) &amp; \hat Var(\hat\beta_2)  &amp;\dots &amp; \hat Cov(\hat\beta_2\hat\beta_k)\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+\hat Cov(\hat\beta_1\hat\beta_k) &amp; \hat Cov(\hat\beta_2,\hat\beta_k) &amp;\dots &amp; \hat Var(\hat\beta_k) \end{bmatrix}\]</span></p>
+<p>Let <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> be a vector of the maximum likelihood estimators. Then <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> is approximately distributed as <span class="math inline">\(N(\hat{\boldsymbol{\beta}}, -[\mathcal l^{(2)}(\boldsymbol{\hat{\beta}})]^{-1})\)</span> for large n. See Ferguson’s textbook “A Course in Large Sample Theory” for more information on “standard” maximum likelihood techniques.</p>
+<p>Note that hypothesis tests for <span class="math inline">\(H_0:\beta_i = \beta_{i0}\)</span> can be done using a Wald statistic: <span class="math display">\[Z=\frac{\hat \beta_i- \beta_{i0}}{\sqrt{\hat Var(\hat \beta_i)}}\]</span></p>
+<p>where <span class="math inline">\(\hat Var(\hat \beta_i)\)</span> can be found from the <span class="math inline">\(i^{th}\)</span> diagonal element of <span class="math inline">\(-[\mathcal l^{(2)}(\boldsymbol{\hat{\beta}})]^{-1}\)</span> and Z has an approximate N(0,1) distribution for a large sample under the null hypothesis.</p>
+<p>Some textbooks may examine the asymptotic probability distributions (this is the distribution when n<span class="math inline">\(\to \infty\)</span>) in more detail than we need for this class. A PhD-level statistics course on asymptotics is required prior to going through these details. For those without this background, you can read through it by simply interpreting</p>
+<ul>
+<li><span class="math inline">\(AN(\mu, \sigma^2)\)</span> to mean the statistic has an approximate normal distribution if the sample size is large</li>
+<li><span class="math inline">\(\to^d\)</span>to mean ~ (i.e., “distributed as”) if the sample size is large</li>
+</ul>
+<p>For example, <span class="math display">\[(\hat{\boldsymbol \beta}-\boldsymbol \beta)\to^d N(\boldsymbol 0, -[\mathcal l^{(2)}(\boldsymbol{\hat{\beta}})]^{-1})\]</span></p>
+<p>means <span class="math inline">\(\hat{\boldsymbol \beta}\)</span> that is approximately distributed as <span class="math inline">\(N(\boldsymbol 0, -[\mathcal l^{(2)}(\boldsymbol{\hat{\beta}})]^{-1})\)</span> for large n. </p>
+<div class="example">
+<p><span id="exm:unlabeled-div-45" class="example"><strong>Example 14.4  </strong></span><strong>AR(1) with <span class="math inline">\(\phi_1=0.7, \mu=0, \sigma_w^2=1\)</span>(fit_AR1.R)</strong></p>
+<p>This example fits a model using maximum likelihood estimation to the AR(1) simulated data examined earlier.</p>
+<div class="sourceCode" id="cb468"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb468-1"><a href="estimation.html#cb468-1" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file=</span><span class="st">&quot;AR1.0.7.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span> , <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb468-2"><a href="estimation.html#cb468-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ar1)</span></code></pre></div>
+<pre><code>##   t          x
+## 1 1  0.0417268
+## 2 2  0.3719068
+## 3 3 -0.1854518
+## 4 4 -1.3829742
+## 5 5 -2.8759365
+## 6 6 -2.6001761</code></pre>
+<div class="sourceCode" id="cb470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb470-1"><a href="estimation.html#cb470-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ar1<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb471-1"><a href="estimation.html#cb471-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">method =</span> <span class="st">&quot;CSS-ML&quot;</span>, <span class="at">include.mean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb471-2"><a href="estimation.html#cb471-2" aria-hidden="true" tabindex="-1"></a>mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 0, 0), include.mean = TRUE, method = &quot;CSS-ML&quot;)
+## 
+## Coefficients:
+##          ar1  intercept
+##       0.6854    -0.4322
+## s.e.  0.0730     0.3602
+## 
+## sigma^2 estimated as 1.336:  log likelihood = -156.68,  aic = 319.36</code></pre>
+<div class="sourceCode" id="cb473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb473-1"><a href="estimation.html#cb473-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(mod.fit) not helpful</span></span></code></pre></div>
+<div class="sourceCode" id="cb474"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb474-1"><a href="estimation.html#cb474-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mod.fit)</span></code></pre></div>
+<pre><code>##  [1] &quot;coef&quot;      &quot;sigma2&quot;    &quot;var.coef&quot;  &quot;mask&quot;      &quot;loglik&quot;    &quot;aic&quot;      
+##  [7] &quot;arma&quot;      &quot;residuals&quot; &quot;call&quot;      &quot;series&quot;    &quot;code&quot;      &quot;n.cond&quot;   
+## [13] &quot;nobs&quot;      &quot;model&quot;</code></pre>
+<div class="sourceCode" id="cb476"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb476-1"><a href="estimation.html#cb476-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimated phi1 and mu</span></span>
+<span id="cb476-2"><a href="estimation.html#cb476-2" aria-hidden="true" tabindex="-1"></a>mod.fit<span class="sc">$</span>coef</span></code></pre></div>
+<pre><code>##        ar1  intercept 
+##  0.6853698 -0.4322225</code></pre>
+<div class="sourceCode" id="cb478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb478-1"><a href="estimation.html#cb478-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimated sigma^2</span></span>
+<span id="cb478-2"><a href="estimation.html#cb478-2" aria-hidden="true" tabindex="-1"></a>mod.fit<span class="sc">$</span>sigma</span></code></pre></div>
+<pre><code>## [1] 1.335638</code></pre>
+<div class="sourceCode" id="cb480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb480-1"><a href="estimation.html#cb480-1" aria-hidden="true" tabindex="-1"></a>mod.fit<span class="sc">$</span>sigma2</span></code></pre></div>
+<pre><code>## [1] 1.335638</code></pre>
+<div class="sourceCode" id="cb482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb482-1"><a href="estimation.html#cb482-1" aria-hidden="true" tabindex="-1"></a><span class="co"># covariance matrix</span></span>
+<span id="cb482-2"><a href="estimation.html#cb482-2" aria-hidden="true" tabindex="-1"></a>mod.fit<span class="sc">$</span>var.coef</span></code></pre></div>
+<pre><code>##                   ar1   intercept
+## ar1       0.005324151 0.001518125
+## intercept 0.001518125 0.129723806</code></pre>
+<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="estimation.html#cb484-1" aria-hidden="true" tabindex="-1"></a><span class="co"># test statistic for H_0: phi1=0 vs. phi1≠0</span></span>
+<span id="cb484-2"><a href="estimation.html#cb484-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> mod.fit<span class="sc">$</span>coef[<span class="dv">1</span>]<span class="sc">/</span><span class="fu">sqrt</span>(mod.fit<span class="sc">$</span>var.coef[<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb484-3"><a href="estimation.html#cb484-3" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div>
+<pre><code>##      ar1 
+## 9.392902</code></pre>
+<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="estimation.html#cb486-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value</span></span>
+<span id="cb486-2"><a href="estimation.html#cb486-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q=</span><span class="fu">abs</span>(z), <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## ar1 
+##   0</code></pre>
+<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="estimation.html#cb488-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confidence intervals- uses confint.default()</span></span>
+<span id="cb488-2"><a href="estimation.html#cb488-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(mod.fit, <span class="at">level=</span><span class="fl">0.95</span>)</span></code></pre></div>
+<pre><code>##                2.5 %    97.5 %
+## ar1        0.5423576 0.8283821
+## intercept -1.1381464 0.2737015</code></pre>
+</div>
+<p>Notes:</p>
+<ul>
+<li><code>arima()</code> finds the estimated ARIMA model. Examine the syntax used!</li>
+<li>The estimated model is <span class="math display">\[(1-0.6854B)x_t=-0.4322(1-0.6854)+w_t\\
+\iff (1-0.6854B)x_t=-0.1360+w_t\]</span></li>
+</ul>
+<p>where <span class="math inline">\(\hat \mu=-0.4322, \hat \sigma_w^2=1.336\)</span></p>
+<p>Equivalently, this can be written as <span class="math inline">\(x_t=-0.1360+0.6854x_{t-1}+w_t\)</span></p>
+<p>Compare these estimates to what was obtained earlier with the methods of moments.</p>
+<ul>
+<li><p>Note the <code>include.mean = TRUE</code> argument in <code>arima()</code> that allows one to estimate <span class="math inline">\(\mu\)</span>. This is the default for ARIMA models with d = 0. <strong>R’s estimate for the mean is listed in the output as “intercept”. This may lead you to think that <span class="math inline">\(\hat \alpha\)</span> is being estimated instead. Be careful!</strong></p></li>
+<li><p>There is another way to estimate <span class="math inline">\(\mu\)</span> through the <code>xreg</code> option. This option will be more important later, but it is instructive now to see how it can be used here,</p></li>
+</ul>
+<div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="estimation.html#cb490-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arima</span>(<span class="at">x=</span>x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">method =</span> <span class="st">&quot;CSS-ML&quot;</span>, </span>
+<span id="cb490-2"><a href="estimation.html#cb490-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">include.mean =</span> <span class="cn">FALSE</span>, <span class="at">xreg =</span> <span class="fu">rep</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">times =</span> </span>
+<span id="cb490-3"><a href="estimation.html#cb490-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">length</span>(x)))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 0, 0), xreg = rep(x = 1, times = length(x)), include.mean = FALSE, 
+##     method = &quot;CSS-ML&quot;)
+## 
+## Coefficients:
+##          ar1  rep(x = 1, times = length(x))
+##       0.6854                        -0.4322
+## s.e.  0.0730                         0.3602
+## 
+## sigma^2 estimated as 1.336:  log likelihood = -156.68,  aic = 319.36</code></pre>
+<p>The <code>rep(x = 1, times = length(x))</code> code creates a vector of 1’s with a length of 100. This tells R that there is a time series variable of all 1’s being used to predict <span class="math inline">\(x_t\)</span>.</p>
+<ul>
+<li>Notice that <span class="math inline">\(\bar x=\frac{1}{n}\sum_{i=1}^{n}x_i=-0.4963\)</span>, so our <span class="math inline">\(\hat \mu\)</span> is closed to it.</li>
+<li>Examine the components that can be extracted from the <code>mod.fit</code> list.</li>
+<li>To test if <span class="math inline">\(H_0:\phi_1 = 0\quad vs. \quad H_a:\phi_1 \ne 0\)</span>, use the test statistic <span class="math display">\[Z=\frac{\hat \phi_1-0}{\sqrt{ \hat Var(\hat \phi_1)}}=\frac{0.6854}{\sqrt{0.005324}}=9.39\]</span></li>
+</ul>
+<p>which results in a p-value of <span class="math inline">\(\approx 0\)</span>. Thus, <span class="math inline">\(\phi_1 \ne 0\)</span> as would be expected!</p>
+<ul>
+<li>Confidence intervals are found using <code>confint().</code></li>
+<li>The iterative parameter estimation method used is maximum likelihood estimation. To find initial values of the parameter estimates for this iterative method, conditional sums of squares estimation is used. The <code>method = "CSS-ML"</code> argument is specified in <code>arima()</code> to implement the parameter estimation method. Note that this is actually the default so excluding the <code>method</code> option will result in the same estimation method.<br />
+</li>
+<li>The maximum likelihood estimation part is carried out by the <code>optim()</code> function in R (<code>arima()</code> calls this function). This is a very general function that can be used to find values which maximize a function. Finer control of the optimization can then be done through specifying the <code>optim.control = list()</code> option in <code>arima()</code>. For example, information about the iterative history can be specified by using <code>trace = 1</code> and controlling the number of iterations can be done through <code>maxit</code> option.</li>
+</ul>
+<p>The <code>methods()</code> function is used to see the method functions available for objects of class <code>Arima</code>. For example, there is a <code>vcov.Arima()</code>method function.</p>
+<div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb492-1"><a href="estimation.html#cb492-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mod.fit)</span></code></pre></div>
+<pre><code>## [1] &quot;Arima&quot;</code></pre>
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="estimation.html#cb494-1" aria-hidden="true" tabindex="-1"></a><span class="fu">methods</span>(<span class="at">class=</span><span class="st">&quot;Arima&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] coef    logLik  predict print   tsdiag  vcov   
+## see &#39;?methods&#39; for accessing help and source code</code></pre>
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb496-1"><a href="estimation.html#cb496-1" aria-hidden="true" tabindex="-1"></a><span class="fu">methods</span>(<span class="at">generic.function =</span> vcov)</span></code></pre></div>
+<pre><code>## [1] vcov.aov*         vcov.Arima*       vcov.glm*         vcov.lm*         
+## [5] vcov.mlm*         vcov.nls*         vcov.summary.glm* vcov.summary.lm* 
+## see &#39;?methods&#39; for accessing help and source code</code></pre>
+<div class="sourceCode" id="cb498"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb498-1"><a href="estimation.html#cb498-1" aria-hidden="true" tabindex="-1"></a><span class="co"># covariance matrix(2nd way)</span></span>
+<span id="cb498-2"><a href="estimation.html#cb498-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(mod.fit)</span></code></pre></div>
+<pre><code>##                   ar1   intercept
+## ar1       0.005324151 0.001518125
+## intercept 0.001518125 0.129723806</code></pre>
+<div class="sourceCode" id="cb500"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb500-1"><a href="estimation.html#cb500-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">:::</span><span class="fu">vcov.Arima</span>(mod.fit)</span></code></pre></div>
+<pre><code>##                   ar1   intercept
+## ar1       0.005324151 0.001518125
+## intercept 0.001518125 0.129723806</code></pre>
+<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="estimation.html#cb502-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod.fit)</span></code></pre></div>
+<pre><code>##        ar1  intercept 
+##  0.6853698 -0.4322225</code></pre>
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb504-1"><a href="estimation.html#cb504-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">:::</span><span class="fu">coef.Arima</span>(mod.fit)</span></code></pre></div>
+<pre><code>##        ar1  intercept 
+##  0.6853698 -0.4322225</code></pre>
+<div class="sourceCode" id="cb506"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb506-1"><a href="estimation.html#cb506-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getAnywhere</span>(vcov.Arima)</span></code></pre></div>
+<pre><code>## A single object matching &#39;vcov.Arima&#39; was found
+## It was found in the following places
+##   registered S3 method for vcov from namespace stats
+##   namespace:stats
+## with value
+## 
+## function (object, ...) 
+## object$var.coef
+## &lt;bytecode: 0x105d830c0&gt;
+## &lt;environment: namespace:stats&gt;</code></pre>
+<div class="example">
+<p><span id="exm:unlabeled-div-46" class="example"><strong>Example 14.5  </strong></span><strong>ARIMA(1,1,1) with<span class="math inline">\(\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200\)</span> (arima111_sim.R)</strong></p>
+<div class="sourceCode" id="cb508"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb508-1"><a href="estimation.html#cb508-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Data could be simulated using the following code - notice the use of the order option.  </span></span>
+<span id="cb508-2"><a href="estimation.html#cb508-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6632</span>)</span>
+<span id="cb508-3"><a href="estimation.html#cb508-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ar =</span> <span class="fl">0.7</span>, <span class="at">ma =</span> <span class="fl">0.4</span>), <span class="at">n =</span> <span class="dv">200</span>, <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb509"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb509-1"><a href="estimation.html#cb509-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Instead, here data that I had simulated earlier using the same model.  </span></span>
+<span id="cb509-2"><a href="estimation.html#cb509-2" aria-hidden="true" tabindex="-1"></a>  arima111 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&quot;arima111.csv&quot;</span>)</span>
+<span id="cb509-3"><a href="estimation.html#cb509-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb509-4"><a href="estimation.html#cb509-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(arima111)</span></code></pre></div>
+<pre><code>##   time         x
+## 1    1 -143.2118
+## 2    2 -142.8908
+## 3    3 -138.0634
+## 4    4 -133.5038
+## 5    5 -132.7496
+## 6    6 -132.2910</code></pre>
+<div class="sourceCode" id="cb511"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb511-1"><a href="estimation.html#cb511-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>(arima111)</span></code></pre></div>
+<pre><code>##     time         x
+## 195  195 -469.1263
+## 196  196 -476.6298
+## 197  197 -483.2368
+## 198  198 -483.9744
+## 199  199 -488.2191
+## 200  200 -488.4823</code></pre>
+<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb513-1"><a href="estimation.html#cb513-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> arima111<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb514"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb514-1"><a href="estimation.html#cb514-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of the data</span></span>
+<span id="cb514-2"><a href="estimation.html#cb514-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#dev.new(width = 8, height = 6, pointsize = 10)</span></span>
+<span id="cb514-3"><a href="estimation.html#cb514-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb514-4"><a href="estimation.html#cb514-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>,  </span>
+<span id="cb514-5"><a href="estimation.html#cb514-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span>  <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;ARIMA model: &quot;</span>, (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.7</span><span class="sc">*</span>B)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>B)<span class="sc">*</span>x[t] <span class="sc">==</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span><span class="sc">*</span>B)<span class="sc">*</span>w[t])), </span>
+<span id="cb514-6"><a href="estimation.html#cb514-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb514-7"><a href="estimation.html#cb514-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="13-Estimation_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p>Below is the R code used to estimate an ARIMA(1,1,1) model for the data.</p>
+<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb515-1"><a href="estimation.html#cb515-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb515-2"><a href="estimation.html#cb515-2" aria-hidden="true" tabindex="-1"></a>  mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1))
+## 
+## Coefficients:
+##          ar1     ma1
+##       0.6720  0.4681
+## s.e.  0.0637  0.0904
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1021.36</code></pre>
+<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb517-1"><a href="estimation.html#cb517-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Covariance matrix</span></span>
+<span id="cb517-2"><a href="estimation.html#cb517-2" aria-hidden="true" tabindex="-1"></a>  mod.fit<span class="sc">$</span>var.coef</span></code></pre></div>
+<pre><code>##              ar1          ma1
+## ar1  0.004060990 -0.003341907
+## ma1 -0.003341907  0.008175261</code></pre>
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb519-1"><a href="estimation.html#cb519-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Test statistic for Ho: phi1 = 0 vs. Ha: phi1 ≠ 0</span></span>
+<span id="cb519-2"><a href="estimation.html#cb519-2" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> mod.fit<span class="sc">$</span>coef[<span class="dv">1</span>]<span class="sc">/</span><span class="fu">sqrt</span>(mod.fit<span class="sc">$</span>var.coef[<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb519-3"><a href="estimation.html#cb519-3" aria-hidden="true" tabindex="-1"></a>  z</span></code></pre></div>
+<pre><code>##      ar1 
+## 10.54508</code></pre>
+<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb521-1"><a href="estimation.html#cb521-1" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> z, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## ar1 
+##   0</code></pre>
+<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb523-1"><a href="estimation.html#cb523-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Test statistic for Ho: theta1 = 0 vs. Ha: theta1 ≠ 0</span></span>
+<span id="cb523-2"><a href="estimation.html#cb523-2" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> mod.fit<span class="sc">$</span>coef[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">sqrt</span>(mod.fit<span class="sc">$</span>var.coef[<span class="dv">2</span>,<span class="dv">2</span>])</span>
+<span id="cb523-3"><a href="estimation.html#cb523-3" aria-hidden="true" tabindex="-1"></a>  z</span></code></pre></div>
+<pre><code>##      ma1 
+## 5.177294</code></pre>
+<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb525-1"><a href="estimation.html#cb525-1" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(<span class="at">q =</span> <span class="fu">abs</span>(z), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>##          ma1 
+## 2.251269e-07</code></pre>
+<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb527-1"><a href="estimation.html#cb527-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(<span class="at">object=</span>mod.fit, <span class="at">level=</span><span class="fl">0.95</span>)</span></code></pre></div>
+<pre><code>##         2.5 %    97.5 %
+## ar1 0.5470940 0.7968949
+## ma1 0.2909019 0.6453306</code></pre>
+<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb529-1"><a href="estimation.html#cb529-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Shows how to use the xreg option</span></span>
+<span id="cb529-2"><a href="estimation.html#cb529-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb529-3"><a href="estimation.html#cb529-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arima</span>(<span class="at">x =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">xreg =</span> <span class="fu">rep</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">times =</span> <span class="fu">length</span>(x)))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = x, order = c(1, 1, 1), xreg = rep(x = 1, times = length(x)))
+## 
+## Coefficients:</code></pre>
+<pre><code>## Warning in sqrt(diag(x$var.coef)): NaNs produced</code></pre>
+<pre><code>##          ar1     ma1  rep(x = 1, times = length(x))
+##       0.6720  0.4681                      -243.5336
+## s.e.  0.0637  0.0904                            NaN
+## 
+## sigma^2 estimated as 9.558:  log likelihood = -507.68,  aic = 1023.36</code></pre>
+</div>
+<p>Notes:</p>
+<ul>
+<li>Notice the syntax used to fit the model using <code>arima().</code><br />
+</li>
+<li>No estimate of <span class="math inline">\(\mu\)</span> was found. The reason is that the time series data is differenced. Remember that
+<span class="math inline">\(E(x_t - x_{t-1}) = \mu - \mu = 0\)</span>. There are times when estimating a “constant” with the rest of the model is still of interest for an ARIMA model. We will discuss these later. The <code>arima()</code> function will default to <code>include.mean = FALSE</code> when d &gt; 0 so you will need to use the <code>xreg</code> option in <code>arima()</code> to include the constant term.<br />
+</li>
+<li>The estimated model is</li>
+</ul>
+<p><span class="math display">\[(1 - \hat \phi_1B)(1 - B)^1x_t= (1 + \hat \theta_1B)w_t\\
+\iff (1- 0.6720B)(1 - B)x_t = (1 + 0.4681B)w_t\\
+\iff x_t = (1 + 0.6720)x_{t-1} – 0.6720x_{t-2} + 0.4681w_{t-1} + w_t\]</span></p>
+<p>with <span class="math inline">\(w_t \sim ind.N(0, 9.56)\)</span></p>
+<ul>
+<li>The estimated covariance matrix for <span class="math inline">\(\hat{\boldsymbol \beta} = (\hat \phi_1 , \hat \theta_1 )&#39;\)</span> is:</li>
+</ul>
+<p><span class="math display">\[-[\mathcal l^{(2)}(\hat{\boldsymbol \beta})]^{-1}=\begin{bmatrix} 0.004061 &amp; -0.003342 \\
+-0.003342 &amp; 0.008175 \end{bmatrix}\]</span></p>
+<ul>
+<li>To test if <span class="math inline">\(H_0:\phi_1 = 0\quad vs.\quad H_a:\phi_1 \ne 0\)</span>, use the test statistic <span class="math display">\[Z=\frac{\hat \phi_1-0}{\sqrt{\hat Var(\hat \phi_1)}}=\frac{0.6720}{\sqrt{0.004061}}=10.55\]</span></li>
+</ul>
+<p>which results in a p-value of <span class="math inline">\(\approx\)</span> 0. Thus, <span class="math inline">\(\phi_1 \ne 0\)</span> as would be expected!</p>
+<ul>
+<li>To test if <span class="math inline">\(H_0:\theta_1 = 0\quad vs.\quad H_a:\theta_1 \ne 0\)</span>, use the test statistic <span class="math display">\[Z=\frac{\hat \theta_1-0}{\sqrt{\hat Var(\hat \theta_1)}}=\frac{0.4681}{\sqrt{0.008175}}=5.1773\]</span></li>
+</ul>
+<p>which results in a p-value of <span class="math inline">\(\approx\)</span> 0. Thus, <span class="math inline">\(\theta_1 \ne 0\)</span> as would be expected!</p>
+<p>Final notes:</p>
+<ul>
+<li>The iterative methods used to find the parameter estimates may NOT converge. If this happens, try a larger number of iterations. If this does not work, one should NOT use any estimates produced for the model.<br />
+</li>
+<li>An alternative to using a normal distribution approximation for inference is the bootstrap. R has a few functions in the boot package that allow one to perform these methods.</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="integrated-models-for-nonstationary-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="forecasting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

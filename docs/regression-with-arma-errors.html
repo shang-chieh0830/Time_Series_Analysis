@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 20 Regression with ARMA Errors | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 20 Regression with ARMA Errors | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 20 Regression with ARMA Errors | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="arfima.html"/>
+<link rel="next" href="multiple-time-series.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression-with-arma-errors" class="section level1 hasAnchor" number="20">
+<h1><span class="header-section-number">Chapter 20</span> Regression with ARMA Errors<a href="regression-with-arma-errors.html#regression-with-arma-errors" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Explanatory variables are incorporated into the time series model.</p>
+<p>A regression model is typically written as</p>
+<p><span class="math inline">\(Y_i=\beta_0+\beta_1x_{i1}+...+\beta_rx_{ir}+\epsilon_i\)</span></p>
+<p>where <span class="math inline">\(\epsilon_i\sim ind N(0,\sigma^2)\)</span> and for i=1,…,n.</p>
+<p>The <span class="math inline">\(x_{i1}, …, x_{ir}\)</span> represent the explanatory variable values for observation i. In matrix form, <span class="math inline">\(\boldsymbol Y =\boldsymbol{X\beta} + \boldsymbol{\epsilon}\)</span>,</p>
+<p>where</p>
+<p><span class="math display">\[\boldsymbol Y=\begin{bmatrix} Y_1 \\Y_2 \\ \vdots \\ Y_n\end{bmatrix}, \boldsymbol X=\begin{bmatrix} 1 &amp; x_{11} &amp; x_{12} &amp; \dots &amp; x_{1r} \\ 1 &amp;  x_{21} &amp; x_{22} &amp; \dots &amp; x_{2r}\\ \vdots &amp; \vdots  &amp; \vdots &amp; &amp; \vdots \\  1 &amp;  x_{n1} &amp; x_{n2} &amp; \dots &amp; x_{nr}  \end{bmatrix}\]</span></p>
+<p><span class="math display">\[\boldsymbol \beta =\begin{bmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_r \end{bmatrix}, \boldsymbol \epsilon =\begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{bmatrix}\sim  N(\boldsymbol 0, \boldsymbol \Sigma)\]</span></p>
+<p>and <span class="math display">\[\boldsymbol \Sigma=\begin{bmatrix} \sigma^2 &amp; 0 &amp; \dots &amp; 0 \\ 0 &amp; \sigma^2  &amp; \dots  &amp; 0 \\ \vdots &amp; \vdots &amp; &amp; \vdots \\ 0 &amp; 0 &amp; \dots &amp; \sigma^2 \end{bmatrix}=\sigma^2 \boldsymbol I\]</span></p>
+<p>The least squares estimate of <span class="math inline">\(\boldsymbol \beta\)</span> is <span class="math inline">\(\boldsymbol{\hat \beta} =(\boldsymbol{X&#39;X})^{-1}\boldsymbol{X&#39;Y}\)</span></p>
+<p>Because <span class="math inline">\(x_t\)</span> has been used in a different way for our course, I am going to write the model as follows:</p>
+<p><span class="math inline">\(y_t=\beta_0+\beta_1z_{t1}+...+\beta_rz_{tr}+x_t=\boldsymbol{ \beta&#39;z}_t+x_t\)</span> for t = 1,…,n</p>
+<p>where <span class="math inline">\(\boldsymbol z_t=(z_{t1},...,z_{tr})&#39;\)</span> and <span class="math inline">\(\boldsymbol \beta =(\beta_0,..,\beta_r)&#39;\)</span>. In matrix form <span class="math inline">\(\boldsymbol y=\boldsymbol{Z\beta}+\boldsymbol x\)</span>, where</p>
+<p><span class="math display">\[\boldsymbol y=\begin{bmatrix} y_1 \\y_2 \\ \vdots \\ y_n\end{bmatrix}, \boldsymbol Z=\begin{bmatrix} 1 &amp; z_{11} &amp; z_{12} &amp; \dots &amp; z_{1r} \\ 1 &amp;  z_{21} &amp; z_{22} &amp; \dots &amp; z_{2r}\\ \vdots &amp; \vdots  &amp; \vdots &amp; &amp; \vdots \\  1 &amp;  z_{n1} &amp; z_{n2} &amp; \dots &amp; z_{nr}  \end{bmatrix}\]</span></p>
+<p><span class="math display">\[\boldsymbol \beta =\begin{bmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_r \end{bmatrix}, \boldsymbol x =\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}\sim  N(\boldsymbol 0,\boldsymbol \Gamma)\]</span></p>
+<p><span class="math inline">\(\boldsymbol \Gamma=\begin{bmatrix} \gamma(1,1) &amp; \gamma(1,2) &amp; \dots &amp; \gamma(1,n) \\ \gamma(1,2) &amp; \gamma(2,2) &amp; \dots &amp; \gamma(2,n) \\\gamma(1,n) &amp; \gamma(2,n) &amp; \dots &amp; \gamma(n,n) \end{bmatrix}\)</span> is known. Note that <span class="math inline">\(\gamma(s,t)\)</span> may not be 0 for s ≠ t</p>
+<p>What are the elements of <span class="math inline">\(\boldsymbol \Gamma\)</span>?</p>
+<p>Suppose <span class="math inline">\(x_t\)</span> has an ARMA representation. Using this assumption, we could find a representation for <span class="math inline">\(\boldsymbol \Gamma\)</span>.</p>
+<p>For example, suppose we assume <span class="math inline">\(x_t\)</span> has an AR(1) structure.</p>
+<p>Then <span class="math inline">\((1-\phi_1B)x_t = w_t\)</span> where <span class="math inline">\(w_t \sim ind N(0, \sigma_w^2)\)</span>. The model could also be written as <span class="math inline">\(x_t = \phi_1x_{t-1} + w_t =\sum_{j=0}^{\infty}\phi_1^jw_{t-j}\)</span> .</p>
+<p>Remember the original model is <span class="math inline">\(y_t = \boldsymbol{\beta&#39;z}_t + x_t\)</span> for t = 1, …, n. Then the model can be written as <span class="math inline">\(y_t=\boldsymbol{\beta&#39;z}_t+\sum_{j=0}^{\infty}\phi_1^jw_{t-j}\)</span></p>
+<p>To find <span class="math inline">\(\boldsymbol \Gamma\)</span>, start finding variances and covariances for <span class="math inline">\(x_t\)</span>. These were already found previously in our course: <span class="math inline">\(Var(x_t)=\frac{\sigma_w^2}{1-\phi_1^2}\)</span> and <span class="math inline">\(Cov(x_t,x_{t-h})=\frac{\sigma_w^2\phi_1^h}{1-\phi_1^2}\)</span></p>
+<p>Therefore, the covariance matrix, <span class="math inline">\(\boldsymbol \Gamma\)</span> has the form of <span class="math inline">\(Cov(x_t, x_{t-h}) =\frac{\sigma_w^2\phi_1^h}{1-\phi_1^2}\)</span>. Written in matrix form,</p>
+<p><span class="math inline">\(\boldsymbol G=\frac{\sigma_w^2}{1-\phi_1^2}=\begin{bmatrix} 1 &amp; \phi_1 &amp; \phi_1^2 &amp; \dots &amp; \phi_1^{n-2} &amp; \phi_1^{n-1} \\ \phi_1 &amp; 1 &amp; \phi_1 &amp; \dots &amp; \phi_1^{n-3} &amp; \phi_1^{n-2} \\ \phi_1^2 &amp; \phi_1 &amp; 1 &amp; \dots &amp; \phi_1^{n-4} &amp; \phi_1^{n-3} \\ \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\ \phi_1^{n-2} &amp; \phi_1^{n-3} &amp; \phi_1^{n-4} &amp; \dots &amp; 1 &amp; \phi_1 \\ \phi_1^{n-1} &amp; \phi_1^{n-2} &amp; \phi_1^{n-3} &amp; \dots &amp; \phi_1 &amp; 1 \end{bmatrix}\)</span></p>
+<p>For those of you who have studied models for repeated measures, you may have seen this as an AR(1) covariance matrix structure before.</p>
+<p>For other ARMA models, the covariance matrix structures can be found as well.</p>
+<p>The parameters of the model are <span class="math inline">\(\boldsymbol \beta = (\beta_1,…,\beta_r)&#39;, \sigma_w^2 , (\phi_1,…, \phi_p), (\theta_1,…, \theta_q)\)</span>. All of these need to be estimated! Again, we can use maximum likelihood estimation.</p>
+<p>The details of the estimation process are not going to be discussed here. Brockwell and Davis’s textbook provides a small discussion.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-71" class="example"><strong>Example 20.1  </strong></span><strong>LA pollution</strong></p>
+<p>This example uses the LA pollution data from Shumway and Stoffer’s textbook. The authors are interested using the temperature, temperature squared, and particulates in the air to estimate cardiovascular mortality over time for LA county. The data consists of weekly observations for 10 years.</p>
+<p>The authors do not provide information about the numerical scale for mortality, but this appears to be the number of deaths per week out of total number of individuals scale. Also, the numerical scale for the particulates is not given.</p>
+<div class="sourceCode" id="cb975"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb975-1"><a href="regression-with-arma-errors.html#cb975-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span>
+<span id="cb975-2"><a href="regression-with-arma-errors.html#cb975-2" aria-hidden="true" tabindex="-1"></a><span class="co"># There are three separate time series, t is also created</span></span>
+<span id="cb975-3"><a href="regression-with-arma-errors.html#cb975-3" aria-hidden="true" tabindex="-1"></a>mtp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(cmort, tempr, part, <span class="at">t =</span><span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(cmort))</span>
+<span id="cb975-4"><a href="regression-with-arma-errors.html#cb975-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtp)</span></code></pre></div>
+<pre><code>##    cmort tempr  part t
+## 1  97.85 72.38 72.72 1
+## 2 104.64 67.19 49.60 2
+## 3  94.36 62.94 55.68 3
+## 4  98.05 72.49 55.16 4
+## 5  95.85 74.25 66.02 5
+## 6  95.98 67.88 44.01 6</code></pre>
+<div class="sourceCode" id="cb977"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb977-1"><a href="regression-with-arma-errors.html#cb977-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of data</span></span>
+<span id="cb977-2"><a href="regression-with-arma-errors.html#cb977-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))</span>
+<span id="cb977-3"><a href="regression-with-arma-errors.html#cb977-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> mtp<span class="sc">$</span>cmort, <span class="at">ylab =</span> <span class="fu">expression</span>(y[t]), <span class="at">xlab =</span> </span>
+<span id="cb977-4"><a href="regression-with-arma-errors.html#cb977-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">&quot;Plot of </span></span>
+<span id="cb977-5"><a href="regression-with-arma-errors.html#cb977-5" aria-hidden="true" tabindex="-1"></a><span class="st">    mortality data&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> </span>
+<span id="cb977-6"><a href="regression-with-arma-errors.html#cb977-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb977-7"><a href="regression-with-arma-errors.html#cb977-7" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> mtp<span class="sc">$</span>cmort, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb977-8"><a href="regression-with-arma-errors.html#cb977-8" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb977-9"><a href="regression-with-arma-errors.html#cb977-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> mtp<span class="sc">$</span>temp, <span class="at">ylab =</span> <span class="fu">expression</span>(T[t]), <span class="at">xlab =</span> </span>
+<span id="cb977-10"><a href="regression-with-arma-errors.html#cb977-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">&quot;Plot of </span></span>
+<span id="cb977-11"><a href="regression-with-arma-errors.html#cb977-11" aria-hidden="true" tabindex="-1"></a><span class="st">    temperature data&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, </span>
+<span id="cb977-12"><a href="regression-with-arma-errors.html#cb977-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb977-13"><a href="regression-with-arma-errors.html#cb977-13" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> mtp<span class="sc">$</span>temp, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb977-14"><a href="regression-with-arma-errors.html#cb977-14" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb977-15"><a href="regression-with-arma-errors.html#cb977-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> mtp<span class="sc">$</span>part, <span class="at">ylab =</span> <span class="fu">expression</span>(P[t]), <span class="at">xlab =</span> </span>
+<span id="cb977-16"><a href="regression-with-arma-errors.html#cb977-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">&quot;Plot of </span></span>
+<span id="cb977-17"><a href="regression-with-arma-errors.html#cb977-17" aria-hidden="true" tabindex="-1"></a><span class="st">    Particulate data&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, lty </span>
+<span id="cb977-18"><a href="regression-with-arma-errors.html#cb977-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb977-19"><a href="regression-with-arma-errors.html#cb977-19" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> mtp<span class="sc">$</span>part, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>There are trends over time! First, let’s ignore the potential dependence and estimate a regression model assuming independent error terms. Thus, the model is</p>
+<p><span class="math inline">\(M_t=\beta_0+\beta_1t+\beta_2T_t+\beta_3T^2_t+\beta_4P_t+x_t\)</span></p>
+<p>where</p>
+<p><span class="math inline">\(M_t\)</span> = cardiovascular mortality at time t</p>
+<p>t = time (1, …, 508)</p>
+<p><span class="math inline">\(T_t\)</span> = temperature at time t</p>
+<p><span class="math inline">\(P_t\)</span> = particulates at time t</p>
+<p><span class="math inline">\(x_t\)</span> = error term at time t (assumed independent for each t)</p>
+<div class="sourceCode" id="cb978"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb978-1"><a href="regression-with-arma-errors.html#cb978-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use t here because one would expect time to help predict</span></span>
+<span id="cb978-2"><a href="regression-with-arma-errors.html#cb978-2" aria-hidden="true" tabindex="-1"></a>mod.fit.lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> cmort <span class="sc">~</span> t <span class="sc">+</span> tempr <span class="sc">+</span> <span class="fu">I</span>(tempr<span class="sc">^</span><span class="dv">2</span>) </span>
+<span id="cb978-3"><a href="regression-with-arma-errors.html#cb978-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">+</span> part, <span class="at">data =</span> mtp)</span>
+<span id="cb978-4"><a href="regression-with-arma-errors.html#cb978-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit.lm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = cmort ~ t + tempr + I(tempr^2) + part, data = mtp)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -19.0760  -4.2153  -0.4878   3.7435  29.2448 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 241.242229  15.813754  15.255  &lt; 2e-16 ***
+## t            -0.026844   0.001942 -13.820  &lt; 2e-16 ***
+## tempr        -3.827264   0.423570  -9.036  &lt; 2e-16 ***
+## I(tempr^2)    0.022588   0.002827   7.990 9.26e-15 ***
+## part          0.255350   0.018857  13.541  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 6.385 on 503 degrees of freedom
+## Multiple R-squared:  0.5954, Adjusted R-squared:  0.5922 
+## F-statistic:   185 on 4 and 503 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb980"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb980-1"><a href="regression-with-arma-errors.html#cb980-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb980-2"><a href="regression-with-arma-errors.html#cb980-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> mod.fit.lm<span class="sc">$</span>residuals, <span class="at">ylab =</span> </span>
+<span id="cb980-3"><a href="regression-with-arma-errors.html#cb980-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(residuals[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> </span>
+<span id="cb980-4"><a href="regression-with-arma-errors.html#cb980-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> </span>
+<span id="cb980-5"><a href="regression-with-arma-errors.html#cb980-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb980-6"><a href="regression-with-arma-errors.html#cb980-6" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> mod.fit.lm<span class="sc">$</span>residuals, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div class="sourceCode" id="cb981"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb981-1"><a href="regression-with-arma-errors.html#cb981-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb981-2"><a href="regression-with-arma-errors.html#cb981-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> mod.fit.lm<span class="sc">$</span>residuals, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">type =</span> </span>
+<span id="cb981-3"><a href="regression-with-arma-errors.html#cb981-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Estimated ACF for residuals&quot;</span>, </span>
+<span id="cb981-4"><a href="regression-with-arma-errors.html#cb981-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb981-5"><a href="regression-with-arma-errors.html#cb981-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> mod.fit.lm<span class="sc">$</span>residuals, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">main =</span> </span>
+<span id="cb981-6"><a href="regression-with-arma-errors.html#cb981-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Estimated PACF for residuals&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> </span>
+<span id="cb981-7"><a href="regression-with-arma-errors.html#cb981-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb982"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb982-1"><a href="regression-with-arma-errors.html#cb982-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>Notes:</p>
+<ul>
+<li><p>The t variable is included to take into account the mean dependence over time.</p></li>
+<li><p>The estimated model is</p>
+<p><span class="math inline">\(\hat M_t= 241.24 - 0.0268t - 3.8273T_t + 0.0226T_t^2 + 0.25554P_t\)</span></p></li>
+<li><p>The <code>I()</code> (identity) function used in the <code>formula</code> argument is the standard way in R to include quadratic terms because <code>^2</code> is associated with specifying interaction terms.</p></li>
+<li><p>The residuals are extracted from <code>mod.fit.lm</code>. There appears to be an ARMA(2,0) structure with them.</p></li>
+<li><p>Inferences should not be made with this model due to violations of independence among the error terms.</p></li>
+</ul>
+<p>A similar model can be estimated using <code>arima()</code> by taking advantage of the <code>xreg</code> argument.</p>
+<div class="sourceCode" id="cb983"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb983-1"><a href="regression-with-arma-errors.html#cb983-1" aria-hidden="true" tabindex="-1"></a>mod.fit.arima1 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> cmort, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb983-2"><a href="regression-with-arma-errors.html#cb983-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">xreg =</span> <span class="fu">cbind</span>(mtp<span class="sc">$</span>t, tempr, tempr<span class="sc">^</span><span class="dv">2</span>, part))</span>
+<span id="cb983-3"><a href="regression-with-arma-errors.html#cb983-3" aria-hidden="true" tabindex="-1"></a>mod.fit.arima1</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = cmort, order = c(0, 0, 0), xreg = cbind(mtp$t, tempr, tempr^2, part))
+## 
+## Coefficients:
+##       intercept    mtp$t    tempr  tempr^2    part
+##        241.2422  -0.0268  -3.8273   0.0226  0.2553
+## s.e.    15.7357   0.0019   0.4215   0.0028  0.0188
+## 
+## sigma^2 estimated as 40.37:  log likelihood = -1660.14,  aic = 3332.28</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \beta_0=241.2422\)</span></p></li>
+<li><p><span class="math inline">\(\hat \beta_1=-0.0268\)</span></p></li>
+<li><p><span class="math inline">\(\hat \sigma^2_w=40.37\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb985"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb985-1"><a href="regression-with-arma-errors.html#cb985-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb985-2"><a href="regression-with-arma-errors.html#cb985-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> <span class="fu">ts</span>(mod.fit.arima1<span class="sc">$</span>residuals), <span class="at">lag.max =</span> <span class="dv">20</span>, type </span>
+<span id="cb985-3"><a href="regression-with-arma-errors.html#cb985-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Estimated ACF for residuals&quot;</span>, </span>
+<span id="cb985-4"><a href="regression-with-arma-errors.html#cb985-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb985-5"><a href="regression-with-arma-errors.html#cb985-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> <span class="fu">ts</span>(mod.fit.arima1<span class="sc">$</span>residuals), <span class="at">lag.max =</span> <span class="dv">20</span>, main </span>
+<span id="cb985-6"><a href="regression-with-arma-errors.html#cb985-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;Estimated PACF for residuals&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), ylim </span>
+<span id="cb985-7"><a href="regression-with-arma-errors.html#cb985-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb986"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb986-1"><a href="regression-with-arma-errors.html#cb986-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb986-2"><a href="regression-with-arma-errors.html#cb986-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb986-3"><a href="regression-with-arma-errors.html#cb986-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice the use of ts()</span></span></code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>The <code>cbind()</code> function combines columns of the explanatory variable values together.</li>
+<li>Notice the <span class="math inline">\(\beta_0\)</span> term was included despite 1 not being specified in <code>cbind()</code>.</li>
+<li>Notice that the <code>ts()</code> function was needed with the residuals so that the ACF and PACF could be plotted.</li>
+</ul>
+<p>The <code>examine.mod()</code> function can be used to examine the model as well.</p>
+<div class="sourceCode" id="cb987"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb987-1"><a href="regression-with-arma-errors.html#cb987-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;examine.mod.R&quot;</span>)</span>
+<span id="cb987-2"><a href="regression-with-arma-errors.html#cb987-2" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit.arima1, mod.name</span>
+<span id="cb987-3"><a href="regression-with-arma-errors.html#cb987-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;regression with ind.&quot;</span>)</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-8-1.png" width="672" /><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<pre><code>## $z
+##  intercept      mtp$t      tempr    tempr^2       part 
+##  15.330848 -13.884370  -9.080527   8.028929  13.608224 
+## 
+## $p.value
+##    intercept        mtp$t        tempr      tempr^2         part 
+## 0.000000e+00 0.000000e+00 0.000000e+00 8.881784e-16 0.000000e+00</code></pre>
+<p>Notice the incorrect values given for the lags on the ACF plot. The lags given on the plot below it can be used to interpret correctly.
+Estimate the same model but allow for an ARMA(2,0) structure for the error terms. This is the model estimated by the authors.</p>
+<div class="sourceCode" id="cb989"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb989-1"><a href="regression-with-arma-errors.html#cb989-1" aria-hidden="true" tabindex="-1"></a>mod.fit.arima2 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> cmort, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb989-2"><a href="regression-with-arma-errors.html#cb989-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">xreg =</span> <span class="fu">cbind</span>(mtp<span class="sc">$</span>t, tempr, tempr<span class="sc">^</span><span class="dv">2</span>, part))</span>
+<span id="cb989-3"><a href="regression-with-arma-errors.html#cb989-3" aria-hidden="true" tabindex="-1"></a>mod.fit.arima2</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = cmort, order = c(2, 0, 0), xreg = cbind(mtp$t, tempr, tempr^2, part))
+## 
+## Coefficients:
+##          ar1     ar2  intercept    mtp$t    tempr  tempr^2    part
+##       0.3848  0.4326   174.1185  -0.0292  -2.3102   0.0154  0.1545
+## s.e.  0.0436  0.0400    11.9080   0.0081   0.3103   0.0020  0.0272
+## 
+## sigma^2 estimated as 26.01:  log likelihood = -1549.04,  aic = 3114.07</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \phi_1=0.3845\)</span></p></li>
+<li><p><span class="math inline">\(\hat \phi_2=0.4326\)</span></p></li>
+<li><p><span class="math inline">\(\hat \beta_0=174.1185\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb991"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb991-1"><a href="regression-with-arma-errors.html#cb991-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit.arima2, mod.name</span>
+<span id="cb991-2"><a href="regression-with-arma-errors.html#cb991-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;regression with AR(2) error&quot;</span>)</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<pre><code>## $z
+##       ar1       ar2 intercept     mtp$t     tempr   tempr^2      part 
+##  8.832875 10.806154 14.621958 -3.588002 -7.445669  7.613531  5.680238 
+## 
+## $p.value
+##          ar1          ar2    intercept        mtp$t        tempr      tempr^2 
+## 0.000000e+00 0.000000e+00 0.000000e+00 3.332219e-04 9.636736e-14 2.664535e-14 
+##         part 
+## 1.345076e-08</code></pre>
+<p>Notes:</p>
+<ul>
+<li><p>The estimated model is</p>
+<p><span class="math inline">\(\hat M_t= 174.12 - 0.0292t - 2.3102T_t + 0.0154 + 0.1545P_t\)</span> with <span class="math inline">\((1 – 0.3848B – 0.4326B^2)x_t = w_t\)</span></p></li>
+<li><p>The <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\beta\)</span> parameters are significantly different from 0. See the parameter estimation information for the test statistics and p-values.</p></li>
+<li><p>There does not appear to be dependence among the residuals.</p></li>
+<li><p>QQ-plot looks o.k.</p></li>
+</ul>
+<p>What if a regression model with ARMA(1,0) terms was estimated?</p>
+<div class="sourceCode" id="cb993"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb993-1"><a href="regression-with-arma-errors.html#cb993-1" aria-hidden="true" tabindex="-1"></a>mod.fit.arima3 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> cmort, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb993-2"><a href="regression-with-arma-errors.html#cb993-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">xreg =</span> <span class="fu">cbind</span>(mtp<span class="sc">$</span>t, tempr, tempr<span class="sc">^</span><span class="dv">2</span>, part))</span>
+<span id="cb993-3"><a href="regression-with-arma-errors.html#cb993-3" aria-hidden="true" tabindex="-1"></a>mod.fit.arima3</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = cmort, order = c(1, 0, 0), xreg = cbind(mtp$t, tempr, tempr^2, part))
+## 
+## Coefficients:
+##          ar1  intercept    mtp$t    tempr  tempr^2    part
+##       0.6797   170.8419  -0.0293  -2.2252   0.0149  0.1568
+## s.e.  0.0521    13.1228   0.0053   0.3423   0.0022  0.0327
+## 
+## sigma^2 estimated as 32:  log likelihood = -1601.43,  aic = 3216.87</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \phi_1=0.6797\)</span></p></li>
+<li><p><span class="math inline">\(\hat \beta_0=170.8419\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb995"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb995-1"><a href="regression-with-arma-errors.html#cb995-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit.arima3, mod.name</span>
+<span id="cb995-2"><a href="regression-with-arma-errors.html#cb995-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;regression with AR(1) error&quot;</span>)</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-12-1.png" width="672" /><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<pre><code>## $z
+##       ar1 intercept     mtp$t     tempr   tempr^2      part 
+## 13.035456 13.018694 -5.534242 -6.500896  6.785260  4.790543 
+## 
+## $p.value
+##          ar1    intercept        mtp$t        tempr      tempr^2         part 
+## 0.000000e+00 0.000000e+00 3.125778e-08 7.984280e-11 1.158784e-11 1.663308e-06</code></pre>
+<p>There is dependence among the residuals. This model should not be used.</p>
+<p>What if a regression model with ARMA(3,0) terms was estimated?</p>
+<div class="sourceCode" id="cb997"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb997-1"><a href="regression-with-arma-errors.html#cb997-1" aria-hidden="true" tabindex="-1"></a>mod.fit.arima4 <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> cmort, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb997-2"><a href="regression-with-arma-errors.html#cb997-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">xreg =</span> <span class="fu">cbind</span>(mtp<span class="sc">$</span>t, tempr, tempr<span class="sc">^</span><span class="dv">2</span>, part))</span>
+<span id="cb997-3"><a href="regression-with-arma-errors.html#cb997-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb997-4"><a href="regression-with-arma-errors.html#cb997-4" aria-hidden="true" tabindex="-1"></a>mod.fit.arima4</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = cmort, order = c(3, 0, 0), xreg = cbind(mtp$t, tempr, tempr^2, part))
+## 
+## Coefficients:
+##          ar1     ar2     ar3  intercept    mtp$t    tempr  tempr^2    part
+##       0.3653  0.4175  0.0385   175.6741  -0.0291  -2.3503   0.0156  0.1584
+## s.e.  0.0494  0.0438  0.0458    12.1584   0.0083   0.3166   0.0021  0.0276
+## 
+## sigma^2 estimated as 25.98:  log likelihood = -1548.68,  aic = 3115.37</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \phi_3=0.0385\)</span></p></li>
+<li><p><span class="math inline">\(\sqrt{\hat Var(\hat \phi_3)}=0.0458\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb999"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb999-1"><a href="regression-with-arma-errors.html#cb999-1" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit.arima4, mod.name</span>
+<span id="cb999-2"><a href="regression-with-arma-errors.html#cb999-2" aria-hidden="true" tabindex="-1"></a>     <span class="ot">=</span> <span class="st">&quot;regression with AR(3) error&quot;</span>)</span></code></pre></div>
+<p><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-14-1.png" width="672" /><img src="19-Regression-ARMA_files/figure-html/unnamed-chunk-14-2.png" width="672" /></p>
+<pre><code>## $z
+##        ar1        ar2        ar3  intercept      mtp$t      tempr    tempr^2 
+##  7.3980781  9.5351104  0.8412562 14.4487390 -3.5143523 -7.4246095  7.5917462 
+##       part 
+##  5.7410631 
+## 
+## $p.value
+##          ar1          ar2          ar3    intercept        mtp$t        tempr 
+## 1.381117e-13 0.000000e+00 4.002044e-01 0.000000e+00 4.408278e-04 1.130207e-13 
+##      tempr^2         part 
+## 3.153033e-14 9.408400e-09</code></pre>
+<p>There does not appear to be dependence among the residuals. However, the <span class="math inline">\(\phi_3\)</span> parameter has a large p-value suggesting it is not needed.</p>
+</div>
+<div id="model-building-for-regression-models-with-arma-errors" class="section level2 hasAnchor" number="20.1">
+<h2><span class="header-section-number">20.1</span> Model building for regression models with ARMA errors<a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Suppose you do not know what an appropriate ARMA model is for the error terms? Below is a suggested model building strategy:</p>
+<ol style="list-style-type: decimal">
+<li>Fit a regular regression model with independent error terms.<br />
+</li>
+<li>Examine the ACF and PACF plots of the residuals to determine an appropriate ARMA model for the error terms.<br />
+</li>
+<li>Fit the regression model with ARMA error terms.</li>
+<li>Examine ACF and PACF plots of the residuals adjusted for the ARMA error terms. If the plots are similar to the corresponding plots from a white noise process, then a good model has been chosen. If there are significant autocorrelations or partial autocorrelations, make changes to the model in a similar manner as you would for a regular ARMA model.</li>
+</ol>
+</div>
+<div id="forecasting-for-regression-models-with-arma-errors" class="section level2 hasAnchor" number="20.2">
+<h2><span class="header-section-number">20.2</span> Forecasting for regression models with ARMA errors<a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A primary purpose for time series models is to forecast future values. The problem with doing this here is that we need to know future explanatory values as well!</p>
+<p>If you have potential future explanatory variable values, these can be used with the ARMA error structure. Predicted values that account for the ARMA error structure, are:</p>
+<p><span class="math inline">\(y_{t+1}=\boldsymbol{\beta&#39;z}_{t+1}+\tilde x^t_{t+1}\)</span>, where <span class="math inline">\(\tilde x^t_{t+1}=E(x_{t+1}| I_t)\)</span></p>
+<p>The variance for the predicted value with regular regression models is <span class="math inline">\(\sqrt{\boldsymbol{z&#39;\hat \Sigma z}}\)</span> where <span class="math inline">\(\boldsymbol z\)</span> is the vector of explanatory variable values and <span class="math inline">\(\boldsymbol{\hat \Sigma}\)</span> is the estimated covariance matrix for <span class="math inline">\(\boldsymbol{\hat \beta}\)</span> . When the ARMA error terms are accounted for, this variance becomes <span class="math inline">\(\sqrt{\boldsymbol{z&#39;\hat S z}+r}\)</span> where r is the variance from the ARMA model. This variance can be used to find the approximate (1-<span class="math inline">\(\alpha\)</span>)100% C.I.s.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-72" class="example"><strong>Example 20.2  </strong></span><strong>LA pollution (LA pollution.R)</strong></p>
+<p>Find 95% C.I. for one-time period into the future using explanatory variable values equal to the last time period observed and using t = n + 1.</p>
+<div class="sourceCode" id="cb1001"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1001-1"><a href="regression-with-arma-errors.html#cb1001-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(mtp)</span></code></pre></div>
+<pre><code>##     cmort tempr  part   t
+## 503 73.46 82.37 69.14 503
+## 504 79.03 75.35 42.17 504
+## 505 76.56 72.29 45.59 505
+## 506 78.52 75.68 70.72 506
+## 507 89.43 73.33 57.58 507
+## 508 85.49 70.52 62.61 508</code></pre>
+<div class="sourceCode" id="cb1003"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1003-1"><a href="regression-with-arma-errors.html#cb1003-1" aria-hidden="true" tabindex="-1"></a>fore.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit.arima2, <span class="at">n.ahead =</span> <span class="dv">1</span>, </span>
+<span id="cb1003-2"><a href="regression-with-arma-errors.html#cb1003-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">se.fit =</span> <span class="cn">TRUE</span>, <span class="at">newxreg =</span> <span class="fu">data.frame</span>(<span class="dv">508</span><span class="sc">+</span><span class="dv">1</span>, <span class="fl">70.52</span>, </span>
+<span id="cb1003-3"><a href="regression-with-arma-errors.html#cb1003-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">70.52</span><span class="sc">^</span><span class="dv">2</span>, <span class="fl">62.61</span>))</span>
+<span id="cb1003-4"><a href="regression-with-arma-errors.html#cb1003-4" aria-hidden="true" tabindex="-1"></a>fore.mod</span></code></pre></div>
+<pre><code>## $pred
+## Time Series:
+## Start = c(1979, 41) 
+## End = c(1979, 41) 
+## Frequency = 52 
+## [1] 87.104
+## 
+## $se
+## Time Series:
+## Start = c(1979, 41) 
+## End = c(1979, 41) 
+## Frequency = 52 
+## [1] 5.100467</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat y_{509}=87.104\)</span></p></li>
+<li><p><span class="math inline">\(\sqrt{\hat Var(\hat y_t)}=5.100467\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb1005"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1005-1"><a href="regression-with-arma-errors.html#cb1005-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate 95% C.I.s</span></span>
+<span id="cb1005-2"><a href="regression-with-arma-errors.html#cb1005-2" aria-hidden="true" tabindex="-1"></a>low <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> </span>
+<span id="cb1005-3"><a href="regression-with-arma-errors.html#cb1005-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb1005-4"><a href="regression-with-arma-errors.html#cb1005-4" aria-hidden="true" tabindex="-1"></a>up <span class="ot">&lt;-</span> fore.mod<span class="sc">$</span>pred <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> </span>
+<span id="cb1005-5"><a href="regression-with-arma-errors.html#cb1005-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>)<span class="sc">*</span>fore.mod<span class="sc">$</span>se</span>
+<span id="cb1005-6"><a href="regression-with-arma-errors.html#cb1005-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(low, up)</span></code></pre></div>
+<pre><code>##                    low       up
+## fore.mod$pred 77.10727 97.10073</code></pre>
+<ul>
+<li><span class="math inline">\(77.1&lt;y_{509}&lt;97.1\)</span></li>
+</ul>
+<p>The <code>newxreg</code> argument is used to specify future explanatory variable values. Be careful with how to specify these values (see program for comments).</p>
+</div>
+</div>
+<div id="additional-comments" class="section level2 hasAnchor" number="20.3">
+<h2><span class="header-section-number">20.3</span> Additional comments<a href="regression-with-arma-errors.html#additional-comments" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><p>The estimation procedure that we followed is similar to what is known as the Cochrane and Orcutt approach to regression modeling with dependent errors.</p></li>
+<li><p>The <code>gls()</code> function of the<code>nlme</code> package can be used to estimate these models as well. Very small differences in the parameter estimates occur from what I obtained when using the ARMA(2,0) error structure for the LA pollution example. Below is the corresponding code/output:</p></li>
+</ul>
+<div class="sourceCode" id="cb1007"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1007-1"><a href="regression-with-arma-errors.html#cb1007-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)  <span class="co"># non-linear mixed effect</span></span>
+<span id="cb1007-2"><a href="regression-with-arma-errors.html#cb1007-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1007-3"><a href="regression-with-arma-errors.html#cb1007-3" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">gls</span>(<span class="at">model =</span> cmort <span class="sc">~</span> t <span class="sc">+</span> tempr <span class="sc">+</span> <span class="fu">I</span>(tempr<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb1007-4"><a href="regression-with-arma-errors.html#cb1007-4" aria-hidden="true" tabindex="-1"></a>    part, <span class="at">data =</span> mtp, <span class="at">correlation =</span> <span class="fu">corARMA</span>(<span class="at">form =</span> <span class="sc">~</span>t, <span class="at">p =</span> </span>
+<span id="cb1007-5"><a href="regression-with-arma-errors.html#cb1007-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>))</span>
+<span id="cb1007-6"><a href="regression-with-arma-errors.html#cb1007-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>## Generalized least squares fit by REML
+##   Model: cmort ~ t + tempr + I(tempr^2) + part 
+##   Data: mtp 
+##        AIC      BIC    logLik
+##   3140.488 3174.253 -1562.244
+## 
+## Correlation Structure: ARMA(2,0)
+##  Formula: ~t 
+##  Parameter estimate(s):
+##      Phi1      Phi2 
+## 0.3939042 0.4381177 
+## 
+## Coefficients:
+##                 Value Std.Error   t-value p-value
+## (Intercept) 173.34218 11.768397 14.729464   0.000
+## t            -0.02918  0.008841 -3.300541   0.001
+## tempr        -2.29248  0.306589 -7.477358   0.000
+## I(tempr^2)    0.01537  0.002021  7.606690   0.000
+## part          0.15014  0.024912  6.026867   0.000
+## 
+##  Correlation: 
+##            (Intr) t      tempr  I(t^2)
+## t          -0.178                     
+## tempr      -0.969 -0.013              
+## I(tempr^2)  0.950  0.009 -0.990       
+## part        0.091  0.033 -0.122  0.037
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -2.1033378 -0.6999939 -0.1497608  0.5200921  4.1160089 
+## 
+## Residual standard error: 7.996799 
+## Degrees of freedom: 508 total; 503 residual</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \phi_1=0.3939\)</span></p></li>
+<li><p><span class="math inline">\(\hat \phi_2=0.4381\)</span></p></li>
+<li><p><span class="math inline">\(\hat \beta_0=173.3\)</span></p></li>
+</ul>
+<p>Note that the model fitting process takes longer to complete.</p>
+<ul>
+<li><p>Shumway and Stoffer reach the same conclusions with their model for the LA pollution example, but use a mean adjusted term for temperature. Thus, they use <span class="math inline">\(T_t - T.\)</span>, where <span class="math inline">\(T.\)</span> is the mean observed temperature. This is done to alleviate potential model fitting problems that can occur in regression when a transformation of another explanatory variable is included in the model.</p></li>
+<li><p>Transfer function models provide an additional way to incorporate explanatory variables into a time series model.</p></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="arfima.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="multiple-time-series.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

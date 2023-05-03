@@ -1,0 +1,251 @@
+# More Time Series Analysis
+
+## Threshold Models
+
+A more comprehensive account can be found in Shumway and Stoffer’s textbook, Howell Tong’s book “Threshold Models in Non-linear Time Series Analysis”, and Tong’s book “Non-linear Time Series: A Dynamical System Approach.” 
+
+Previously, we have fit models for all t = 1, …, n.  This is o.k. to do as long as the dynamics of the “system” from which the data came from does not change. If it does change, “local” models can be fit to the data.  
+
+### Threshold autoregressive models
+
+Multiple AR(p) models can be fit to segments of the data set. These segments are decided upon by past observations, say $x_{t-1}$. If $x_{t-1}$ reaches a “threshold” (i.e., maybe $x_{t-1} \ge 0.05$), a different AR(p) model is fit. There can be multiple thresholds. 
+
+Divide the data up into r mutually exclusive and exhaustive regions denoted by $R_1,…,R_r$.  
+
+The threshold autoregressive model is r different AR(p) models: 
+
+$x_t=\alpha^{(j)}+\phi_1^{(j)}x_{t-1}+...+\phi_p^{(j)}x_{t-p}+w^{(j)}_t$ for $x_t\in R_j$  for j=1,...,r, where $w_t^{(j)}\sim ind.(0, \sigma^2_j)$
+
+Notes: 
+
+- r = 1 is the “usual” AR(p) model.
+- Model estimation, identification, and diagnostics can be done in a similar manner as for r = 1. 
+
+:::{.example}
+
+**Pneumonia and influenza data from Shumway and Stoffer**
+
+The data represents the number of United States pneumonia and influenza deaths per 10,000 people from 1968 to 1978. Below is a plot of the first differences with a horizontal line drawn at 0.05.  
+Shumway and Stoffer investigate the following models where $x_t$ denotes the first differences:
+
+$x_t=\alpha^{(1)}+\sum_{j=1}^{p}\phi^{(1)}_jx_{t-j}+w^{(1)}_t, x_{t-1}<0.05$
+
+$x_t=\alpha^{(2)}+\sum_{j=1}^{p}\phi_j^{(2)}x_{t-j}+w_t^{(2)}, x_{t-1}\ge 0.05$
+
+with p set to 6.
+
+:::
+
+## Intervention analysis
+
+A more comprehensive reference is Wei’s textbook. 
+
+If you examine this book, please note the different notation that is used: 
+
+|Wei|My notes|
+|---|---|
+|$z_t$ and assume $\mu=0$|$x_t$ and assume $\mu=0$|
+|$a_t$|$w_t$|
+|MA: $(1-\theta_1B)$|MA: $(1+\theta_1B)$|
+
+We want to be able to account for special events (interventions) when modeling time series data.  
+
+Example: 
+
+1.	OSU started at new campus in Tulsa during the time the enrollment data was collected. 
+2.	A special promotion for a product may have an effect on sales.  
+3.	A new law causes a change in the number of deaths from car accidents or the amount of pollution in the air.  
+
+Suppose an intervention occurred at time T. Is there evidence of a change in $x_t$?
+
+To determine change, the mean value of $x_t$ for t = 1, …,T-1 and t = T,…,n may be examined. Denote the mean for the first time period as $\mu_1$ and for the second time period as $\mu_2$. To determine differences of means, a simple two sample t-test could be used. Unfortunately, the “independence” assumption of this type of test is violated and the test can not be used.
+
+Intervention analysis can be used instead. 
+
+### Types of intervention variables
+
+1. Step function
+
+$S^{(T)}_t=\begin{cases}0 & t<T \\ 1 & t\ge T\end{cases}$
+
+2. Pulse function
+
+$P_t^{(T)}=\begin{cases}0 & t\ne T \\ 1 & t=T\end{cases}$
+
+Note that $P_t^{(T)}=S^{(T)}_t-S^{(T)}_{t-1}=(1-B)S^{(T)}_t$. Therefore, we can always write a pulse function in terms of step functions. Often the notation, $I_t$, is used in general to denote an intervention. “$I$” stands for indicator variable.
+
+The intervention variables are often referred to as "inputs". The responses to intervention variables are often referred to as "outputs".  
+
+### Possible responses to interventions
+
+1. A fixed unknown impact $\omega$ of an intervention is felt b periods after the intervention:
+
+$\omega B^bS_t^{(T)}$ or $\omega B^bP^{(T)}_t$
+
+:::{.example} 
+
+Let T=5, $S^{(5)}_t=\begin{cases}0 & t<5 \\ 1 & t\ge 5\end{cases}, b=1, \omega=3$
+
+Then the response to the intervention is  $\omega B^bS_t^{(T)}=3S^{(5)}_{t-1}$  Over time, this is what happens: 
+
+|t|$S_t^{(T)}$|$\omega B^bS_t^{(T)}=3S^{(T)}_{t-1}$|
+|---|---|---|
+|1|0||
+|2|0|$3S^{(5)}_{1}=0$|
+|3|0|$3S^{(5)}_{2}=0$|
+|4|0|$3S^{(5)}_{3}=0$|
+|5|1|$3S^{(5)}_{4}=0$|
+|6|1|$3S^{(5)}_{5}=3$|
+|7|1|$3S^{(5)}_{6}=3$|
+|$\vdots$|$\vdots$|$\vdots$|
+
+:::
+
+2. An impact of an intervention is felt b periods after the intervention, but the response is gradual:
+
+$\frac{\omega B^b}{(1-\delta B)}S^{(T)}_t$ or $\frac{\omega B^b}{(1-\delta B)}P^{(T)}_t$, where $0\le \delta \le 1$
+
+Note that 
+
+$\frac{\omega B^b}{(1-\delta B)}S^{(T)}_t=\omega B^b(S^{(T)}_t+\delta BS_t^{(T)}+\delta^2B^2S^{(T)}_t+...)\\=\omega(S^{(T)}_{t-1}+\delta S^{(T)}_{t-2}+\delta^2S^{(T)}_{t-3}+...)$
+
+For $\delta = 0$, the above equations simplify to what is in #1. For $\delta = 1$, the impact increases without bound. 
+
+:::{.example}
+
+Let T=5, $S^{(5)}_t=\begin{cases}0 & t<5 \\ 1 & t \ge 5\end{cases}, b=1, \omega=3, \delta=0.5$
+
+Over time, this is what happens:
+
+|t|$S^{(T)}_t$|$\frac{\omega B^b}{1-\delta B}S^{(T)}_t=\frac{3}{1-0.5B}S^{(T)}_{t-1}$|
+|---|---|---|
+|1|0||
+|2|0|0|
+|3|0|0|
+|4|0|0|
+|5|1|0|
+|6|1|$3S^{(5)}_5=3$|
+|7|1|$3S^{(5)}_6+3\times 0.5\times S^{(5)}_5=4.5$|
+|$\vdots$|$\vdots$|$\vdots$|
+
+:::
+
+A figure from Box et al.’s textbook:
+
+
+### Multiple interventions
+
+The response can be written more generally as
+
+$\frac{\omega(B)B^b}{\delta(B)}$
+
+where $\omega(B)=(\omega_0-\omega_1B-...-\omega_sB^s)$ amd $\delta(B)=(1-\delta_1B-...-\delta_rB^r)$
+
+The $\omega_i$'s represent the expected initial effects of the intervention. The $\delta_j$'s represent the permanent effects of the intervention, and the roots of $\delta(B) = 0$ are assumed to be on or outside the unit circle.  
+
+For multiple interventions, the following model below can be used.  
+Suppose we have the following ARIMA model $\phi(B)(1-B)^dx_t=\theta(B)w_t$. This can be rewritten as 
+$x_t=\frac{\theta(B)}{\phi(B)(1-B)^d}w_t$
+
+Incorporating multiple interventions produces
+
+$x_t=\sum_{j=1}^{K}\frac{\omega_j(B)B^{b_j}}{\delta_j(B)}I_{jt}+\frac{\theta(B)}{\phi(B)(1-B)^d}w_t$ where $I_{jt}$ for j = 1,...,K are the intervention variables.
+
+Notes: 
+
+1.	The seasonal part of a process could also be incorporated into the above.  
+2.	The process without the intervention, $\frac{\theta(B)}{\phi(B)(1-B)^d}w_t$, is often called the "noise process" and is denoted by $n_t$.  
+3.	The "noise model" is often found based on the time series before the intervention occurs.  
+4.	Hypothesis tests for the parameters associated with the interventions can be performed to determine if the intervention variable is needed. For example, testing an $\omega$ could be done to determine if a new law is effective.  
+
+### Modeling
+
+Frequently, an ARIMA model is found for the data before the intervention. This model is then fit to the entire data including a regression independent variable to account for the intervention.  
+
+In the simplest setting, suppose there are n = 100 observations and an intervention occurs at t = 80. The model with the intervention variable can be fit to all of the observations through using the `arima()` function by specifying the ARIMA part of the model in the usual way and using the `xreg` option to include the intervention variable. For example, a simple step invention can be created as 
+
+```{r}
+I <- c(rep(0, 79), rep(1, 21))
+```
+
+### Outliers
+
+One way to handle outliers is to use an intervention variable.  
+
+## Transfer function models
+
+More comprehensive references are Shumway and Stoffer and Box et al.’s textbooks.  
+
+Explanatory variables may influence a time series variable.  Transfer function models allow the use of other times series variables to help explain the variability in the time series variable. These models can be thought of as an alternative to regression models with ARMA errors.  
+
+Examples: 
+
+1. The number of Oklahoma high school graduates could be used to help model OSU enrollment.  
+2. Advertising expenditures could be used to help model sales. 
+3. All intervention analysis examples.  
+
+### General concepts
+
+Let $x_t$ denote the value of an input series at time t.  
+Let $y_t$ denote the value of an output series at time t.
+
+Assume that both are stationary and suppose that x influences y.
+
+Typically, influences other than x will affect y. The combined effect on y of these influences is called the “noise” and is denoted by $n_t$ at time t ($n_t$ is assumed to be stationary).  
+
+The transfer function model which relates $x_t$, $y_t$, and $n_t$ is: 
+
+$y_t=\mu(B)x_t+n_t$
+
+where $\nu(B)=\nu_0+\nu_1B+\nu_2B^2+...=\sum_{j=0}^{\infty}\nu_jB^j$ is the transfer function
+
+Notes:
+
+1.	$x_t$ is assumed independent of $n_t$.
+2.	$x_t$ and $n_t$ are assumed to follow an ARMA model.
+3.	The weights, $\nu_0,\nu_1,\nu_2, …,$ are often called the impulse response weights.  
+4.	Purpose of transfer function modeling is to estimate $\nu_0, \nu_1, \nu_2, …$ and find the model for $n_t$ based on the information in $x_t$ and $y_t$.
+
+### Trandfer function
+
+The transfer function can be rewritten as 
+
+$\nu(B)=\frac{\omega_s(B)B^b}{\delta_r(B)}$
+
+where $\omega_s(B)=\omega_0-\omega_1B-\omega_2B^2-...-\omega_sB^s, \delta_r(B)=1-\delta_1B-\delta_2B^2-...-\delta_rB^r$(roots outside unit circle for $\delta_r(B)=0$)
+
+$b=$ delay before the input variable (x) produces an effect on the output variable (y). 
+
+Compare this representation of the transfer function to the responses to interventions.  
+
+Without going into all of the details (and there is a lot), the cross correlation function helps determine the values of r, s, and b.  
+
+:::{.example}
+
+**Gas furnace data**
+
+
+This example comes from Box et al.’s textbook. 
+
+$x_t$ = input gas rate (transformed for this example)
+$y_t$ = $CO_2$ output 
+
+$x_t$ is measured in cubic foot per minute and $y_t$ is measured as percentage of output. 
+
+From the textbook, 
+
+
+
+The data is observed in 9 second intervals. Below is the final model used:
+
+$y_t=\frac{\hat \omega_s(B)B^b}{\hat \delta_r(B)}x_t+\frac{\hat \phi(B)}{\hat \theta(B)}w_t\\=\frac{(-0.5308-0.3799B-0.5186B^2)B^3}{1-0.5489B}x_t+\frac{1}{1-1.5274B+0.6290B^2}w_t$
+
+The best ARIMA model alone for $Y_t$ appears to be ARIMA(3,0,2).
+
+Below are plots of the data along with forecasts.
+
+
+
+
+:::
+

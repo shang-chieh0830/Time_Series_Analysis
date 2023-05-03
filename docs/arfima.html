@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 19 ARFIMA | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 19 ARFIMA | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 19 ARFIMA | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="sarima-models.html"/>
+<link rel="next" href="regression-with-arma-errors.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="arfima" class="section level1 hasAnchor" number="19">
+<h1><span class="header-section-number">Chapter 19</span> ARFIMA<a href="arfima.html#arfima" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="introduction-and-simulated-example-1" class="section level2 hasAnchor" number="19.1">
+<h2><span class="header-section-number">19.1</span> Introduction and Simulated Example<a href="arfima.html#introduction-and-simulated-example-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The purpose of this section is to give a brief account of long memory ARMA models. The “F” in ARFIMA stands for “fractional” with respect to differencing.</p>
+<p>ARIMA(p,0,q)x(P,0,Q)<span class="math inline">\(_s\)</span> is referred to as a “short memory” process because <span class="math inline">\(\rho(h)\to0\)</span> “quickly” as <span class="math inline">\(h \to \infty\)</span>.</p>
+<p>A long memory time series does not and has <span class="math inline">\(\rho(h)\to 0\)</span> “slowly”.</p>
+<p>In the past, we would have differenced a time series that exhibited these properties. There are cases where using <span class="math inline">\((1-B)^d\)</span> for d = 1, 2, … may be too severe to fix the problem and result in “overdifferencing”. Note that overdifferencing may induce artificial patterns in the time series and reduce forecasting accuracy (see Pankratz’s textbook).</p>
+<p>Long memory time series do not necessarily have “large” <span class="math inline">\(\rho(h)\)</span>. Instead, the <span class="math inline">\(\rho(h) \ne 0\)</span> tend to persist for a long period of time. Some of the original examples where this type of data was examined include economics and hydrology applications from the 1980s. Newer examples include computer network traffic and meteorology.</p>
+<p>As a compromise between differencing and not differencing a time series, fractional differencing can be done.</p>
+<p>Use fractional powers of d between 0 to 0.5 for the differencing. The fractional difference series (p = 0, q = 0) can be represented as</p>
+<p><span class="math display">\[(1-B)^dx_t=(\sum_{j=0}^{\infty}\pi_jB^j)x_t=\sum_{j=0}^{\infty}\pi_jx_{t-j}=w_t\]</span></p>
+<p>where <span class="math inline">\(w_t\sim ind.(0, \sigma_w^2)\)</span> and the <span class="math inline">\(\pi_j\)</span>’s are found through a Taylor series expansion of <span class="math inline">\((1-B)^d\)</span>. Note that d now becomes a parameter to be estimated!</p>
+<div id="the-pi_js" class="section level3 hasAnchor" number="19.1.1">
+<h3><span class="header-section-number">19.1.1</span> The <span class="math inline">\(\pi_j\)</span>’s<a href="arfima.html#the-pi_js" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Taylor series expansion in general for a function f(B):</p>
+<p><span class="math display">\[f(B)=\sum_{j=0}^{\infty}\frac{f^{(j)}(a)}{j!}(B-a)^j\]</span> where <span class="math inline">\(f^{(j)}(a)\)</span> is the jth derivative of f(B) evaluated at a.</p>
+<p>Using a Taylor series expansion about 0 leads to</p>
+<p><span class="math display">\[(1-B)^d=\frac{(1-0)^d}{0!}(B-0)^0+\frac{-d(1-0)^{d-1}}{1!}(B-0)^1\\+\frac{d(d-1)(1-0)^{d-2}}{2!}(B-0)^2+...\\
+=1+(-d)B+\frac{d(d-1)}{2}B^2+...\]</span></p>
+<p>The general expression is <span class="math inline">\((1-B)^d-\sum_{j=0}^{\infty}\pi_jB^j\)</span> where <span class="math inline">\(\pi_j=\frac{\Gamma(j-d)}{\Gamma(j+1)\Gamma(-d)}\)</span></p>
+<p>Notes:</p>
+<ul>
+<li><p><span class="math inline">\(\Gamma(x+1)=x\Gamma(x)=x\int_{0}^{\infty}y^{x-1}e^{-y}dy\)</span> for x&gt;0 is the gamma function. Note that if x is an integer, this simplifies to <span class="math inline">\(\Gamma(x) = (x – 1)!\)</span></p>
+<ul>
+<li>How can I have <span class="math inline">\(\Gamma(-d)\)</span> above???</li>
+<li> Notice the <span class="math inline">\(\Gamma(-d)\)</span> will fall out; for example,</li>
+</ul>
+<p><span class="math display">\[\pi_1=\frac{\Gamma(1-d)}{\Gamma(1+1)\Gamma(-d)}=\frac{-d\Gamma(-d)}{\Gamma(2)\Gamma(-d)}=-d\]</span></p></li>
+<li><p>An equivalent recursive representation of <span class="math inline">\(\pi_j\)</span> is</p></li>
+</ul>
+<p><span class="math display">\[\pi_{j+1}=\frac{(j-d)\pi_j}{j+1}, \pi_0=1\]</span></p>
+<p>One can try a few values of j to see it works out.</p>
+<ul>
+<li>It can be shown that <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jw_{t-j}\)</span> where <span class="math inline">\(\psi_j=\frac{\Gamma(j+d)}{\Gamma(j+1)\gamma(d)}\)</span></li>
+</ul>
+</div>
+<div id="finding-estimatet-of-d" class="section level3 hasAnchor" number="19.1.2">
+<h3><span class="header-section-number">19.1.2</span> Finding estimatet of d:<a href="arfima.html#finding-estimatet-of-d" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Use an iterative root-finding procedure with <span class="math inline">\(Q(d) = \sum w_t^2(d)\)</span>. In other words, minimize the squared <span class="math inline">\(w_t\)</span>’s (residuals) with respect to d. Iterative numerical method details are available in Shumway and Stoffer’s textbook.</p>
+</div>
+<div id="fractional-arimapdq-or-arfima-model" class="section level3 hasAnchor" number="19.1.3">
+<h3><span class="header-section-number">19.1.3</span> Fractional ARIMA(p,d,q) or ARFIMA model<a href="arfima.html#fractional-arimapdq-or-arfima-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The model is <span class="math display">\[\phi(B)(1-B)^d(x_t-\mu)=\theta(B)w_t\]</span> for 0 &lt; d &lt; 0.5 and <span class="math inline">\(w_t\sim ind.(0, \sigma_w^2)\)</span>.</p>
+<p>This model can be rewritten as <span class="math display">\[\phi(B)\pi_d(B)(x_t-\mu)=\theta(B)w_t\]</span> where <span class="math inline">\(\pi_d(B)=\sum_{j=0}^{\infty}\pi_jB^j\)</span></p>
+<p>Notes:</p>
+<ul>
+<li><p>A seasonal form of the model could also have been used above.</p></li>
+<li><p>We have often just examined the <span class="math inline">\(\mu = 0\)</span> form of an ARMA model. The way we have written the <span class="math inline">\(\mu \ne 0\)</span> form of the model is <span class="math inline">\(\phi(B)x_t = \alpha + \theta(B)w_t\)</span> where <span class="math inline">\(\alpha = \mu(1-\phi_1-\phi_2-…-\phi_p)\)</span>. Instead, one could also write the model as <span class="math inline">\(\phi(B)(x_t-\mu) = \theta(B)w_t\)</span> so that the <span class="math inline">\(\\alpha\)</span> term is not directly written in there. This is why the ARFIMA model is represented as above.</p></li>
+<li><p>Let <span class="math inline">\(z_t=(1-B)^dx_t\)</span>. Thus <span class="math inline">\(x_t\)</span> is passed through an infinite linear filter to form <span class="math inline">\(z_t\)</span>. We can then find an ARMA model for <span class="math inline">\(z_t\)</span>.</p></li>
+<li><p>The <span class="math inline">\(w_t\)</span>’s are still assumed to be independent <span class="math inline">\(N(0, \sigma_w^2 )\)</span> random variables when estimating the model. This can be used the “usual” way for diagnostic methods.</p></li>
+<li><p>Parameter estimation and forecasting can proceed using similar techniques as described earlier in the course!</p></li>
+<li><p>The <code>fracdiff</code> package in R provides the computational methods.</p></li>
+</ul>
+<div class="example">
+<p><span id="exm:unlabeled-div-68" class="example"><strong>Example 19.1  </strong></span><strong>ARFIMA(1,0.3,0) with <span class="math inline">\(\phi_1=0.2, \mu=0\)</span> (arfima_sim.R)</strong></p>
+<p>To simulate data from an ARFIMA model, use the <code>fracdiff.sim()</code> function in R. Below is part of the code and output.</p>
+<div class="sourceCode" id="cb875"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb875-1"><a href="arfima.html#cb875-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fracdiff)</span>
+<span id="cb875-2"><a href="arfima.html#cb875-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb875-3"><a href="arfima.html#cb875-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9101</span>)</span>
+<span id="cb875-4"><a href="arfima.html#cb875-4" aria-hidden="true" tabindex="-1"></a>x.ex <span class="ot">&lt;-</span> <span class="fu">fracdiff.sim</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">ar =</span> <span class="fl">0.2</span>, <span class="at">ma =</span> <span class="cn">NULL</span>, <span class="at">d =</span><span class="fl">0.3</span>, <span class="at">rand.gen =</span> rnorm, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">mu =</span> <span class="dv">0</span>)</span>
+<span id="cb875-5"><a href="arfima.html#cb875-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb875-6"><a href="arfima.html#cb875-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x.ex)</span></code></pre></div>
+<pre><code>## [1] &quot;series&quot;  &quot;ar&quot;      &quot;ma&quot;      &quot;d&quot;       &quot;mu&quot;      &quot;n.start&quot;</code></pre>
+<div class="sourceCode" id="cb877"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb877-1"><a href="arfima.html#cb877-1" aria-hidden="true" tabindex="-1"></a>x.ex<span class="sc">$</span>series[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div>
+<pre><code>## [1]  0.2558553628 -0.2582559302  1.1313066446  0.0001357745  1.1763489841</code></pre>
+<p>I had already simulated observations from the model in the past and put them in <code>x_arfima.txt</code>. This data was simulated using the same settings as above, but just using a different seed. I am going to use this data for the rest of the example. Below is the code needed to read in the data and plot the data.</p>
+<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="arfima.html#cb879-1" aria-hidden="true" tabindex="-1"></a>arfima.sim.data <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">&quot;x_arfima.txt&quot;</span>, </span>
+<span id="cb879-2"><a href="arfima.html#cb879-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb879-3"><a href="arfima.html#cb879-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(arfima.sim.data)</span></code></pre></div>
+<pre><code>##           x
+## 1 1.3563372
+## 2 1.5681298
+## 3 0.8548125
+## 4 1.1731924
+## 5 0.7413035
+## 6 0.7017789</code></pre>
+<div class="sourceCode" id="cb881"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb881-1"><a href="arfima.html#cb881-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> arfima.sim.data<span class="sc">$</span>x</span>
+<span id="cb881-2"><a href="arfima.html#cb881-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb881-3"><a href="arfima.html#cb881-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb881-4"><a href="arfima.html#cb881-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">&quot;Plot of x_arfima.txt </span></span>
+<span id="cb881-5"><a href="arfima.html#cb881-5" aria-hidden="true" tabindex="-1"></a><span class="st">    data&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span><span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb881-6"><a href="arfima.html#cb881-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb881-7"><a href="arfima.html#cb881-7" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div class="sourceCode" id="cb882"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb882-1"><a href="arfima.html#cb882-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb882-2"><a href="arfima.html#cb882-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Estimated ACF </span></span>
+<span id="cb882-3"><a href="arfima.html#cb882-3" aria-hidden="true" tabindex="-1"></a><span class="st">    for x_arfima.txt data&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">lag.max =</span> <span class="dv">50</span>)</span>
+<span id="cb882-4"><a href="arfima.html#cb882-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">50</span>, <span class="at">main =</span> <span class="st">&quot;Estimated PACF for </span></span>
+<span id="cb882-5"><a href="arfima.html#cb882-5" aria-hidden="true" tabindex="-1"></a><span class="st">    x_arfima.txt data&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb883"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb883-1"><a href="arfima.html#cb883-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>The ACF of the simulated data is tailing off very slowly – although the autocorrelations are not very large. This is a characteristic of a long-memory series. Note that this particular series has autocorrelations tailing off faster than most others that I have generated! Try the code yourself to see other examples of the ACF.</p>
+<p>To fit a model to the data, the <code>fracdiff()</code> function can be used. The data should be first adjusted to make sure it has a 0 mean. Below is part of the code and output.</p>
+<div class="sourceCode" id="cb884"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb884-1"><a href="arfima.html#cb884-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x)</span></code></pre></div>
+<pre><code>## [1] -0.1712369</code></pre>
+<div class="sourceCode" id="cb886"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb886-1"><a href="arfima.html#cb886-1" aria-hidden="true" tabindex="-1"></a>x.adj <span class="ot">&lt;-</span> x<span class="sc">-</span><span class="fu">mean</span>(x) <span class="co"># adjust for mean</span></span></code></pre></div>
+<div class="sourceCode" id="cb887"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb887-1"><a href="arfima.html#cb887-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">fracdiff</span>(<span class="at">x=</span>x.adj, <span class="at">nar=</span><span class="dv">1</span>)</span>
+<span id="cb887-2"><a href="arfima.html#cb887-2" aria-hidden="true" tabindex="-1"></a><span class="co"># use nma = 1 for 1 MA if needed</span></span>
+<span id="cb887-3"><a href="arfima.html#cb887-3" aria-hidden="true" tabindex="-1"></a>mod.fit</span></code></pre></div>
+<pre><code>## 
+## Call:
+##   fracdiff(x = x.adj, nar = 1) 
+## 
+## Coefficients:
+##         d        ar 
+## 0.2501425 0.1874089 
+## sigma[eps] = 0.9928298 
+## a list with components:
+##  [1] &quot;log.likelihood&quot;  &quot;n&quot;               &quot;msg&quot;             &quot;d&quot;              
+##  [5] &quot;ar&quot;              &quot;ma&quot;              &quot;covariance.dpq&quot;  &quot;fnormMin&quot;       
+##  [9] &quot;sigma&quot;           &quot;stderror.dpq&quot;    &quot;correlation.dpq&quot; &quot;h&quot;              
+## [13] &quot;d.tol&quot;           &quot;M&quot;               &quot;hessian.dpq&quot;     &quot;length.w&quot;       
+## [17] &quot;residuals&quot;       &quot;fitted&quot;          &quot;call&quot;</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat d=0.2501\)</span></p></li>
+<li><p><span class="math inline">\(\hat \phi_1=0.1874\)</span></p></li>
+<li><p><span class="math inline">\(\hat \sigma_w=0.9928\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb889"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb889-1"><a href="arfima.html#cb889-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+##   fracdiff(x = x.adj, nar = 1) 
+## 
+## Coefficients:
+##    Estimate Std. Error z value Pr(&gt;|z|)    
+## d  0.250143   0.007397  33.816  &lt; 2e-16 ***
+## ar 0.187409   0.044551   4.207 2.59e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## sigma[eps] = 0.9928298 
+## [d.tol = 0.0001221, M = 100, h = 7.45e-06]
+## Log likelihood: -706.1 ==&gt; AIC = 1418.169 [3 deg.freedom]</code></pre>
+<ul>
+<li><p><span class="math inline">\(\sqrt{\hat Var(\hat d)}=0.0073\)</span></p></li>
+<li><p><span class="math inline">\(z-statistics=\frac{\hat d}{\sqrt{\hat Var(\hat d)}}\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb891"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb891-1"><a href="arfima.html#cb891-1" aria-hidden="true" tabindex="-1"></a><span class="co"># covariance matrix</span></span>
+<span id="cb891-2"><a href="arfima.html#cb891-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(mod.fit)</span></code></pre></div>
+<pre><code>##                 d           ar1
+## d    5.471676e-05 -5.890262e-05
+## ar1 -5.890262e-05  1.984812e-03</code></pre>
+<div class="sourceCode" id="cb893"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb893-1"><a href="arfima.html#cb893-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mod.fit)</span></code></pre></div>
+<pre><code>##  [1] &quot;log.likelihood&quot;  &quot;n&quot;               &quot;msg&quot;             &quot;d&quot;              
+##  [5] &quot;ar&quot;              &quot;ma&quot;              &quot;covariance.dpq&quot;  &quot;fnormMin&quot;       
+##  [9] &quot;sigma&quot;           &quot;stderror.dpq&quot;    &quot;correlation.dpq&quot; &quot;h&quot;              
+## [13] &quot;d.tol&quot;           &quot;M&quot;               &quot;hessian.dpq&quot;     &quot;length.w&quot;       
+## [17] &quot;residuals&quot;       &quot;fitted&quot;          &quot;call&quot;</code></pre>
+<p>Notes:</p>
+<ul>
+<li>The estimated model is</li>
+</ul>
+<p><span class="math display">\[(1 - 0.1875B)(1 - B)^{0.2501}(x_t + 0.1712) = w_t.\]</span></p>
+<p>with <span class="math inline">\(\hat \sigma_w^2=0.9928298^2\)</span>. Notice how the mean is incorporated into the model.</p>
+<ul>
+<li>A test of <span class="math inline">\(H_0: \phi_1=0\)</span> vs. <span class="math inline">\(H_a:\phi_1 \ne 0\)</span> results in</li>
+</ul>
+<p><span class="math display">\[Z=\frac{\hat \phi_1-\phi_1}{\sqrt{\hat Var(\hat \phi_1)}}=\frac{0.1875}{0.04455}=4.21\]</span>
+Thus, there is sufficient evidence to show that <span class="math inline">\(\phi_1 \ne 0\)</span>.</p>
+<ul>
+<li><p>Similarly, there is sufficient evidence to show d <span class="math inline">\(\ne\)</span> 0.</p></li>
+<li><p>Computational speed has improved since the 1980s when these models were developed! Haslett and Raftery’s 1989 paper discuss using a VAX computer to do the calculations. They say a “single evaluation of the likelihood takes 3 hours of CPU time on a VAX 11/780 and finding the MLE would take at least 45 hours.”</p></li>
+<li><p>To speed up the computational process, Haslett and Raftery use an algorithm that omits M initial observations in the computations. This algorithm is implemented by <code>fracdiff()</code> using <code>M = 100</code> as the default. Page 13 of their paper provides some reasoning (approximations are made using the first 100 observations to help with the calculations using the remaining observations). With their algorithm, a single evaluation took 2.5 minutes.</p></li>
+</ul>
+</div>
+<p>How would you find <span class="math inline">\(\tilde x^{500}_{501}\)</span>? Remember that an ARFIMA model can be written in general as</p>
+<p><span class="math display">\[\phi(B)\pi_d(B)(x_t-\mu)=\theta(B)w_t\]</span></p>
+<p>where <span class="math inline">\(\pi_d(B)=\sum_{j=0}^{\infty}\pi_jB^j\)</span>. For our model, let <span class="math inline">\(z_t=x_t-\mu\)</span>. Then</p>
+<p><span class="math display">\[(1-0.1875B)(\sum_{j=0}^{\infty}\pi_jB^j)z_t=w_t\\
+\iff (\sum_{j=0}^{\infty}\pi_jB^j)z_t-0.1875(\sum_{j=0}^{\infty}\pi_jB^j)z_{t-1}=w_t\\
+\iff z_t=-(\sum_{j=1}^{\infty}\pi_jB^j)z_t+0.1875(\sum_{j=0}^{\infty}\pi_jB^j)z_{t-1}+w_t\\
+\iff z_t=0.1875x_{t-1}-(\sum_{j=1}^{\infty}\pi_jB^j)(z_t-0.1875z_{t-1})+w_t\]</span></p>
+<p>This leads to</p>
+<p><span class="math display">\[E(z_{501} | I_{500})=E(w_{501}+0.1875z_{500}-\pi_1(z_{500}-0.1875z_{499})\\-\pi_2(z_{499}-0.1875z_{498})-...| I_{500})=
+\\0.1875z_{500}-\pi_1(z_{500}-0.1875z_{499})-\pi_2(z_{499}-0.1875z_{498})-...\]</span></p>
+<p>The mean needs to be added to this as well because z is mean adjusted. Thus,</p>
+<p><span class="math inline">\(\tilde x^{500}_{501}=\mu+E(z_{501}| I_{500})\)</span></p>
+<p>Unfortunately, the <code>fracdiff</code> package does not have a function available to find the forecasts. Below is code that can be used instead.</p>
+<div class="sourceCode" id="cb895"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb895-1"><a href="arfima.html#cb895-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<div class="sourceCode" id="cb897"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb897-1"><a href="arfima.html#cb897-1" aria-hidden="true" tabindex="-1"></a>save.fore <span class="ot">&lt;-</span> <span class="fu">forecast</span>(<span class="at">object =</span> mod.fit, <span class="at">h =</span> <span class="dv">2</span>, <span class="at">level =</span> <span class="dv">95</span>)</span>
+<span id="cb897-2"><a href="arfima.html#cb897-2" aria-hidden="true" tabindex="-1"></a>save.fore</span></code></pre></div>
+<pre><code>##     Point Forecast     Lo 95    Hi 95
+## 501     -0.5184022 -2.465437 1.428633
+## 502     -0.3372291 -2.462489 1.788030</code></pre>
+<ul>
+<li><p><span class="math inline">\(\tilde z^{500}_{501}=-0.5184\)</span></p></li>
+<li><p><span class="math inline">\(-2.47&lt; \tilde z^{500}_{501}&lt;1.43\)</span></p></li>
+<li><p><span class="math inline">\(-2.47+\hat \mu &lt;\tilde x^{500}_{501} &lt;1.43+\hat \mu\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb899"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb899-1"><a href="arfima.html#cb899-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(save.fore)</span></code></pre></div>
+<pre><code>##  [1] &quot;x&quot;         &quot;mean&quot;      &quot;upper&quot;     &quot;lower&quot;     &quot;level&quot;     &quot;method&quot;   
+##  [7] &quot;model&quot;     &quot;series&quot;    &quot;residuals&quot; &quot;fitted&quot;</code></pre>
+<div class="sourceCode" id="cb901"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb901-1"><a href="arfima.html#cb901-1" aria-hidden="true" tabindex="-1"></a>save.fore<span class="sc">$</span>mean</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 501 
+## End = 502 
+## Frequency = 1 
+## [1] -0.5184022 -0.3372291</code></pre>
+<div class="sourceCode" id="cb903"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb903-1"><a href="arfima.html#cb903-1" aria-hidden="true" tabindex="-1"></a>save.fore<span class="sc">$</span>mean<span class="sc">+</span><span class="fu">mean</span>(x) <span class="co"># adjust back for mean</span></span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 501 
+## End = 502 
+## Frequency = 1 
+## [1] -0.6896391 -0.5084660</code></pre>
+<div class="sourceCode" id="cb905"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb905-1"><a href="arfima.html#cb905-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall you&#39;re using z=x-mean(x)</span></span></code></pre></div>
+<div class="sourceCode" id="cb906"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb906-1"><a href="arfima.html#cb906-1" aria-hidden="true" tabindex="-1"></a>save.fore<span class="sc">$</span>upper<span class="sc">+</span><span class="fu">mean</span>(x) <span class="co"># adjust back for mean</span></span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 501 
+## End = 502 
+## Frequency = 1 
+##           95%
+## [1,] 1.257396
+## [2,] 1.616793</code></pre>
+<div class="sourceCode" id="cb908"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb908-1"><a href="arfima.html#cb908-1" aria-hidden="true" tabindex="-1"></a>save.fore<span class="sc">$</span>lower<span class="sc">+</span><span class="fu">mean</span>(x) <span class="co"># adjust back for mean</span></span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 501 
+## End = 502 
+## Frequency = 1 
+##            95%
+## [1,] -2.636674
+## [2,] -2.633725</code></pre>
+<div class="sourceCode" id="cb910"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb910-1"><a href="arfima.html#cb910-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(save.fore, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">495</span>, <span class="dv">503</span>))</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+</div>
+<div id="additional-example" class="section level2 hasAnchor" number="19.2">
+<h2><span class="header-section-number">19.2</span> Additional Example<a href="arfima.html#additional-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="example">
+<p><span id="exm:unlabeled-div-69" class="example"><strong>Example 19.2  </strong></span><strong>Varve data (varve_frac.R)</strong></p>
+<p>The purpose here is to duplicate and expand on the results in a corresponding example of Shumway and Stoffer.</p>
+<p>Varves are sedimentary deposits from melting glaciers over the spring and summer seasons. The data used here is a measurement of the thickness from yearly deposits at one location in Massachusetts. There are 634 years of deposit measurements that start about 11,800 years ago.</p>
+<p>Below is part of the code and output for the analysis.</p>
+<div class="sourceCode" id="cb911"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb911-1"><a href="arfima.html#cb911-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;astsa&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:forecast&#39;:
+## 
+##     gas</code></pre>
+<div class="sourceCode" id="cb914"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb914-1"><a href="arfima.html#cb914-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> varve</span>
+<span id="cb914-2"><a href="arfima.html#cb914-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y)</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 6 
+## Frequency = 1 
+## [1] 26.28 27.42 42.28 58.28 20.57 28.57</code></pre>
+<div class="sourceCode" id="cb916"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb916-1"><a href="arfima.html#cb916-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> y, <span class="at">ylab =</span> <span class="fu">expression</span>(y[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, </span>
+<span id="cb916-2"><a href="arfima.html#cb916-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">&quot;Glacial </span></span>
+<span id="cb916-3"><a href="arfima.html#cb916-3" aria-hidden="true" tabindex="-1"></a><span class="st">    varve thickness data&quot;</span>, <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, </span>
+<span id="cb916-4"><a href="arfima.html#cb916-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb916-5"><a href="arfima.html#cb916-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>The log transformation is applied to deal with nonstationarity in the variance.</p>
+<div class="sourceCode" id="cb917"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb917-1"><a href="arfima.html#cb917-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">log</span>(y)</span>
+<span id="cb917-2"><a href="arfima.html#cb917-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb917-3"><a href="arfima.html#cb917-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">log</span>(y[t])), <span class="at">xlab =</span> </span>
+<span id="cb917-4"><a href="arfima.html#cb917-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">main =</span> </span>
+<span id="cb917-5"><a href="arfima.html#cb917-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Glacial varve thickness data - log transformed&quot;</span>, </span>
+<span id="cb917-6"><a href="arfima.html#cb917-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb917-7"><a href="arfima.html#cb917-7" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div class="sourceCode" id="cb918"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb918-1"><a href="arfima.html#cb918-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb918-2"><a href="arfima.html#cb918-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">50</span>, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, </span>
+<span id="cb918-3"><a href="arfima.html#cb918-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">&quot;Est. ACF for log trans. data&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">50</span>), </span>
+<span id="cb918-4"><a href="arfima.html#cb918-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb918-5"><a href="arfima.html#cb918-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">50</span>, <span class="at">main =</span> <span class="st">&quot;Est. PACF for </span></span>
+<span id="cb918-6"><a href="arfima.html#cb918-6" aria-hidden="true" tabindex="-1"></a><span class="st">    log trans. data&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">50</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div class="sourceCode" id="cb919"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb919-1"><a href="arfima.html#cb919-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb919-2"><a href="arfima.html#cb919-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb919-3"><a href="arfima.html#cb919-3" aria-hidden="true" tabindex="-1"></a><span class="co"># long memory exhibited</span></span></code></pre></div>
+<div class="sourceCode" id="cb920"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb920-1"><a href="arfima.html#cb920-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x)</span></code></pre></div>
+<pre><code>## [1] 3.117993</code></pre>
+<div class="sourceCode" id="cb922"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb922-1"><a href="arfima.html#cb922-1" aria-hidden="true" tabindex="-1"></a>x.adj <span class="ot">&lt;-</span> x<span class="sc">-</span><span class="fu">mean</span>(x)</span></code></pre></div>
+<div class="sourceCode" id="cb923"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb923-1"><a href="arfima.html#cb923-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fracdiff)</span>
+<span id="cb923-2"><a href="arfima.html#cb923-2" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">fracdiff</span>(<span class="at">x=</span>x.adj)</span>
+<span id="cb923-3"><a href="arfima.html#cb923-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+##   fracdiff(x = x.adj) 
+## 
+## Coefficients:
+##    Estimate Std. Error z value Pr(&gt;|z|)    
+## d 3.705e-01  4.569e-06   81086   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## sigma[eps] = 0.4784262 
+## [d.tol = 0.0001221, M = 100, h = 4.571e-06]
+## Log likelihood: -432.8 ==&gt; AIC = 869.5471 [2 deg.freedom]</code></pre>
+<ul>
+<li><span class="math inline">\(\hat d=3.705e-01\)</span></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>The ACF for xt is very slowly tailing off to 0.<br />
+</li>
+<li>Notice that only d was estimated using <code>fracdiff()</code>.<br />
+</li>
+<li>The estimated ARFIMA model is <span class="math inline">\((1-B)^{0.3705}(x_t-3.1179) = w_t\)</span> using the default value of M. Shumway and Stoffer found d = 0.384 with M = 30. To be consistent with Shumway and Stoffer’s original approach, I decided to use M = 30 and d = 0.384 in the rest of the analysis.<br />
+</li>
+<li>Next, I decided to find the <span class="math inline">\(\pi_j\)</span>’s. Below is the code used and some of the resulting values.</li>
+</ul>
+<div class="sourceCode" id="cb925"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb925-1"><a href="arfima.html#cb925-1" aria-hidden="true" tabindex="-1"></a>pi.vec <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(x.adj))</span>
+<span id="cb925-2"><a href="arfima.html#cb925-2" aria-hidden="true" tabindex="-1"></a>pi.vec[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="sc">-</span>mod.fit<span class="sc">$</span>d</span>
+<span id="cb925-3"><a href="arfima.html#cb925-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb925-4"><a href="arfima.html#cb925-4" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(x.adj))</span>
+<span id="cb925-5"><a href="arfima.html#cb925-5" aria-hidden="true" tabindex="-1"></a>w[<span class="dv">1</span>] <span class="ot">&lt;-</span> x.adj[<span class="dv">1</span>]</span>
+<span id="cb925-6"><a href="arfima.html#cb925-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb925-7"><a href="arfima.html#cb925-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(<span class="fu">length</span>(x.adj))) {</span>
+<span id="cb925-8"><a href="arfima.html#cb925-8" aria-hidden="true" tabindex="-1"></a>      <span class="co">#Need to move subscript one back to match pi_j+1 equation</span></span>
+<span id="cb925-9"><a href="arfima.html#cb925-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb925-10"><a href="arfima.html#cb925-10" aria-hidden="true" tabindex="-1"></a>      pi.vec[j] <span class="ot">&lt;-</span> ((j<span class="dv">-1</span><span class="sc">-</span>mod.fit<span class="sc">$</span>d)<span class="sc">*</span>pi.vec[j<span class="dv">-1</span>])<span class="sc">/</span>(j<span class="dv">-1</span><span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb925-11"><a href="arfima.html#cb925-11" aria-hidden="true" tabindex="-1"></a>      w[j] <span class="ot">&lt;-</span> x.adj[j] <span class="sc">+</span> <span class="fu">sum</span>(pi.vec[<span class="dv">1</span><span class="sc">:</span>(j<span class="dv">-1</span>)] </span>
+<span id="cb925-12"><a href="arfima.html#cb925-12" aria-hidden="true" tabindex="-1"></a>            <span class="sc">*</span> <span class="fu">rev</span>(x.adj[<span class="dv">1</span><span class="sc">:</span>(j <span class="sc">-</span> <span class="dv">1</span>)]))</span>
+<span id="cb925-13"><a href="arfima.html#cb925-13" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb925-14"><a href="arfima.html#cb925-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Notice the use of rev()</span></span>
+<span id="cb925-15"><a href="arfima.html#cb925-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb925-16"><a href="arfima.html#cb925-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb925-17"><a href="arfima.html#cb925-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb925-18"><a href="arfima.html#cb925-18" aria-hidden="true" tabindex="-1"></a>pi.vec[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div>
+<pre><code>## [1] -0.37046191 -0.11660994 -0.06334011 -0.04163881 -0.03022593</code></pre>
+<p>To find the <span class="math inline">\(\pi_j\)</span>’s, I used <span class="math inline">\(\pi_{j+1}=\frac{(j-d)\pi_j}{j+1}\)</span> and <span class="math inline">\(\pi_0\)</span> = 1. The values above do not quite match those of Shumway and Stoffer. Their values are likely incorrect because they obtain <span class="math inline">\(\pi_1\)</span> = 0.3079, but j = 0 produces <span class="math inline">\(\pi_{0+1}=\frac{(0-d)\pi_0}{0+1}=-d\)</span></p>
+<p>Thus, <span class="math inline">\(\pi_1=-d\)</span>, which should be 0.384.</p>
+<ul>
+<li>The residuals can be obtained using the <code>residuals()</code> function. R does not automatically output the residuals.</li>
+</ul>
+<div class="sourceCode" id="cb927"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb927-1"><a href="arfima.html#cb927-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">residuals</span>(mod.fit))</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 6 
+## Frequency = 1 
+## [1]  0.1508147  0.1374081  0.5371316  0.6831467 -0.5366428  0.1065081</code></pre>
+<div class="sourceCode" id="cb929"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb929-1"><a href="arfima.html#cb929-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(<span class="fu">residuals</span>(mod.fit))</span></code></pre></div>
+<pre><code>## Time Series:
+## Start = 629 
+## End = 634 
+## Frequency = 1 
+## [1]  0.132948970 -0.135026061 -0.660507502  0.711401452 -0.001857311
+## [6] -0.252491968</code></pre>
+<p>Let’s do the programming to find the residuals on our own too! Remember that the model can be written as</p>
+<p><span class="math inline">\(\sum_{j=0}^{\infty}\pi_jx_{t-j}=w_t\iff\pi_0x_t+\pi_1x_{t-1}+\pi_2x_{t-2}+...=w_t\)</span></p>
+<p>where <span class="math inline">\(x_t\)</span> is already adjusted for the mean. The residuals are the <span class="math inline">\(w_t\)</span>’s resulting from the model’s fit. Note that</p>
+<p><span class="math inline">\(x_1=w_1\)</span></p>
+<p><span class="math inline">\(x_2+\pi_1x_2=w_2\)</span></p>
+<p><span class="math inline">\(x_3+\pi_1x_2+\pi_2x_1=w_3\)</span></p>
+<p><span class="math inline">\(\vdots\)</span></p>
+<p><span class="math inline">\(x_{634}+\pi_1x_{633}+\pi_2x_{632}+...+\pi_{633}x_1=w_{634}\)</span></p>
+<p>Below is a data frame containing the w’s</p>
+<div class="sourceCode" id="cb931"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb931-1"><a href="arfima.html#cb931-1" aria-hidden="true" tabindex="-1"></a>all <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x.adj, w, pi.vec)</span>
+<span id="cb931-2"><a href="arfima.html#cb931-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(all)</span></code></pre></div>
+<pre><code>##         x.adj          w      pi.vec
+## 1  0.15081473  0.1508147 -0.37046191
+## 2  0.19327921  0.1374081 -0.11660994
+## 3  0.62632070  0.5371316 -0.06334011
+## 4  0.94726552  0.6831467 -0.04163881
+## 5 -0.09415976 -0.5366428 -0.03022593
+## 6  0.23436375  0.1065081 -0.02332202</code></pre>
+<div class="sourceCode" id="cb933"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb933-1"><a href="arfima.html#cb933-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(all)</span></code></pre></div>
+<pre><code>##           x.adj            w        pi.vec
+## 629 -0.19752367  0.132948970 -3.798538e-05
+## 630 -0.46123656 -0.135026061 -3.790275e-05
+## 631 -1.05620686 -0.660507502 -3.782043e-05
+## 632  0.08597175  0.711401452 -3.773842e-05
+## 633 -0.27424755 -0.001857311 -3.765671e-05
+## 634 -0.56154165 -0.252491968 -3.757531e-05</code></pre>
+<p>These match what was obtained by <code>residuals()</code>.</p>
+<ul>
+<li>Next are the residual ACF and PACF plots. The plot resembles an ACF plot from a white noise process. Remember that <span class="math inline">\(\alpha\)</span> = 0.05 here for each lag so it is not surprising to see a few values a little outside of the dashed lines.</li>
+</ul>
+<div class="sourceCode" id="cb935"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb935-1"><a href="arfima.html#cb935-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod.fit) </span>
+<span id="cb935-2"><a href="arfima.html#cb935-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb935-3"><a href="arfima.html#cb935-3" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> w, <span class="at">lag.max =</span> <span class="dv">100</span>, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb935-4"><a href="arfima.html#cb935-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Est. ACF for residuals&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> </span>
+<span id="cb935-5"><a href="arfima.html#cb935-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb935-6"><a href="arfima.html#cb935-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> w, <span class="at">lag.max =</span> <span class="dv">100</span>, <span class="at">main =</span> <span class="st">&quot;Est. PACF for </span></span>
+<span id="cb935-7"><a href="arfima.html#cb935-7" aria-hidden="true" tabindex="-1"></a><span class="st">    residuals&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> </span>
+<span id="cb935-8"><a href="arfima.html#cb935-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<div class="sourceCode" id="cb936"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb936-1"><a href="arfima.html#cb936-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<ul>
+<li>How would you find <span class="math inline">\(\tilde x^{634}_{635}\)</span>?</li>
+</ul>
+<p><span class="math inline">\(E(x_{635}|I_{634})=E(w_{635}-\pi_1x_{634}-\pi_{634}x_1-...|I_{634})=-\pi_1x_{634}-\pi_{634}x_1-...\)</span></p>
+<p>The mean needs to be added to this as well because x is mean adjusted. Also, we will need to put the forecasts back on the <span class="math inline">\(y_t\)</span> scale.</p>
+<p>Forecasts in R:</p>
+<div class="sourceCode" id="cb937"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb937-1"><a href="arfima.html#cb937-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb937-2"><a href="arfima.html#cb937-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb937-3"><a href="arfima.html#cb937-3" aria-hidden="true" tabindex="-1"></a>save.fore <span class="ot">&lt;-</span> <span class="fu">forecast</span>(<span class="at">object =</span> mod.fit, <span class="at">h =</span> <span class="dv">2</span>, <span class="at">level =</span> <span class="dv">95</span>)</span>
+<span id="cb937-4"><a href="arfima.html#cb937-4" aria-hidden="true" tabindex="-1"></a>save.fore</span></code></pre></div>
+<pre><code>##     Point Forecast     Lo 95     Hi 95
+## 635     -0.4082066 -1.347075 0.5306615
+## 636     -0.3764717 -1.377695 0.6247518</code></pre>
+<ul>
+<li><span class="math inline">\(\tilde z^{634}_{635}=-0.4082\)</span></li>
+</ul>
+<div class="sourceCode" id="cb939"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb939-1"><a href="arfima.html#cb939-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Need to mean adjust</span></span>
+<span id="cb939-2"><a href="arfima.html#cb939-2" aria-hidden="true" tabindex="-1"></a>fore.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">forecast =</span> save.fore<span class="sc">$</span>mean <span class="sc">+</span> </span>
+<span id="cb939-3"><a href="arfima.html#cb939-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(x),</span>
+<span id="cb939-4"><a href="arfima.html#cb939-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">low =</span> <span class="fu">as.numeric</span>(save.fore<span class="sc">$</span>lower <span class="sc">+</span> <span class="fu">mean</span>(x)),</span>
+<span id="cb939-5"><a href="arfima.html#cb939-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">up =</span> <span class="fu">as.numeric</span>(save.fore<span class="sc">$</span>upper <span class="sc">+</span> <span class="fu">mean</span>(x)))</span>
+<span id="cb939-6"><a href="arfima.html#cb939-6" aria-hidden="true" tabindex="-1"></a><span class="co"># as.numeric() was needed to remove a label</span></span>
+<span id="cb939-7"><a href="arfima.html#cb939-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb939-8"><a href="arfima.html#cb939-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb939-9"><a href="arfima.html#cb939-9" aria-hidden="true" tabindex="-1"></a>fore.df</span></code></pre></div>
+<pre><code>##   forecast      low       up
+## 1 2.709787 1.770919 3.648655
+## 2 2.741522 1.740298 3.742745</code></pre>
+<div class="sourceCode" id="cb941"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb941-1"><a href="arfima.html#cb941-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Need to account for log transform</span></span>
+<span id="cb941-2"><a href="arfima.html#cb941-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(fore.df)</span></code></pre></div>
+<pre><code>##   forecast      low       up
+## 1 15.02607 5.876250 38.42295
+## 2 15.51057 5.699043 42.21372</code></pre>
+<p>What would be the purpose of the forecasts here? Maybe a model like this would be helpful for current glaciers to understand varves.</p>
+<ul>
+<li>Shumway and Stoffer also examine regular ARIMA models for this data and suggest an ARIMA(1,1,1) model for the data. Later in the textbook they perform a “unit root test” to determine if d = 1. They conclude “no” and that the ARFIMA approach is better. Please see their textbook for the examples.</li>
+</ul>
+<p><span class="math inline">\(H_0:\phi_1=1\)</span></p>
+<p><span class="math inline">\(H_1:\phi_1\ne 1\)</span></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-70" class="example"><strong>Example 19.3  </strong></span><strong>ARFIMA(1, 0.3, 0) with <span class="math inline">\(\phi_1=0.2, \mu=0\)</span> (arfima_sim.R)</strong></p>
+<p>What if you did not know what the model was to begin with? I have not found any reference to “model building” strategies, but here is how I would proceed.</p>
+<ul>
+<li>Find the estimated ACF and check to see if it has the characteristics of a long-memory series.</li>
+<li>If it looks like a long-memory series, find an initial estimate of d using <code>fracdiff()</code>.<br />
+</li>
+<li>Find residuals from the model fit. Use the regular ARIMA model building methods to find estimates of <span class="math inline">\(\phi\)</span>’s and <span class="math inline">\(\theta\)</span>’s. Use <code>fracdiff()</code> to fit the models and update the estimate of d. </li>
+</ul>
+<p>Following the above procedure, I fit an ARFIMA(0,d,0) model to the data, found the residuals, and then constructed an ACF plot of the residuals.</p>
+<div class="sourceCode" id="cb943"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb943-1"><a href="arfima.html#cb943-1" aria-hidden="true" tabindex="-1"></a>arfima.sim.data <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">&quot;x_arfima.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb943-2"><a href="arfima.html#cb943-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> arfima.sim.data<span class="sc">$</span>x</span>
+<span id="cb943-3"><a href="arfima.html#cb943-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x)</span></code></pre></div>
+<pre><code>## [1] -0.1712369</code></pre>
+<div class="sourceCode" id="cb945"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb945-1"><a href="arfima.html#cb945-1" aria-hidden="true" tabindex="-1"></a>x.adj <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x) <span class="co"># adjust for mean</span></span>
+<span id="cb945-2"><a href="arfima.html#cb945-2" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">fracdiff</span>(<span class="at">x=</span>x.adj)</span>
+<span id="cb945-3"><a href="arfima.html#cb945-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+##   fracdiff(x = x.adj) 
+## 
+## Coefficients:
+##    Estimate Std. Error z value Pr(&gt;|z|)    
+## d 3.760e-01  7.474e-06   50309   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## sigma[eps] = 0.997149 
+## [d.tol = 0.0001221, M = 100, h = 7.477e-06]
+## Log likelihood: -708.7 ==&gt; AIC = 1421.316 [2 deg.freedom]</code></pre>
+<ul>
+<li><span class="math inline">\(\hat d=3.760e-01\)</span></li>
+</ul>
+<div class="sourceCode" id="cb947"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb947-1"><a href="arfima.html#cb947-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod.fit)</span>
+<span id="cb947-2"><a href="arfima.html#cb947-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb947-3"><a href="arfima.html#cb947-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb947-4"><a href="arfima.html#cb947-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> w, <span class="at">lag.max =</span> <span class="dv">100</span>, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb947-5"><a href="arfima.html#cb947-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Est. ACF for residuals&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), </span>
+<span id="cb947-6"><a href="arfima.html#cb947-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb947-7"><a href="arfima.html#cb947-7" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> w, <span class="at">lag.max =</span> <span class="dv">100</span>, <span class="at">main =</span> <span class="st">&quot;Est. PACF for </span></span>
+<span id="cb947-8"><a href="arfima.html#cb947-8" aria-hidden="true" tabindex="-1"></a><span class="st">    residuals&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> <span class="fu">grid</span>(col </span>
+<span id="cb947-9"><a href="arfima.html#cb947-9" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<div class="sourceCode" id="cb948"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb948-1"><a href="arfima.html#cb948-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>The residual ACF and PACF look like the ACF and PACF from a white noise series. I was hoping that it would look like the ACF and PACF from an AR(1) process. This may have occurred due to the choice of a “small” <span class="math inline">\(\phi_1\)</span> value.</p>
+<p>Suppose I wanted to find the residuals from the fit of an ARFIMA(1,d,0) model.</p>
+<p><span class="math inline">\((1-B\phi_1)(1-B)^dx_t=w_t\\ \iff (1-B\phi_1)(x_t+\pi_1x_{t-1}+\pi_2x_{t-2}+...)=w_t\\ \iff x_t+\pi_1x_{t-1}+\pi_2x_{t-2}+...-\phi_1x_{t-1}-\phi_1\pi_1x_{t-2}-\phi_1\pi_2x_{t-3}-...=w_t\)</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[x_1=w_1\\
+x2+\pi_1x_1-\phi_1x_1=w_2\\
+x_3+\pi_1x_2+\pi_2x_1-\phi_1x_2-\phi_1\pi_1x_1=w_3\\
+x_4+\pi_1x-3+\pi_2x_2+\pi_3x_1-\phi_1x_3-\phi_1\pi_1x_2-\phi_1\pi_2x_1=w_4\\
+\vdots\\
+x_{500}+\pi_1x_{499}+\pi_2x_{498}+...+\pi_{499}x_1-...-\phi_1x_{499}-\phi_1\pi_1x_{498}-...-\phi_1\pi_{498}x_1=w_{500}\]</span></p>
+<p>Below is the code used to find the residuals with this model. Also, residual ACF and PACF plots are produced.</p>
+<div class="sourceCode" id="cb949"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb949-1"><a href="arfima.html#cb949-1" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">fracdiff</span>(<span class="at">x =</span> x.adj, <span class="at">nar =</span> <span class="dv">1</span>) </span>
+<span id="cb949-2"><a href="arfima.html#cb949-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+##   fracdiff(x = x.adj, nar = 1) 
+## 
+## Coefficients:
+##    Estimate Std. Error z value Pr(&gt;|z|)    
+## d  0.250143   0.007397  33.816  &lt; 2e-16 ***
+## ar 0.187409   0.044551   4.207 2.59e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## sigma[eps] = 0.9928298 
+## [d.tol = 0.0001221, M = 100, h = 7.45e-06]
+## Log likelihood: -706.1 ==&gt; AIC = 1418.169 [3 deg.freedom]</code></pre>
+<div class="sourceCode" id="cb951"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb951-1"><a href="arfima.html#cb951-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod.fit)</span>
+<span id="cb951-2"><a href="arfima.html#cb951-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb951-3"><a href="arfima.html#cb951-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb951-4"><a href="arfima.html#cb951-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> w, <span class="at">lag.max =</span> <span class="dv">100</span>, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb951-5"><a href="arfima.html#cb951-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;Est. ACF for residuals&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> </span>
+<span id="cb951-6"><a href="arfima.html#cb951-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb951-7"><a href="arfima.html#cb951-7" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> w, <span class="at">lag.max =</span> <span class="dv">100</span>, <span class="at">main =</span> <span class="st">&quot;Est. PACF for </span></span>
+<span id="cb951-8"><a href="arfima.html#cb951-8" aria-hidden="true" tabindex="-1"></a><span class="st">    residuals&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> <span class="fu">grid</span>(col </span>
+<span id="cb951-9"><a href="arfima.html#cb951-9" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<div class="sourceCode" id="cb952"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb952-1"><a href="arfima.html#cb952-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>Again, the residual ACF and PACF plots look similar to the same plots from a white noise process.</p>
+<p>Examine the AIC to choose between the models. The AIC for the model that includes <span class="math inline">\(\phi_1\)</span> is a little lower.</p>
+</div>
+<p>Final notes:</p>
+<ul>
+<li>If a good estimate for d can be found, then <span class="math inline">\((1-B)^dx_t\)</span> can be found. An ARMA could be built upon this series using <code>arima()</code> and <code>tsdiag()</code>. I have not tried this and I do not know how well this would work.<br />
+</li>
+<li>The <code>arfima</code> package can also estimate ARFIMA models. Below is output associated with the ARFIMA(1,0.3,0) model example</li>
+</ul>
+<div class="sourceCode" id="cb953"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb953-1"><a href="arfima.html#cb953-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arfima)</span></code></pre></div>
+<pre><code>## Loading required package: ltsa</code></pre>
+<pre><code>## Note that the arfima package has new defaults starting with
+## 1.4-0: type arfimachanges() for a list, as well as some other notes.
+## NOTE: some of these are quite important!</code></pre>
+<pre><code>## 
+## Attaching package: &#39;arfima&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:forecast&#39;:
+## 
+##     arfima</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     BIC</code></pre>
+<div class="sourceCode" id="cb959"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb959-1"><a href="arfima.html#cb959-1" aria-hidden="true" tabindex="-1"></a>mod.fit2 <span class="ot">&lt;-</span> arfima<span class="sc">::</span><span class="fu">arfima</span>(<span class="at">z =</span> x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code></pre></div>
+<pre><code>## Note: only one starting point.  Only one mode can be found -- this is now the default behavior.
+## Beginning the fits with 1 starting values.</code></pre>
+<div class="sourceCode" id="cb961"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb961-1"><a href="arfima.html#cb961-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+##  
+## arfima::arfima(z = x, order = c(1, 0, 0))
+## 
+## 
+## Mode 1 Coefficients:
+##               Estimate Std. Error Th. Std. Err.  z-value  Pr(&gt;|z|)    
+## phi(1)       0.1860171  0.0838391     0.0828130  2.21874 0.0265046 *  
+## d.f          0.2513300  0.0664605     0.0657191  3.78164 0.0001558 ***
+## Fitted mean -0.1457951  0.2662330            NA -0.54762 0.5839513    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## sigma^2 estimated as 0.990203; Log-likelihood = 3.61017; AIC = 0.779664; BIC = 17.6381
+## 
+## Numerical Correlations of Coefficients:
+##             phi(1) d.f   Fitted mean
+## phi(1)       1.00  -0.85 -0.03      
+## d.f         -0.85   1.00  0.03      
+## Fitted mean -0.03   0.03  1.00      
+## 
+## Theoretical Correlations of Coefficients:
+##        phi(1) d.f  
+## phi(1)  1.00  -0.85
+## d.f    -0.85   1.00
+## 
+## Expected Fisher Information Matrix of Coefficients:
+##        phi(1) d.f 
+## phi(1) 1.04   1.11
+## d.f    1.11   1.64</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \phi=0.1860\)</span></p></li>
+<li><p><span class="math inline">\(\hat d=0.2513\)</span></p></li>
+</ul>
+<p>The model is essentially the same as before. The largest difference is the estimate of <span class="math inline">\(\mu\)</span> is done within the function (<code>Fitted mean =-0.1457951</code>) and it is a little more than what we obtained previously (<code>mean(x)=-0.1712369</code>).</p>
+<p>Forecasts:</p>
+<div class="sourceCode" id="cb963"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb963-1"><a href="arfima.html#cb963-1" aria-hidden="true" tabindex="-1"></a>save.pred2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod.fit2, <span class="at">n.ahead =</span> <span class="dv">2</span>, <span class="at">predint =</span> <span class="fl">0.95</span>)</span>
+<span id="cb963-2"><a href="arfima.html#cb963-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb963-3"><a href="arfima.html#cb963-3" aria-hidden="true" tabindex="-1"></a>save.pred2</span></code></pre></div>
+<pre><code>## $`Mode 1`
+## $`Mode 1`$`Forecasts and SDs`
+##                     1         2
+## Forecasts   -0.683843 -0.500583
+## Exact SD     0.995152  1.086213
+## Limiting SD  0.995090  1.086095</code></pre>
+<div class="sourceCode" id="cb965"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb965-1"><a href="arfima.html#cb965-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(save.pred2)</span></code></pre></div>
+<pre><code>## [1] &quot;&quot;         &quot;z&quot;        &quot;limiting&quot; &quot;predint&quot;  &quot;name&quot;     &quot;m&quot;</code></pre>
+<div class="sourceCode" id="cb967"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb967-1"><a href="arfima.html#cb967-1" aria-hidden="true" tabindex="-1"></a>save.pred2<span class="sc">$</span><span class="st">&quot;&quot;</span>  </span></code></pre></div>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb969"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb969-1"><a href="arfima.html#cb969-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Oddly, the first component in the list does not have a name!</span></span></code></pre></div>
+<div class="sourceCode" id="cb970"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb970-1"><a href="arfima.html#cb970-1" aria-hidden="true" tabindex="-1"></a>save.pred2[[<span class="dv">1</span>]]  <span class="co"># So, access by number</span></span></code></pre></div>
+<pre><code>## $SDForecasts
+##             1        2
+## 500 0.9951524 1.086213
+## 
+## $Forecast
+##          1          2 
+## -0.6838431 -0.5005828 
+## 
+## $exactVar
+## [1] 0.9903282 1.1798597
+## 
+## $exactSD
+## [1] 0.9951524 1.0862135
+## 
+## $limitVar
+## [1] 0.9902033 1.1796020
+## 
+## $limitSD
+## [1] 0.9950896 1.0860948
+## 
+## $sigma2
+## [1] 0.9902033</code></pre>
+<div class="sourceCode" id="cb972"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb972-1"><a href="arfima.html#cb972-1" aria-hidden="true" tabindex="-1"></a>low <span class="ot">&lt;-</span> save.pred2[[<span class="dv">1</span>]]<span class="sc">$</span>Forecast <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, mean </span>
+<span id="cb972-2"><a href="arfima.html#cb972-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>) <span class="sc">*</span> save.pred2[[<span class="dv">1</span>]]<span class="sc">$</span>limitSD</span>
+<span id="cb972-3"><a href="arfima.html#cb972-3" aria-hidden="true" tabindex="-1"></a>up <span class="ot">&lt;-</span> save.pred2[[<span class="dv">1</span>]]<span class="sc">$</span>Forecast <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">mean =</span> </span>
+<span id="cb972-4"><a href="arfima.html#cb972-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>) <span class="sc">*</span> save.pred2[[<span class="dv">1</span>]]<span class="sc">$</span>limitSD</span>
+<span id="cb972-5"><a href="arfima.html#cb972-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(low, up)</span></code></pre></div>
+<pre><code>##         low       up
+## 1 -2.634183 1.266497
+## 2 -2.629290 1.628124</code></pre>
+<p>There are some small differences in comparison to <code>fracdiff</code>.</p>
+<div class="sourceCode" id="cb974"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb974-1"><a href="arfima.html#cb974-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>save.pred2)</span></code></pre></div>
+<p><img src="18-ARFIMA_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<p>Why didn’t we focus on this package?</p>
+<ul>
+<li>The fracdiff package is more established. It has been around since at least 1999 in R and available with S-Plus prior to it.</li>
+<li>I recognize some of fracdiff’s authors as leaders in time series analysis.</li>
+</ul>
+<p>Both packages could use improvements.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="sarima-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression-with-arma-errors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

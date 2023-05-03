@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 22 ARCH Models | Time Series Analysis</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 22 ARCH Models | Time Series Analysis" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="shang-chieh0830/Time_Series_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 22 ARCH Models | Time Series Analysis" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="Shang Chieh" />
+
+
+<meta name="date" content="2023-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="multiple-time-series.html"/>
+<link rel="next" href="garch-models.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series Analysis</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-r.html"><a href="introduction-to-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-r.html"><a href="introduction-to-r.html#basic-operation"><i class="fa fa-check"></i><b>2.1</b> Basic Operation</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-r.html"><a href="introduction-to-r.html#vectors"><i class="fa fa-check"></i><b>2.2</b> Vectors</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-r.html"><a href="introduction-to-r.html#files"><i class="fa fa-check"></i><b>2.3</b> Files</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-r.html"><a href="introduction-to-r.html#regression"><i class="fa fa-check"></i><b>2.4</b> Regression</a></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-r.html"><a href="introduction-to-r.html#object-oriented-language"><i class="fa fa-check"></i><b>2.5</b> Object-Oriented Language</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>3</b> Plotting</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="plotting.html"><a href="plotting.html#example-data"><i class="fa fa-check"></i><b>3.1</b> Example Data</a></li>
+<li class="chapter" data-level="3.2" data-path="plotting.html"><a href="plotting.html#sp500-index"><i class="fa fa-check"></i><b>3.2</b> S&amp;P500 Index</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting.html"><a href="plotting.html#sunspots"><i class="fa fa-check"></i><b>3.3</b> Sunspots</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="plotting.html"><a href="plotting.html#plot.ts"><i class="fa fa-check"></i><b>3.3.1</b> plot.ts()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="basic-model.html"><a href="basic-model.html"><i class="fa fa-check"></i><b>4</b> Basic Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="basic-model.html"><a href="basic-model.html#white-noise"><i class="fa fa-check"></i><b>4.1</b> White Noise</a></li>
+<li class="chapter" data-level="4.2" data-path="basic-model.html"><a href="basic-model.html#moving-average"><i class="fa fa-check"></i><b>4.2</b> Moving Average</a></li>
+<li class="chapter" data-level="4.3" data-path="basic-model.html"><a href="basic-model.html#autoregression"><i class="fa fa-check"></i><b>4.3</b> Autoregression</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dependence.html"><a href="dependence.html"><i class="fa fa-check"></i><b>5</b> Dependence</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dependence.html"><a href="dependence.html#autocovariance-function"><i class="fa fa-check"></i><b>5.1</b> Autocovariance function</a></li>
+<li class="chapter" data-level="5.2" data-path="dependence.html"><a href="dependence.html#autocorrelation-function-acf"><i class="fa fa-check"></i><b>5.2</b> Autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="5.3" data-path="dependence.html"><a href="dependence.html#strong-positive-and-negative-linear-dependence"><i class="fa fa-check"></i><b>5.3</b> Strong positive and negative linear dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stationarity.html"><a href="stationarity.html"><i class="fa fa-check"></i><b>6</b> Stationarity</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stationarity.html"><a href="stationarity.html#stationarity-1"><i class="fa fa-check"></i><b>6.1</b> Stationarity</a></li>
+<li class="chapter" data-level="6.2" data-path="stationarity.html"><a href="stationarity.html#linear-process"><i class="fa fa-check"></i><b>6.2</b> Linear Process</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html"><i class="fa fa-check"></i><b>7</b> Estimation and Inference for measures of dependence</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-mean-function"><i class="fa fa-check"></i><b>7.1</b> Sample mean function</a></li>
+<li class="chapter" data-level="7.2" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocovariance-function"><i class="fa fa-check"></i><b>7.2</b> Sample autocovariance function</a></li>
+<li class="chapter" data-level="7.3" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sample-autocorrelation-function-acf"><i class="fa fa-check"></i><b>7.3</b> Sample autocorrelation function (ACF)</a></li>
+<li class="chapter" data-level="7.4" data-path="estimation-and-inference-for-measures-of-dependence.html"><a href="estimation-and-inference-for-measures-of-dependence.html#sampling-distribution"><i class="fa fa-check"></i><b>7.4</b> Sampling distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html"><i class="fa fa-check"></i><b>8</b> Resolving Non-Stationarity Problems</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#differencing"><i class="fa fa-check"></i><b>8.1</b> Differencing</a></li>
+<li class="chapter" data-level="8.2" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#backshift-operator"><i class="fa fa-check"></i><b>8.2</b> Backshift Operator</a></li>
+<li class="chapter" data-level="8.3" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#fractional-differencing"><i class="fa fa-check"></i><b>8.3</b> Fractional Differencing</a></li>
+<li class="chapter" data-level="8.4" data-path="resolving-non-stationarity-problems.html"><a href="resolving-non-stationarity-problems.html#transformations"><i class="fa fa-check"></i><b>8.4</b> Transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="autoregressive-models.html"><a href="autoregressive-models.html"><i class="fa fa-check"></i><b>9</b> Autoregressive Models</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="autoregressive-models.html"><a href="autoregressive-models.html#ar-models"><i class="fa fa-check"></i><b>9.1</b> AR Models</a></li>
+<li class="chapter" data-level="9.2" data-path="autoregressive-models.html"><a href="autoregressive-models.html#autoregressive-models-arp"><i class="fa fa-check"></i><b>9.2</b> Autoregressive models – AR(p)</a></li>
+<li class="chapter" data-level="9.3" data-path="autoregressive-models.html"><a href="autoregressive-models.html#causal-process"><i class="fa fa-check"></i><b>9.3</b> Causal Process</a></li>
+<li class="chapter" data-level="9.4" data-path="autoregressive-models.html"><a href="autoregressive-models.html#writing-higher-order-casual-models-as-x_tsum_j0inftypsi_jbjw_t"><i class="fa fa-check"></i><b>9.4</b> Writing higher-order casual models as <span class="math inline">\(x_t=\sum_{j=0}^{\infty}\psi_jB^jw_t\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="moving-average-models.html"><a href="moving-average-models.html"><i class="fa fa-check"></i><b>10</b> Moving Average Models</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="moving-average-models.html"><a href="moving-average-models.html#moving-average-models-maq"><i class="fa fa-check"></i><b>10.1</b> Moving Average models-MA(q)</a></li>
+<li class="chapter" data-level="10.2" data-path="moving-average-models.html"><a href="moving-average-models.html#invertible-process"><i class="fa fa-check"></i><b>10.2</b> Invertible process</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="arma.html"><a href="arma.html"><i class="fa fa-check"></i><b>11</b> ARMA</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="arma.html"><a href="arma.html#autoregressive-moving-averagearma"><i class="fa fa-check"></i><b>11.1</b> Autoregressive Moving Average(ARMA)</a></li>
+<li class="chapter" data-level="11.2" data-path="arma.html"><a href="arma.html#causality-of-an-armapq-process"><i class="fa fa-check"></i><b>11.2</b> Causality of an ARMA(p,q) process</a></li>
+<li class="chapter" data-level="11.3" data-path="arma.html"><a href="arma.html#invertibility-of-armapq-process"><i class="fa fa-check"></i><b>11.3</b> Invertibility of ARMA(p,q) process</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html"><i class="fa fa-check"></i><b>12</b> ACF and PACF for ARMA models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-maq"><i class="fa fa-check"></i><b>12.1</b> ACF for MA(q)</a></li>
+<li class="chapter" data-level="12.2" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#acf-for-casual-armapq"><i class="fa fa-check"></i><b>12.2</b> ACF for casual ARMA(p,q)</a></li>
+<li class="chapter" data-level="12.3" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#pacf-for-arma-models"><i class="fa fa-check"></i><b>12.3</b> PACF for ARMA models</a></li>
+<li class="chapter" data-level="12.4" data-path="acf-and-pacf-for-arma-models.html"><a href="acf-and-pacf-for-arma-models.html#compare-true-to-estimated-acfs-and-pacfs"><i class="fa fa-check"></i><b>12.4</b> Compare True to Estimated ACFs and PACFs</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="integrated-models-for-nonstationary-data.html"><a href="integrated-models-for-nonstationary-data.html"><i class="fa fa-check"></i><b>13</b> Integrated Models for Nonstationary Data</a></li>
+<li class="chapter" data-level="14" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>14</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="estimation.html"><a href="estimation.html#method-of-moments-estimates"><i class="fa fa-check"></i><b>14.1</b> Method of moments estimates</a></li>
+<li class="chapter" data-level="14.2" data-path="estimation.html"><a href="estimation.html#maximum-likelihood"><i class="fa fa-check"></i><b>14.2</b> Maximum Likelihood</a></li>
+<li class="chapter" data-level="14.3" data-path="estimation.html"><a href="estimation.html#likelihood-function"><i class="fa fa-check"></i><b>14.3</b> Likelihood function</a></li>
+<li class="chapter" data-level="14.4" data-path="estimation.html"><a href="estimation.html#newton-raphson-method"><i class="fa fa-check"></i><b>14.4</b> Newton-Raphson method</a></li>
+<li class="chapter" data-level="14.5" data-path="estimation.html"><a href="estimation.html#covariance-matrix-for-the-estimators"><i class="fa fa-check"></i><b>14.5</b> Covariance matrix for the estimators</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>15</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="forecasting.html"><a href="forecasting.html#point-estimates"><i class="fa fa-check"></i><b>15.1</b> Point Estimates</a></li>
+<li class="chapter" data-level="15.2" data-path="forecasting.html"><a href="forecasting.html#inference"><i class="fa fa-check"></i><b>15.2</b> Inference</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="drift-term.html"><a href="drift-term.html"><i class="fa fa-check"></i><b>16</b> Drift Term</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="drift-term.html"><a href="drift-term.html#random-walk-model"><i class="fa fa-check"></i><b>16.1</b> Random Walk Model</a></li>
+<li class="chapter" data-level="16.2" data-path="drift-term.html"><a href="drift-term.html#estimating-the-drift-term"><i class="fa fa-check"></i><b>16.2</b> Estimating the drift term</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="arima-model-building.html"><a href="arima-model-building.html"><i class="fa fa-check"></i><b>17</b> ARIMA Model Building</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="arima-model-building.html"><a href="arima-model-building.html#steps"><i class="fa fa-check"></i><b>17.1</b> Steps</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-steps-1-3-of-6-total-steps"><i class="fa fa-check"></i><b>17.1.1</b> Model Building Process (steps 1-3 of 6 total steps)</a></li>
+<li class="chapter" data-level="17.1.2" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-4."><i class="fa fa-check"></i><b>17.1.2</b> Model Building Process (continued, Step 4.)</a></li>
+<li class="chapter" data-level="17.1.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-processcontinued-step-5."><i class="fa fa-check"></i><b>17.1.3</b> Model Building Process(continued, Step 5.)</a></li>
+<li class="chapter" data-level="17.1.4" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-continued-step-6."><i class="fa fa-check"></i><b>17.1.4</b> Model Building Process (continued, Step 6.)</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="arima-model-building.html"><a href="arima-model-building.html#example"><i class="fa fa-check"></i><b>17.2</b> Example</a></li>
+<li class="chapter" data-level="17.3" data-path="arima-model-building.html"><a href="arima-model-building.html#model-building-process-summarized"><i class="fa fa-check"></i><b>17.3</b> Model Building Process Summarized</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="sarima-models.html"><a href="sarima-models.html"><i class="fa fa-check"></i><b>18</b> SARIMA Models</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="sarima-models.html"><a href="sarima-models.html#introduction-and-simulated-example"><i class="fa fa-check"></i><b>18.1</b> Introduction and Simulated Example</a></li>
+<li class="chapter" data-level="18.2" data-path="sarima-models.html"><a href="sarima-models.html#osu-example"><i class="fa fa-check"></i><b>18.2</b> OSU Example</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="arfima.html"><a href="arfima.html"><i class="fa fa-check"></i><b>19</b> ARFIMA</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="arfima.html"><a href="arfima.html#introduction-and-simulated-example-1"><i class="fa fa-check"></i><b>19.1</b> Introduction and Simulated Example</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="arfima.html"><a href="arfima.html#the-pi_js"><i class="fa fa-check"></i><b>19.1.1</b> The <span class="math inline">\(\pi_j\)</span>’s</a></li>
+<li class="chapter" data-level="19.1.2" data-path="arfima.html"><a href="arfima.html#finding-estimatet-of-d"><i class="fa fa-check"></i><b>19.1.2</b> Finding estimatet of d:</a></li>
+<li class="chapter" data-level="19.1.3" data-path="arfima.html"><a href="arfima.html#fractional-arimapdq-or-arfima-model"><i class="fa fa-check"></i><b>19.1.3</b> Fractional ARIMA(p,d,q) or ARFIMA model</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="arfima.html"><a href="arfima.html#additional-example"><i class="fa fa-check"></i><b>19.2</b> Additional Example</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html"><i class="fa fa-check"></i><b>20</b> Regression with ARMA Errors</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#model-building-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.1</b> Model building for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.2" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#forecasting-for-regression-models-with-arma-errors"><i class="fa fa-check"></i><b>20.2</b> Forecasting for regression models with ARMA errors</a></li>
+<li class="chapter" data-level="20.3" data-path="regression-with-arma-errors.html"><a href="regression-with-arma-errors.html#additional-comments"><i class="fa fa-check"></i><b>20.3</b> Additional comments</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiple-time-series.html"><a href="multiple-time-series.html"><i class="fa fa-check"></i><b>21</b> Multiple Time Series</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="multiple-time-series.html"><a href="multiple-time-series.html#cross-covariance-function-and-cross-correlation-function"><i class="fa fa-check"></i><b>21.1</b> Cross-covariance function and Cross-correlation function</a></li>
+<li class="chapter" data-level="21.2" data-path="multiple-time-series.html"><a href="multiple-time-series.html#stationarity-2"><i class="fa fa-check"></i><b>21.2</b> Stationarity</a></li>
+<li class="chapter" data-level="21.3" data-path="multiple-time-series.html"><a href="multiple-time-series.html#estimation-1"><i class="fa fa-check"></i><b>21.3</b> Estimation</a></li>
+<li class="chapter" data-level="21.4" data-path="multiple-time-series.html"><a href="multiple-time-series.html#vector-time-series"><i class="fa fa-check"></i><b>21.4</b> Vector time series</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="arch-models.html"><a href="arch-models.html"><i class="fa fa-check"></i><b>22</b> ARCH Models</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="arch-models.html"><a href="arch-models.html#arch-models--introduction"><i class="fa fa-check"></i><b>22.1</b> ARCH Models- Introduction</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="arch-models.html"><a href="arch-models.html#when-to-use-this-models"><i class="fa fa-check"></i><b>22.1.1</b> When to use this models?</a></li>
+<li class="chapter" data-level="22.1.2" data-path="arch-models.html"><a href="arch-models.html#arch1-model"><i class="fa fa-check"></i><b>22.1.2</b> ARCH(1) model</a></li>
+<li class="chapter" data-level="22.1.3" data-path="arch-models.html"><a href="arch-models.html#parameter-estimation"><i class="fa fa-check"></i><b>22.1.3</b> Parameter estimation</a></li>
+<li class="chapter" data-level="22.1.4" data-path="arch-models.html"><a href="arch-models.html#archm-model"><i class="fa fa-check"></i><b>22.1.4</b> ARCH(m) model</a></li>
+<li class="chapter" data-level="22.1.5" data-path="arch-models.html"><a href="arch-models.html#weaknesses-of-arch-models"><i class="fa fa-check"></i><b>22.1.5</b> Weaknesses of ARCH models</a></li>
+<li class="chapter" data-level="22.1.6" data-path="arch-models.html"><a href="arch-models.html#garchmr"><i class="fa fa-check"></i><b>22.1.6</b> GARCH(m,r)</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="arch-models.html"><a href="arch-models.html#simulated-example"><i class="fa fa-check"></i><b>22.2</b> Simulated Example</a></li>
+<li class="chapter" data-level="22.3" data-path="arch-models.html"><a href="arch-models.html#arch-models-arima"><i class="fa fa-check"></i><b>22.3</b> ARCH Models: ARIMA</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="arch-models.html"><a href="arch-models.html#model-building"><i class="fa fa-check"></i><b>22.3.1</b> Model Building</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="garch-models.html"><a href="garch-models.html"><i class="fa fa-check"></i><b>23</b> GARCH Models</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="garch-models.html"><a href="garch-models.html#garchm-r"><i class="fa fa-check"></i><b>23.1</b> GARCH(m, r)</a></li>
+<li class="chapter" data-level="23.2" data-path="garch-models.html"><a href="garch-models.html#final-comments"><i class="fa fa-check"></i><b>23.2</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html"><i class="fa fa-check"></i><b>24</b> More Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-models"><i class="fa fa-check"></i><b>24.1</b> Threshold Models</a>
+<ul>
+<li class="chapter" data-level="24.1.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#threshold-autoregressive-models"><i class="fa fa-check"></i><b>24.1.1</b> Threshold autoregressive models</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#intervention-analysis"><i class="fa fa-check"></i><b>24.2</b> Intervention analysis</a>
+<ul>
+<li class="chapter" data-level="24.2.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#types-of-intervention-variables"><i class="fa fa-check"></i><b>24.2.1</b> Types of intervention variables</a></li>
+<li class="chapter" data-level="24.2.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#possible-responses-to-interventions"><i class="fa fa-check"></i><b>24.2.2</b> Possible responses to interventions</a></li>
+<li class="chapter" data-level="24.2.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#multiple-interventions"><i class="fa fa-check"></i><b>24.2.3</b> Multiple interventions</a></li>
+<li class="chapter" data-level="24.2.4" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#modeling"><i class="fa fa-check"></i><b>24.2.4</b> Modeling</a></li>
+<li class="chapter" data-level="24.2.5" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#outliers"><i class="fa fa-check"></i><b>24.2.5</b> Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#transfer-function-models"><i class="fa fa-check"></i><b>24.3</b> Transfer function models</a>
+<ul>
+<li class="chapter" data-level="24.3.1" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#general-concepts"><i class="fa fa-check"></i><b>24.3.1</b> General concepts</a></li>
+<li class="chapter" data-level="24.3.2" data-path="more-time-series-analysis.html"><a href="more-time-series-analysis.html#trandfer-function"><i class="fa fa-check"></i><b>24.3.2</b> Trandfer function</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="arch-models" class="section level1 hasAnchor" number="22">
+<h1><span class="header-section-number">Chapter 22</span> ARCH Models<a href="arch-models.html#arch-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="arch-models--introduction" class="section level2 hasAnchor" number="22.1">
+<h2><span class="header-section-number">22.1</span> ARCH Models- Introduction<a href="arch-models.html#arch-models--introduction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Nobel Prize in Economic Sciences: <a href="https://www.nobelprize.org/prizes/economic-sciences/2003/summary" class="uri">https://www.nobelprize.org/prizes/economic-sciences/2003/summary</a></p>
+<p>ARCH models are time series models for hetereoscedastic error terms, i.e., models for when <span class="math inline">\(\sigma^2_{w,t}\)</span> depends on t. In this section, <span class="math inline">\(\sigma^2_{w,t}\)</span> will be denoted by <span class="math inline">\(\sigma^2_t\)</span></p>
+<p>ARCH stands for autoregressive conditionally hetereoscedastic. The generalization of these models to be discussed later are GARCH models with the G meaning “generalized”.</p>
+<div id="when-to-use-this-models" class="section level3 hasAnchor" number="22.1.1">
+<h3><span class="header-section-number">22.1.1</span> When to use this models?<a href="arch-models.html#when-to-use-this-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Sometimes in a time series plot, the variation is small, then large for a small period of time, then the variation goes back to being small again. Examples of where this happens:</p>
+<ol style="list-style-type: decimal">
+<li>stock or bond prices</li>
+<li>money exchange rates</li>
+</ol>
+<p>In the ARIMA modeling framework, what is usually done is the following:</p>
+<ul>
+<li>Suppose <span class="math inline">\(x_t\)</span> denotes the series that appears to have non-constant variance.<br />
+</li>
+<li>A common method to handle this is to use the natural log of the series, log(<span class="math inline">\(x_t\)</span>).<br />
+</li>
+<li>This series will often appear to be nonstationary in the mean, so a solution to that problem is first differences: <span class="math inline">\(y_t = log(x_t) – log(x_{t-1})\)</span>. Notice that <span class="math inline">\(y_t\)</span> has a mean of 0.<br />
+</li>
+<li>This <span class="math inline">\(y_t\)</span> series ACF and PACF will often look like the ACF and PACF from a white noise process leaving the model to be ARIMA(0,1,0) for <span class="math inline">\(y_t\)</span>! This corresponds to the “efficient market hypothesis” discussed in finance that stock prices follow a random walk.</li>
+</ul>
+<p>A closer look at <span class="math inline">\(y_t\)</span> reveals the following,</p>
+<p><span class="math display">\[y_t=log(x_t)-log(x_{t-1})\\=log(x_t/x_{t-1})\\=log(current \quad value/ past \quad value)\]</span></p>
+<p>This is somewhat similar to a “return” for an investment, defined as</p>
+<p><span class="math inline">\(r_t=\frac{x_t-x_{t-1}}{x_{t-1}}\)</span></p>
+<p>For example, if a stock price at the end of trading the previous day is 50 and at the end of today it was 60, the return would be:</p>
+<p><span class="math inline">\(r_t=(60-50)/50=0.2\)</span></p>
+<p>Thus, the stock went up 20%.</p>
+<p>Other types of structures are often still present in <span class="math inline">\(y_t\)</span> which would lead to an additional model:</p>
+<ol style="list-style-type: decimal">
+<li>The distribution of <span class="math inline">\(y_t\)</span> has “heavier” tails than a normal distribution (remember the relationship between a t-distribution with say 5 degrees of freedom and a standard normal distribution).<br />
+</li>
+<li>The <span class="math inline">\(y_t^2\)</span> are correlated and often the correlation is non-negative.<br />
+</li>
+<li>The changes in <span class="math inline">\(y_t\)</span> tend to be clustered. Because of this clustering, one could say there is dependence in the variability or “volatility” of observed values.</li>
+</ol>
+<div class="example">
+<p><span id="exm:unlabeled-div-77" class="example"><strong>Example 22.1  </strong></span><strong>Monthly returns of value-weighted S&amp;P 500 Index from 1926 to 1991 (SP500.R)</strong></p>
+<p>This data set is taken from Pena, Tiao, and Tsay’s textbook. The data set is already in the returns rt format. Notice the changes in the variability (and their corresponding dates).</p>
+<div class="sourceCode" id="cb1037"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1037-1"><a href="arch-models.html#cb1037-1" aria-hidden="true" tabindex="-1"></a>sp500 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">&quot;sp500.txt&quot;</span>,</span>
+<span id="cb1037-2"><a href="arch-models.html#cb1037-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="st">&quot;x&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb1037-3"><a href="arch-models.html#cb1037-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sp500)</span></code></pre></div>
+<pre><code>##         x
+## 1  0.0225
+## 2 -0.0440
+## 3 -0.0591
+## 4  0.0227
+## 5  0.0077
+## 6  0.0432</code></pre>
+<div class="sourceCode" id="cb1039"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1039-1"><a href="arch-models.html#cb1039-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="at">data =</span> sp500<span class="sc">$</span>x, <span class="at">start =</span> <span class="dv">1926</span>, <span class="at">deltat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">12</span>)</span>
+<span id="cb1039-2"><a href="arch-models.html#cb1039-2" aria-hidden="true" tabindex="-1"></a>x</span></code></pre></div>
+<pre><code>##          Jan     Feb     Mar     Apr     May     Jun     Jul     Aug     Sep
+## 1926  0.0225 -0.0440 -0.0591  0.0227  0.0077  0.0432  0.0455  0.0171  0.0229
+## 1927 -0.0208  0.0477  0.0065  0.0172  0.0522 -0.0094  0.0650  0.0445  0.0432
+## 1928 -0.0051 -0.0176  0.1083  0.0324  0.0127 -0.0405  0.0125  0.0741  0.0240
+## 1929  0.0571 -0.0058 -0.0023  0.0161 -0.0428  0.1124  0.0456  0.0980 -0.0489
+## 1930  0.0625  0.0215  0.0799 -0.0095 -0.0165 -0.1646  0.0367  0.0075 -0.1301
+## 1931  0.0489  0.1144 -0.0692 -0.0959 -0.1372  0.1390 -0.0742  0.0095 -0.2994
+## 1932 -0.0283  0.0507 -0.1182 -0.2025 -0.2333 -0.0089  0.3770  0.3754 -0.0369
+## 1933  0.0073 -0.1844  0.0336  0.4222  0.1587  0.1317 -0.0880  0.1146 -0.1136
+## 1934  0.1059 -0.0367 -0.0009 -0.0270 -0.0813  0.0208 -0.1152  0.0541 -0.0055
+## 1935 -0.0421 -0.0396 -0.0309  0.0956  0.0323  0.0678  0.0831  0.0217  0.0239
+## 1936  0.0655  0.0168  0.0254 -0.0771  0.0458  0.0306  0.0681  0.0088  0.0013
+## 1937  0.0378  0.0146 -0.0094 -0.0831 -0.0103 -0.0529  0.1026 -0.0554 -0.1421
+## 1938  0.0133  0.0608 -0.2504  0.1412 -0.0443  0.2470  0.0727 -0.0274  0.0149
+## 1939 -0.0689  0.0325 -0.1354 -0.0055  0.0623 -0.0638  0.1087 -0.0714  0.1646
+## 1940 -0.0352  0.0066  0.0099 -0.0049 -0.2395  0.0766  0.0311  0.0262  0.0095
+## 1941 -0.0482 -0.0149  0.0040 -0.0653  0.0043  0.0535  0.0548 -0.0087 -0.0097
+## 1942  0.0138 -0.0250 -0.0675 -0.0437  0.0640  0.0184  0.0313  0.0070  0.0267
+## 1943  0.0716  0.0506  0.0527  0.0009  0.0449  0.0198 -0.0543  0.0103  0.0237
+## 1944  0.0154 -0.0025  0.0169 -0.0125  0.0404  0.0510 -0.0208  0.0087 -0.0031
+## 1945  0.0143  0.0616 -0.0462  0.0880  0.0115 -0.0033 -0.0201  0.0580  0.0419
+## 1946  0.0697 -0.0695  0.0463  0.0376  0.0224 -0.0391 -0.0255 -0.0729 -0.1015
+## 1947  0.0235 -0.0147 -0.0169 -0.0389 -0.0089  0.0526  0.0362 -0.0279 -0.0137
+## 1948 -0.0399 -0.0470  0.0771  0.0265  0.0782  0.0030 -0.0532  0.0076 -0.0301
+## 1949  0.0013 -0.0394  0.0301 -0.0212 -0.0373 -0.0021  0.0621  0.0120  0.0237
+## 1950  0.0173  0.0100  0.0041  0.0451  0.0393 -0.0580  0.0085  0.0325  0.0559
+## 1951  0.0612  0.0065 -0.0183  0.0481 -0.0406 -0.0260  0.0687  0.0393 -0.0009
+## 1952  0.0156 -0.0365  0.0477 -0.0431  0.0232  0.0461  0.0176 -0.0146 -0.0196
+## 1953 -0.0072 -0.0182 -0.0236 -0.0265 -0.0032 -0.0163  0.0253 -0.0578  0.0013
+## 1954  0.0512  0.0027  0.0302  0.0490  0.0329  0.0007  0.0572 -0.0340  0.0831
+## 1955  0.0181  0.0035 -0.0049  0.0377 -0.0013  0.0823  0.0607 -0.0078  0.0113
+## 1956 -0.0365  0.0347  0.0693 -0.0021 -0.0657  0.0392  0.0515 -0.0381 -0.0455
+## 1957 -0.0418 -0.0326  0.0196  0.0370  0.0369 -0.0013  0.0114 -0.0561 -0.0619
+## 1958  0.0428 -0.0206  0.0309  0.0318  0.0150  0.0261  0.0431  0.0119  0.0484
+## 1959  0.0038 -0.0002  0.0005  0.0388  0.0189 -0.0036  0.0349 -0.0150 -0.0456
+## 1960 -0.0715  0.0092 -0.0139 -0.0175  0.0269  0.0195 -0.0248  0.0261 -0.0604
+## 1961  0.0632  0.0269  0.0255  0.0038  0.0191 -0.0288  0.0328  0.0196 -0.0197
+## 1962 -0.0379  0.0163 -0.0059 -0.0620 -0.0860 -0.0818  0.0636  0.0153 -0.0482
+## 1963  0.0491 -0.0289  0.0355  0.0485  0.0143 -0.0202 -0.0035  0.0487 -0.0110
+## 1964  0.0269  0.0099  0.0152  0.0061  0.0115  0.0164  0.0182 -0.0162  0.0287
+## 1965  0.0332 -0.0015 -0.0145  0.0342 -0.0077 -0.0486  0.0134  0.0225  0.0320
+## 1966  0.0049 -0.0179 -0.0218  0.0205 -0.0541 -0.0161 -0.0135 -0.0778 -0.0070
+## 1967  0.0782  0.0020  0.0394  0.0422 -0.0524  0.0175  0.0453 -0.0117  0.0328
+## 1968 -0.0438 -0.0312  0.0094  0.0819  0.0112  0.0091 -0.0185  0.0115  0.0385
+## 1969 -0.0082 -0.0474  0.0344  0.0215 -0.0022 -0.0556 -0.0602  0.0401 -0.0250
+## 1970 -0.0765  0.0527  0.0015 -0.0905 -0.0610 -0.0500  0.0733  0.0445  0.0330
+## 1971  0.0405  0.0091  0.0368  0.0363 -0.0416  0.0007 -0.0413  0.0361 -0.0070
+## 1972  0.0181  0.0253  0.0059  0.0044  0.0173 -0.0218  0.0023  0.0345 -0.0049
+## 1973 -0.0171 -0.0375 -0.0014 -0.0408 -0.0189 -0.0066  0.0380 -0.0367  0.0401
+## 1974 -0.0100 -0.0036 -0.0233 -0.0391 -0.0336 -0.0147 -0.0778 -0.0903 -0.1193
+## 1975  0.1228  0.0599  0.0217  0.0473  0.0441  0.0443 -0.0677 -0.0211 -0.0346
+## 1976  0.1183 -0.0114  0.0307 -0.0110 -0.0144  0.0409 -0.0081 -0.0051  0.0226
+## 1977 -0.0505 -0.0217 -0.0140  0.0002 -0.0236  0.0454 -0.0162 -0.0210 -0.0025
+## 1978 -0.0615 -0.0248  0.0249  0.0854  0.0042 -0.0176  0.0539  0.0259 -0.0073
+## 1979  0.0397 -0.0365  0.0552  0.0017 -0.0263  0.0387  0.0087  0.0531  0.0000
+## 1980  0.0576 -0.0044 -0.1018  0.0411  0.0466  0.0270  0.0650  0.0058  0.0252
+## 1981 -0.0457  0.0133  0.0360 -0.0235 -0.0017 -0.0104 -0.0022 -0.0621 -0.0538
+## 1982 -0.0175 -0.0605 -0.0102  0.0400 -0.0392 -0.0203 -0.0230  0.1160  0.0076
+## 1983  0.0331  0.0190  0.0331  0.0749 -0.0123  0.0352 -0.0330  0.0113  0.0102
+## 1984 -0.0092 -0.0389  0.0135  0.0055 -0.0594  0.0175 -0.0165  0.1063 -0.0035
+## 1985  0.0741  0.0087 -0.0029 -0.0046  0.0541  0.0121 -0.0048 -0.0120 -0.0347
+## 1986  0.0024  0.0715  0.0528 -0.0141  0.0502  0.0141 -0.0587  0.0712 -0.0854
+## 1987  0.1318  0.0369  0.0264 -0.0115  0.0060  0.0479  0.0482  0.0350 -0.0242
+## 1988  0.0404  0.0418 -0.0333  0.0094  0.0032  0.0433 -0.0054 -0.0386  0.0397
+## 1989  0.0711 -0.0289  0.0208  0.0501  0.0351 -0.0079  0.0884  0.0155 -0.0065
+## 1990 -0.0688  0.0085  0.0243 -0.0269  0.0920 -0.0089 -0.0052 -0.0943 -0.0512
+## 1991  0.0415  0.0673  0.0222  0.0003  0.0386 -0.0479  0.0449  0.0196 -0.0191
+##          Oct     Nov     Dec
+## 1926 -0.0313  0.0223  0.0166
+## 1927 -0.0531  0.0678  0.0190
+## 1928  0.0145  0.1199  0.0029
+## 1929 -0.1993 -0.1337  0.0253
+## 1930 -0.0888 -0.0218 -0.0742
+## 1931  0.0844 -0.0978 -0.1453
+## 1932 -0.1386 -0.0589  0.0519
+## 1933 -0.0885  0.1027  0.0223
+## 1934 -0.0319  0.0829 -0.0042
+## 1935  0.0751  0.0393  0.0371
+## 1936  0.0750  0.0041 -0.0058
+## 1937 -0.1017 -0.1011 -0.0504
+## 1938  0.0760 -0.0334  0.0377
+## 1939 -0.0146 -0.0491  0.0238
+## 1940  0.0394 -0.0424 -0.0028
+## 1941 -0.0686 -0.0421 -0.0451
+## 1942  0.0644 -0.0138  0.0517
+## 1943 -0.0132 -0.0755  0.0590
+## 1944  0.0000  0.0039  0.0351
+## 1945  0.0303  0.0324  0.0099
+## 1946 -0.0080 -0.0115  0.0429
+## 1947  0.0212 -0.0285  0.0207
+## 1948  0.0678 -0.1082  0.0305
+## 1949  0.0295  0.0012  0.0436
+## 1950  0.0041 -0.0010  0.0461
+## 1951 -0.0138 -0.0026  0.0389
+## 1952 -0.0008  0.0465  0.0355
+## 1953  0.0510  0.0090  0.0020
+## 1954 -0.0195  0.0808  0.0508
+## 1955 -0.0305  0.0749 -0.0007
+## 1956  0.0051 -0.0110  0.0353
+## 1957 -0.0321  0.0161 -0.0415
+## 1958  0.0254  0.0224  0.0520
+## 1959  0.0113  0.0132  0.0276
+## 1960 -0.0024  0.0403  0.0463
+## 1961  0.0283  0.0393  0.0032
+## 1962  0.0044  0.1016  0.0135
+## 1963  0.0322 -0.0105  0.0244
+## 1964  0.0081 -0.0052  0.0039
+## 1965  0.0273 -0.0088  0.0090
+## 1966  0.0475  0.0031 -0.0015
+## 1967 -0.0291  0.0011  0.0263
+## 1968  0.0072  0.0480 -0.0416
+## 1969  0.0442 -0.0353 -0.0187
+## 1970 -0.0114  0.0474  0.0568
+## 1971 -0.0418 -0.0025  0.0862
+## 1972  0.0093  0.0456  0.0118
+## 1973 -0.0013 -0.1139  0.0166
+## 1974  0.1630 -0.0532 -0.0202
+## 1975  0.0616  0.0247 -0.0115
+## 1976 -0.0222 -0.0078  0.0525
+## 1977 -0.0434  0.0270  0.0028
+## 1978 -0.0916  0.0166  0.0149
+## 1979 -0.0686  0.0426  0.0168
+## 1980  0.0160  0.1024 -0.0339
+## 1981  0.0491  0.0366 -0.0301
+## 1982  0.1104  0.0361  0.0152
+## 1983 -0.0152  0.0174 -0.0088
+## 1984 -0.0001 -0.0151  0.0224
+## 1985  0.0425  0.0651  0.0451
+## 1986  0.0547  0.0215 -0.0283
+## 1987 -0.2176 -0.0853  0.0729
+## 1988  0.0260 -0.0189  0.0147
+## 1989 -0.0252  0.0165  0.0214
+## 1990 -0.0067  0.0599  0.0248
+## 1991  0.0119 -0.0439  0.1116</code></pre>
+<div class="sourceCode" id="cb1041"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1041-1"><a href="arch-models.html#cb1041-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb1041-2"><a href="arch-models.html#cb1041-2" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>,<span class="at">main =</span> <span class="st">&quot;S&amp;P 500 data series&quot;</span>)</span>
+<span id="cb1041-3"><a href="arch-models.html#cb1041-3" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb1041-4"><a href="arch-models.html#cb1041-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="dv">1930</span>, <span class="dv">1940</span>, <span class="dv">1950</span>, <span class="dv">1960</span>, <span class="dv">1970</span>, <span class="dv">1980</span>, <span class="dv">1990</span>), </span>
+<span id="cb1041-5"><a href="arch-models.html#cb1041-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>) </span>
+<span id="cb1041-6"><a href="arch-models.html#cb1041-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>), <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>, <span class="at">col =</span> </span>
+<span id="cb1041-7"><a href="arch-models.html#cb1041-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">&quot;gray&quot;</span>) </span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-78" class="example"><strong>Example 22.2  </strong></span><strong>Simulated ARCH(2) data with <span class="math inline">\(\alpha_0 = 0.1, \alpha_1 = 0.5, \alpha_2 = 0.2, n = 10,000\)</span> (arch2.R)</strong></p>
+<p>Data is simulated from the model above. Don’t worry about the name yet! For now, just understand that this series is example of where there is dependence in the variability. See the program for the code (after we do a model fitting example).</p>
+<p>Suppose the series is denoted by <span class="math inline">\(x_t\)</span>.</p>
+<div class="sourceCode" id="cb1042"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1042-1"><a href="arch-models.html#cb1042-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fGarch)</span></code></pre></div>
+<pre><code>## NOTE: Packages &#39;fBasics&#39;, &#39;timeDate&#39;, and &#39;timeSeries&#39; are no longer
+## attached to the search() path when &#39;fGarch&#39; is attached.
+## 
+## If needed attach them yourself in your R script by e.g.,
+##         require(&quot;timeSeries&quot;)</code></pre>
+<div class="sourceCode" id="cb1044"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1044-1"><a href="arch-models.html#cb1044-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8111</span>)</span>
+<span id="cb1044-2"><a href="arch-models.html#cb1044-2" aria-hidden="true" tabindex="-1"></a>spec <span class="ot">&lt;-</span> <span class="fu">garchSpec</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">omega =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.2</span>), <span class="at">beta =</span> <span class="dv">0</span>))</span>
+<span id="cb1044-3"><a href="arch-models.html#cb1044-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">garchSim</span>(<span class="at">spec =</span> spec, <span class="at">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb1044-4"><a href="arch-models.html#cb1044-4" aria-hidden="true" tabindex="-1"></a><span class="co"># write.csv(x = y, file = &quot;arch2.csv&quot;, quote = FALSE, row.names = FALSE)</span></span>
+<span id="cb1044-5"><a href="arch-models.html#cb1044-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>, <span class="at">y =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb1044-6"><a href="arch-models.html#cb1044-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;ARCH(2) model simulated data&quot;</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Around time <span class="math inline">\(\approx\)</span> 2000 and various other places, there is more variability than which appears in the rest of the series.</p>
+<div class="sourceCode" id="cb1045"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1045-1"><a href="arch-models.html#cb1045-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb1045-2"><a href="arch-models.html#cb1045-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb1045-3"><a href="arch-models.html#cb1045-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated ACF for &quot;</span>, x[t])))</span>
+<span id="cb1045-4"><a href="arch-models.html#cb1045-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb1045-5"><a href="arch-models.html#cb1045-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated PACF for &quot;</span>, x[t])))</span>
+<span id="cb1045-6"><a href="arch-models.html#cb1045-6" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb1045-7"><a href="arch-models.html#cb1045-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated ACF for &quot;</span>, x[t]<span class="sc">^</span><span class="dv">2</span>)))</span>
+<span id="cb1045-8"><a href="arch-models.html#cb1045-8" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb1045-9"><a href="arch-models.html#cb1045-9" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb1045-10"><a href="arch-models.html#cb1045-10" aria-hidden="true" tabindex="-1"></a><span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated PACF for &quot;</span>, x[t]<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>According to the ACF and PACF of <span class="math inline">\(x_t\)</span>, the data appear to be white noise! However, take a look at the ACF and PACF of <span class="math inline">\(x_t^2\)</span>. It looks like an AR(3) model would be appropriate to model <span class="math inline">\(x_t^2\)</span>! (Note: Actually it should have shown up to be AR(2))</p>
+</div>
+</div>
+<div id="arch1-model" class="section level3 hasAnchor" number="22.1.2">
+<h3><span class="header-section-number">22.1.2</span> ARCH(1) model<a href="arch-models.html#arch1-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Understanding the variability is important in finance because investors expect higher returns as compensation for higher degrees of volatility (think of this as risk).</p>
+<p>Consider a model that allows dependence in the variances of <span class="math inline">\(y_t\)</span>, denoted by <span class="math inline">\(\sigma_t^2\)</span>. Below is the ARCH(1) model:</p>
+<p><span class="math inline">\(y_t=\sigma_t\epsilon_t\)</span> where <span class="math inline">\(\sigma_t^2=\alpha_0+\alpha_1y^2_{t-1}\)</span> and <span class="math inline">\(\epsilon_t\sim ind(0,1)\)</span></p>
+<p>Notes:</p>
+<ul>
+<li><span class="math inline">\(y_t\)</span> has a mean of 0. Thus, the time series of interest could be <span class="math inline">\(x_t\)</span> with <span class="math inline">\(y_t = x_t -\mu\)</span>. Alternatively, possible values of <span class="math inline">\(y_t\)</span> are <span class="math inline">\(y_t = (1-B)x_t\)</span>, <span class="math inline">\(y_t = (1-B)log(x_t)\)</span>, or <span class="math inline">\(y_t = (1-B)x_t / x_t = r_t\)</span>.</li>
+<li>Relate this model to what we would have for an ARMA(0,0) model for <span class="math inline">\(y_t\)</span> before: <span class="math inline">\(y_t = w_t\)</span> where <span class="math inline">\(w_t \sim ind.(0,\sigma^2)\)</span>. We could have instead used <span class="math inline">\(y_t = \sigma w_t\)</span> where <span class="math inline">\(w_t \sim ind.(0,1)\)</span>.</li>
+<li>We could even state the model as</li>
+</ul>
+<p><span class="math inline">\(x_t = \mu + w_t\)</span></p>
+<p>where <span class="math inline">\(w_t \sim ind.(0, \sigma_t^2), \sigma_t^2= \alpha_0 + \alpha_1y^2_{t-1}, y_t = x_t - \mu\)</span>.
+- Because the variance changes, this is where the H part of the ARCH name comes about.<br />
+- For now, t will be taken as having a normal distribution.
+- The <span class="math inline">\(\alpha_0\)</span> and <span class="math inline">\(\alpha_1\)</span> parameters have constraints on possible values they can take on so that <span class="math inline">\(\sigma_t^2 &gt; 0\)</span>. For example, <span class="math inline">\(\alpha_1 &gt; 0\)</span> to make sure <span class="math inline">\(\sigma_t^2&gt; 0\)</span> for any <span class="math inline">\(\alpha_0\)</span>. More specific constraints are given later.
+- One can think of this as <span class="math inline">\(y_t\)</span> is white noise with variance depending on the past.
+- Also, one may need to find an ARMA model for the original series <span class="math inline">\(x_t\)</span> itself if it has autocorrelation in it. We can then work with the residuals as <span class="math inline">\(y_t\)</span> to find an ARCH model. We will discuss finding an ARMA model and ARCH model together later in the notes.<br />
+- You could rewrite the model as <span class="math inline">\(y_t=\sqrt{\alpha_0+\alpha_1y^2_{t-1}}\epsilon_t\)</span>
+- Conditional on <span class="math inline">\(y_{t-1}\)</span>, <span class="math inline">\(y_t\)</span> has a normal distribution, i.e., <span class="math inline">\(y_t|y_{t-1} \sim N(0, \alpha_0+\alpha_1y^2_{t-1})\)</span></p>
+<p>Thus, if you know the value of <span class="math inline">\(y_{t-1}\)</span>, <span class="math inline">\(yt\)</span> has a normal distribution with mean 0 and variance <span class="math inline">\(\alpha_0+\alpha_1y^2_{t-1}\)</span> .</p>
+<ul>
+<li>The above representation means that <span class="math inline">\(Var(y_t|y_{t-1}) = \sigma^2_t = \alpha_0 + \alpha_1y^2_{t-1}\)</span>. Also, because <span class="math inline">\(E(y_t|y_{t-1}) = 0\)</span>,</li>
+</ul>
+<p><span class="math display">\[Var(y_t|y_{t-1})=E(y_t^2|y_{t-1})-E(y_t|y_{t-1})^2=E(y_t^2|y_{t-1})-0=E(y_t^2|y_{t-1})\]</span>
+So, <span class="math inline">\(E(y_t^2|y_{t-1})=\alpha_0+\alpha_1y^2_{t-1}.\)</span> Thus, the conditional variance of <span class="math inline">\(y_t\)</span> comes about through previous values of <span class="math inline">\(y^2_{t-1}\)</span> like an AR(1) model! This is where the AR and C parts of the ARCH name come about!</p>
+<p>One could also express the model as</p>
+<p><span class="math display">\[y_t^2=\sigma_t^2+y_t^2-\sigma_t^2\\=(\alpha_0+\alpha_1y^2_{t-1})+(\sigma_t\epsilon_t)^2-\sigma_t^2\\=\alpha_0+\alpha_1y^2_{t-1}+\nu_t\]</span> where <span class="math inline">\(\nu_t=\sigma_t^2(\epsilon_t^2-1)\)</span></p>
+<p>Again, you can think of the ARCH(1) model as an AR(1) model for <span class="math inline">\(y_t^2\)</span> with <span class="math inline">\(\nu_t\)</span> as the error term. This error term is different from the usual error term found in an AR(1) model.</p>
+<ul>
+<li><p>The “unconditional” mean of <span class="math inline">\(y_t\)</span>, <span class="math inline">\(E(y_t)\)</span>, is found using the following property:</p>
+<p>Let A and B be two random variables. Then <span class="math inline">\(E_A(A)\)</span>, the expected value of A using the marginal distribution of A, can be found using <span class="math inline">\(E_B[E_{A|B}(A|B)]\)</span> where the second expectation is with respect to the conditional distribution of A given B is known. More generally, <span class="math inline">\(E_A[g(A)]=E_B\{E_{A|B}[g(A)|B]\}\)</span> where g() is a function of A. For a proof, see Casella and Berger’s textbook.</p>
+<p>Using this result, <span class="math inline">\(E_{y_t}(y_t)=E_{y_{t-1}}[E_{y_t|y_{t-1}}(y_t|y_{t-1})]=E_{y_{t-1}}[0]=0\)</span></p></li>
+<li><p>One way to find the “unconditional” variance of <span class="math inline">\(y_t\)</span> is the following:</p></li>
+</ul>
+<p><span class="math display">\[Var_{y_t}(y_t)=E_{y_t}(y_t^2)-E_{y_t}(y_t)\\
+=E_{y_t}(y_t^2)-0\\
+=E_{y_{t-1}}[E_{y_t|y_{t-1}}(y_t^2|y_{t-1})]\\
+=E_{y_{t-1}}[Var_{y_t|y_{t-1}}(y_t|y_{t-1})+E_{y_t|y_{t-1}}(y_t|y_{t-1})^2]\\
+=E_{y_{t-1}}[\alpha_0+\alpha_1y_{t-1}^2+0]\\
+=\alpha_0+\alpha_1E_{y_{t-1}}[y^2_{t-1}]\\
+=\alpha_0+\alpha_1E_{y_t}[y_t^2]\]</span></p>
+<p>where the last step is the result of <span class="math inline">\(E_{y_t}(y_t^2)\)</span> must be constant through time since <span class="math inline">\(y_t^2= \alpha_0+\alpha_1y^2_{t-1} + \nu_t\)</span> is a causal AR(1) process when <span class="math inline">\(0 \le \alpha_1 &lt; 1\)</span> (not future dependent).</p>
+<ul>
+<li><p>The above representation of the variance leads to the following:</p>
+<p><span class="math inline">\(Var_{y_t}(y_t)=\frac{\alpha_0}{1-\alpha_1}\)</span></p>
+<p>b/c <span class="math inline">\(Var_{y_t}(y_t)=\alpha_0+\alpha_1E_{y_t}[y_t^2]\\=\alpha_0+\alpha_1\{Var_{y_t}[y_t]+(E_{y_t}[y_t])^2\}\\=\alpha_0+\alpha_1\{Var_{y_t}[y_t]+0\}\)</span></p></li>
+<li><p>The kurtosis for a random variable A is defined to be:</p>
+<p><span class="math inline">\(\frac{E\{[A-E(A)]^4\}}{E\{[A-E(A)]^2\}^2}=\frac{E\{[A-E(A)]^4\}}{\sigma^4}\)</span></p>
+<p>It measures the peakedness or flatness of a probability distribution function. The larger the value, the more spread out the distribution is. For a standard normal distribution, this becomes <span class="math inline">\(\frac{E(A^4)}{1^2}=3\)</span></p>
+<p>One can use the moment generating function of a standard normal distribution to figure this out.</p>
+<p>The fourth moment for <span class="math inline">\(y_t\)</span> can be shown to be <span class="math inline">\(E(y_t^4)=\frac{3\alpha_0^2}{(1-\alpha_1)^2}\frac{1-\alpha_1^2}{1-3\alpha_1^2}\)</span> provided that <span class="math inline">\(3\alpha_1^2 &lt; 1\)</span> because the fourth moment must be positive (a random variable to the 4th power is always positive). Because we already have the constraint of <span class="math inline">\(0 \le \alpha_1 &lt; 1\)</span>, this means <span class="math inline">\(0 \le \alpha_1 &lt; \sqrt{1/3}\)</span> .</p>
+<p>The kurtosis for yt then becomes <span class="math inline">\(3\frac{1-\alpha_1^2}{1-3\alpha_1^2} &gt; 3\)</span>. Thus, the distribution of <span class="math inline">\(y_t\)</span> will always have “fatter” tails than a standard normal. Using the “usual” method of finding outliers will find more of them. Pena, Tiao, and Tsay’s textbook says “this is in agreement with the empirical finding that outliers appear more often in asset returns than that implied by an iid sequence of normal random variates.”</p></li>
+<li><p>Because we have an AR(1) structure for <span class="math inline">\(y_t^2\)</span>, then the autocorrelation between <span class="math inline">\(y_t^2\)</span> and <span class="math inline">\(y_{t-h}^2\)</span> is <span class="math inline">\(\alpha_1^h\ge 0\)</span>. The autocorrelation is always greater than 0 because of the constraints on <span class="math inline">\(\alpha_1\)</span>. We can look for this behavior in an ACF plot! This positive autocorrelation allows us to model the phenomenon that changes in <span class="math inline">\(y_t\)</span> tend to be clustered (i.e., volatile <span class="math inline">\(y_t\)</span> values lead to more volatile values – think in terms of a stock return).</p></li>
+</ul>
+</div>
+<div id="parameter-estimation" class="section level3 hasAnchor" number="22.1.3">
+<h3><span class="header-section-number">22.1.3</span> Parameter estimation<a href="arch-models.html#parameter-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The likelihood can be written out using <span class="math inline">\(y_t|y_{t-1} \sim ind.N(0, \alpha_0+\alpha_1y^2_{t-1})\)</span>. See Shumway and Stoffer’s textbook’s for more on this likelihood function and notice how the first observation is conditioned upon. This function involves writing out a joint probability distribution as a product of conditional probability distributions and one marginal probability distribution.</p>
+<p>Given this likelihood, “conditional” maximum likelihood estimation can proceed in a similar manner as maximum likelihood estimation has done before. Standard likelihood methods can be used to find the covariance matrix for parameter estimates.</p>
+</div>
+<div id="archm-model" class="section level3 hasAnchor" number="22.1.4">
+<h3><span class="header-section-number">22.1.4</span> ARCH(m) model<a href="arch-models.html#archm-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math inline">\(y_t=\sigma_t\epsilon_t\)</span> where <span class="math inline">\(\sigma_t^2=\alpha_0+\alpha_1y_{t-1}^2+\alpha_2y^2_{t-2}+...+\alpha_my_{t-m}^2\)</span> and <span class="math inline">\(\epsilon_t \sim ind.N(0,1)\)</span></p>
+<p>Conditions on the parameters are <span class="math inline">\(\alpha_i \ge 0\)</span> for all i = 1, …, m and <span class="math inline">\(\alpha_1 + ... + \alpha_m &lt; 1\)</span>.</p>
+</div>
+<div id="weaknesses-of-arch-models" class="section level3 hasAnchor" number="22.1.5">
+<h3><span class="header-section-number">22.1.5</span> Weaknesses of ARCH models<a href="arch-models.html#weaknesses-of-arch-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>The model treats positive and negative returns (<span class="math inline">\(y_t\)</span>) in the same manner (all <span class="math inline">\(y_{t-1},...,y_{t-m}\)</span> are taking squares).<br />
+</li>
+<li>The model is restrictive with regard to what values the <span class="math inline">\(\alpha_i\)</span> can take on – see the ARCH(1) example.</li>
+<li>The model does not provide new insight to understanding financial time series; only a mechanical way to describe the variance.<br />
+</li>
+<li>The model often over predicts the volatility because it responds slowly to isolated large shocks to the return series.</li>
+</ol>
+</div>
+<div id="garchmr" class="section level3 hasAnchor" number="22.1.6">
+<h3><span class="header-section-number">22.1.6</span> GARCH(m,r)<a href="arch-models.html#garchmr" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The “G” stands for “Generalized”</p>
+<p><span class="math inline">\(y_t = \sigma_t\epsilon_t\)</span> where <span class="math inline">\(\sigma_t^2= \alpha_0 + \alpha_1y^2_{t-1} + … + \alpha_my^2_{t-m]}+ \beta_1\sigma^2_{t-1} + … +\beta_r\sigma_{t-r}^2\)</span> and <span class="math inline">\(\epsilon_t \sim ind.N(0,1)\)</span></p>
+<p>The additional parameters help incorporate past variances. <strong>More will be discussed about this model later</strong></p>
+</div>
+</div>
+<div id="simulated-example" class="section level2 hasAnchor" number="22.2">
+<h2><span class="header-section-number">22.2</span> Simulated Example<a href="arch-models.html#simulated-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are a number of R packages available to work with these models. Packages include:</p>
+<ol style="list-style-type: decimal">
+<li><code>tseries</code> and the <code>garch()</code> function</li>
+<li><code>fGarch</code> and the <code>garchFit()</code> function</li>
+<li><code>rugarch</code> and the <code>ugarchfit()</code> function</li>
+</ol>
+<p>The finance task view at CRAN (<a href="http://cran.r-project.org/web/views/Finance.html" class="uri">http://cran.r-project.org/web/views/Finance.html</a>) gives a summary of these and other packages available for finance data modeling.</p>
+<p>The <code>tseries</code> package has limitations for what can be done with the model so we will focus on <code>fGarch</code>. The <code>rugarch</code> package works fine as well, so some examples will be provided with it. Code for the <code>tseries</code> package is available my corresponding programs when it will work for an example.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-79" class="example"><strong>Example 22.3  </strong></span>Generate data from an ARCH(1) model with <span class="math inline">\(\alpha_0=0.1, \alpha_1=0.4\)</span> (arch1.R)</p>
+<p>Code to simulate data from the model:</p>
+<div class="sourceCode" id="cb1046"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1046-1"><a href="arch-models.html#cb1046-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1532</span>)</span>
+<span id="cb1046-2"><a href="arch-models.html#cb1046-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">1100</span></span>
+<span id="cb1046-3"><a href="arch-models.html#cb1046-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.4</span>)  <span class="co">#ARCH(1) coefficients - alpha0 and alpha1</span></span>
+<span id="cb1046-4"><a href="arch-models.html#cb1046-4" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb1046-5"><a href="arch-models.html#cb1046-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n)   <span class="co">#intializes a vector of y&#39;s to be n long</span></span>
+<span id="cb1046-6"><a href="arch-models.html#cb1046-6" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fu">sqrt</span>(a[<span class="dv">1</span>]<span class="sc">/</span>(<span class="fl">1.0</span><span class="sc">-</span>a[<span class="dv">2</span>]))) </span>
+<span id="cb1046-7"><a href="arch-models.html#cb1046-7" aria-hidden="true" tabindex="-1"></a>                                              <span class="co">#start value</span></span>
+<span id="cb1046-8"><a href="arch-models.html#cb1046-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1046-9"><a href="arch-models.html#cb1046-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n)     <span class="co">#Simulate ARCH(1) process</span></span>
+<span id="cb1046-10"><a href="arch-models.html#cb1046-10" aria-hidden="true" tabindex="-1"></a> {</span>
+<span id="cb1046-11"><a href="arch-models.html#cb1046-11" aria-hidden="true" tabindex="-1"></a>  y[i] <span class="ot">&lt;-</span> e[i]<span class="sc">*</span><span class="fu">sqrt</span>(a[<span class="dv">1</span>] <span class="sc">+</span> a[<span class="dv">2</span>]<span class="sc">*</span>y[i<span class="dv">-1</span>]<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1046-12"><a href="arch-models.html#cb1046-12" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb1046-13"><a href="arch-models.html#cb1046-13" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[<span class="dv">101</span><span class="sc">:</span><span class="dv">1100</span>]    <span class="co">#Drop the first 100 and just call it y again</span></span>
+<span id="cb1046-14"><a href="arch-models.html#cb1046-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1046-15"><a href="arch-models.html#cb1046-15" aria-hidden="true" tabindex="-1"></a>save.y <span class="ot">&lt;-</span> y</span></code></pre></div>
+<p>The start value for <span class="math inline">\(y_1\)</span> needs to be set outside the loop. The variance used is <span class="math inline">\(Var(y_t) = \alpha_0/(1-\alpha_1)\)</span> as found previously in the notes.</p>
+<p>Below is a plot of the data. The plot of <span class="math inline">\(y_t\)</span> shows moments of high volatility in comparison to other time points.</p>
+<div class="sourceCode" id="cb1047"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1047-1"><a href="arch-models.html#cb1047-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> y, <span class="at">ylab =</span> <span class="fu">expression</span>(y[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb1047-2"><a href="arch-models.html#cb1047-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>,  <span class="at">main =</span> <span class="st">&quot;ARCH(1) simulaed data&quot;</span>, </span>
+<span id="cb1047-3"><a href="arch-models.html#cb1047-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first=</span><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb1047-4"><a href="arch-models.html#cb1047-4" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>While I used “y” here, we would actually find a model for the mean adjusted version of it.</p>
+<p>This data could have been generated more easily by using the <code>garchSim()</code> function in the <code>fGarch</code> package.</p>
+<div class="sourceCode" id="cb1048"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1048-1"><a href="arch-models.html#cb1048-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fGarch)</span>
+<span id="cb1048-2"><a href="arch-models.html#cb1048-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Note that beta (sigma^2_t-1 part) needs to be set to something due to a default value of 0.8</span></span>
+<span id="cb1048-3"><a href="arch-models.html#cb1048-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9129</span>)</span>
+<span id="cb1048-4"><a href="arch-models.html#cb1048-4" aria-hidden="true" tabindex="-1"></a>spec <span class="ot">&lt;-</span> <span class="fu">garchSpec</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">omega =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, </span>
+<span id="cb1048-5"><a href="arch-models.html#cb1048-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta =</span> <span class="dv">0</span>))</span>
+<span id="cb1048-6"><a href="arch-models.html#cb1048-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">garchSim</span>(<span class="at">spec =</span> spec, <span class="at">n =</span> <span class="dv">1000</span>)</span>
+<span id="cb1048-7"><a href="arch-models.html#cb1048-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(x)</span></code></pre></div>
+<pre><code>## GMT
+##                  garch
+## 2020-08-06 -0.33502258
+## 2020-08-07 -0.01923007
+## 2020-08-08 -0.27130332
+## 2020-08-09 -0.06068358
+## 2020-08-10  0.11332049
+## 2020-08-11  0.51447406</code></pre>
+<div class="sourceCode" id="cb1050"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1050-1"><a href="arch-models.html#cb1050-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(x)</span></code></pre></div>
+<pre><code>## GMT
+##                  garch
+## 2023-04-27  0.15444146
+## 2023-04-28  0.50981301
+## 2023-04-29  0.06590522
+## 2023-04-30  0.28678420
+## 2023-05-01  0.07107253
+## 2023-05-02 -0.69714833</code></pre>
+<ul>
+<li><span class="math inline">\(x_{1000}=-0.6971\)</span></li>
+</ul>
+<div class="sourceCode" id="cb1052"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1052-1"><a href="arch-models.html#cb1052-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb1052-2"><a href="arch-models.html#cb1052-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">main =</span> <span class="st">&quot;ARCH(1) simulated data&quot;</span>, </span>
+<span id="cb1052-3"><a href="arch-models.html#cb1052-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb1052-4"><a href="arch-models.html#cb1052-4" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> x, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Notes:</p>
+<ul>
+<li>I am unable to remove the date information produced by <code>garchSim()</code>.</li>
+<li>The <code>garchSpec()</code> model specification can be generalized for other versions of a GARCH model. For example, an ARCH(2) model uses the alpha argument to specify <span class="math inline">\(\alpha_1\)</span> and <span class="math inline">\(\alpha_2\)</span> (use <code>c()</code>).</li>
+</ul>
+</div>
+<p>In a typical model building situation when you do not know if an ARIMA and/or ARCH model is appropriate, one should find the ACF and PACF for <span class="math inline">\(x_t\)</span> and <span class="math inline">\(x_t^2\)</span>.</p>
+<div class="sourceCode" id="cb1053"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1053-1"><a href="arch-models.html#cb1053-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb1053-2"><a href="arch-models.html#cb1053-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Est. ACF for </span></span>
+<span id="cb1053-3"><a href="arch-models.html#cb1053-3" aria-hidden="true" tabindex="-1"></a><span class="st">    x&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, </span>
+<span id="cb1053-4"><a href="arch-models.html#cb1053-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb1053-5"><a href="arch-models.html#cb1053-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x, <span class="at">main =</span> <span class="st">&quot;Est. PACF for x&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb1053-6"><a href="arch-models.html#cb1053-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+There is not any strong indication of dependence among <span class="math inline">\(x_t\)</span> for t = 1, …, n. This indicates that an ARIMA model is likely not needed.</p>
+<div class="sourceCode" id="cb1054"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1054-1"><a href="arch-models.html#cb1054-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb1054-2"><a href="arch-models.html#cb1054-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb1054-3"><a href="arch-models.html#cb1054-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Est. ACF for &quot;</span>, x<span class="sc">^</span><span class="dv">2</span>)), <span class="at">ylim =</span> </span>
+<span id="cb1054-4"><a href="arch-models.html#cb1054-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> </span>
+<span id="cb1054-5"><a href="arch-models.html#cb1054-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;dotted&quot;</span>))</span>
+<span id="cb1054-6"><a href="arch-models.html#cb1054-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Est. PACF for &quot;</span>, </span>
+<span id="cb1054-7"><a href="arch-models.html#cb1054-7" aria-hidden="true" tabindex="-1"></a>    x<span class="sc">^</span><span class="dv">2</span>)), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">panel.first =</span> <span class="fu">grid</span>(<span class="at">col =</span> </span>
+<span id="cb1054-8"><a href="arch-models.html#cb1054-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>))</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1055"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1055-1"><a href="arch-models.html#cb1055-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>There are significant ACF and PACF values for <span class="math inline">\(x_t^2\)</span>. The patterns in these plots are similar to those for an AR(1). Therefore, an ARCH(1) model should be investigated.</p>
+<div class="sourceCode" id="cb1056"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1056-1"><a href="arch-models.html#cb1056-1" aria-hidden="true" tabindex="-1"></a><span class="co"># garch(1,0)=grach(m,r)</span></span>
+<span id="cb1056-2"><a href="arch-models.html#cb1056-2" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">garchFit</span>(<span class="at">formula=</span> <span class="sc">~</span> <span class="fu">garch</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">data=</span>x, <span class="at">include.mean =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## 
+## Series Initialization:
+##  ARMA Model:                arma
+##  Formula Mean:              ~ arma(0, 0)
+##  GARCH Model:               garch
+##  Formula Variance:          ~ garch(1, 0)
+##  ARMA Order:                0 0
+##  Max ARMA Order:            0
+##  GARCH Order:               1 0
+##  Max GARCH Order:           1
+##  Maximum Order:             1
+##  Conditional Dist:          norm
+##  h.start:                   2
+##  llh.start:                 1
+##  Length of Series:          1000
+##  Recursion Init:            mci
+##  Series Scale:              0.4019932
+## 
+## Parameter Initialization:
+##  Initial Parameters:          $params
+##  Limits of Transformations:   $U, $V
+##  Which Parameters are Fixed?  $includes
+##  Parameter Matrix:
+##                      U           V      params includes
+##     mu     -0.26370509   0.2637051 -0.02637051     TRUE
+##     omega   0.00000100 100.0000000  0.10000000     TRUE
+##     alpha1  0.00000001   1.0000000  0.10000000     TRUE
+##     gamma1 -0.99999999   1.0000000  0.10000000    FALSE
+##     delta   0.00000000   2.0000000  2.00000000    FALSE
+##     skew    0.10000000  10.0000000  1.00000000    FALSE
+##     shape   1.00000000  10.0000000  4.00000000    FALSE
+##  Index List of Parameters to be Optimized:
+##     mu  omega alpha1 
+##      1      2      3 
+##  Persistence:                  0.1 
+## 
+## 
+## --- START OF TRACE ---
+## Selected Algorithm: nlminb 
+## 
+## R coded nlminb Solver: 
+## 
+##   0:     2730.5757: -0.0263705 0.100000 0.100000
+##   1:     1406.5130: -0.0263637  1.02096 0.489662
+##   2:     1404.7286: -0.0262432  1.03760 0.427583
+##   3:     1380.1916: -0.0261965 0.568988 0.212845
+##   4:     1368.2039: -0.0178751 0.568012 0.620445
+##   5:     1367.6167: -0.00499265 0.675450 0.495844
+##   6:     1363.5002: 0.00831181 0.593963 0.428503
+##   7:     1363.4602: 0.000981720 0.598204 0.425437
+##   8:     1363.4600: 0.00102897 0.598210 0.423962
+##   9:     1363.4599: 0.00101890 0.598073 0.424451
+##  10:     1363.4599: 0.00102995 0.598125 0.424422
+##  11:     1363.4599: 0.00102694 0.598112 0.424423
+## 
+## Final Estimate of the Negative LLH:
+##  LLH:  452.1397    norm LLH:  0.4521397 
+##           mu        omega       alpha1 
+## 0.0004128227 0.0966539778 0.4244229492 
+## 
+## R-optimhess Difference Approximated Hessian Matrix:
+##                mu       omega     alpha1
+## mu     -8611.3924   -375.7156   122.5107
+## omega   -375.7156 -31139.6984 -1737.9325
+## alpha1   122.5107  -1737.9325  -369.2304
+## attr(,&quot;time&quot;)
+## Time difference of 0.002430916 secs
+## 
+## --- END OF TRACE ---
+## 
+## 
+## Time to Estimate Parameters:
+##  Time difference of 0.01375389 secs</code></pre>
+<div class="sourceCode" id="cb1058"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1058-1"><a href="arch-models.html#cb1058-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>## 
+## Title:
+##  GARCH Modelling 
+## 
+## Call:
+##  garchFit(formula = ~garch(1, 0), data = x, include.mean = TRUE) 
+## 
+## Mean and Variance Equation:
+##  data ~ garch(1, 0)
+## &lt;environment: 0x1149d1e08&gt;
+##  [data = x]
+## 
+## Conditional Distribution:
+##  norm 
+## 
+## Coefficient(s):
+##         mu       omega      alpha1  
+## 0.00041282  0.09665398  0.42442295  
+## 
+## Std. Errors:
+##  based on Hessian 
+## 
+## Error Analysis:
+##         Estimate  Std. Error  t value Pr(&gt;|t|)    
+## mu     0.0004128   0.0108266    0.038     0.97    
+## omega  0.0966540   0.0066149   14.612  &lt; 2e-16 ***
+## alpha1 0.4244229   0.0608758    6.972 3.13e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Log Likelihood:
+##  -452.1397    normalized:  -0.4521397 
+## 
+## Description:
+##  Wed May  3 20:10:36 2023 by user:  
+## 
+## 
+## Standardised Residuals Tests:
+##                                 Statistic p-Value  
+##  Jarque-Bera Test   R    Chi^2  0.4202807 0.8104705
+##  Shapiro-Wilk Test  R    W      0.9981917 0.3723707
+##  Ljung-Box Test     R    Q(10)  15.1952   0.1251057
+##  Ljung-Box Test     R    Q(15)  18.0511   0.2599886
+##  Ljung-Box Test     R    Q(20)  20.52373  0.4256256
+##  Ljung-Box Test     R^2  Q(10)  3.841834  0.9542001
+##  Ljung-Box Test     R^2  Q(15)  14.25011  0.5066509
+##  Ljung-Box Test     R^2  Q(20)  15.26702  0.7609303
+##  LM Arch Test       R    TR^2   5.875025  0.9222503
+## 
+## Information Criterion Statistics:
+##       AIC       BIC       SIC      HQIC 
+## 0.9102794 0.9250027 0.9102615 0.9158753</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \mu=0.0004128\)</span></p></li>
+<li><p><span class="math inline">\(\hat \alpha_0=0.0966540\)</span></p></li>
+<li><p><span class="math inline">\(\hat \alpha_1=0.4244229\)</span></p></li>
+<li><p><span class="math inline">\(\sqrt{\hat Var(\hat \alpha_1)}=0.608\)</span></p></li>
+<li><p>t-statistics of <span class="math inline">\(\alpha_1:z=\frac{0.4244}{0.0608}\)</span></p></li>
+<li><p>Jarque-Bera and Shapiro-Wilk tests are used to test normality</p></li>
+</ul>
+<p><span class="math inline">\(H_0: Normal\)</span></p>
+<p><span class="math inline">\(H_1: Not \quad Normal\)</span></p>
+<ul>
+<li><p><code>R</code> stand for residual itself, <code>Q(10)</code> means lags up to lag 10</p></li>
+<li><p><code>R^2</code> stands for squared residual</p></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>The <code>garchFit()</code> function fits the model. The order of the model is given as <strong>(m,r)</strong> where m is the order of the ARCH part and r is order of the GARCH part. <strong>BE CAREFUL</strong> because textbooks and software are not consistent in their orderings.</li>
+<li>Use <code>trace = FALSE</code> to reduce the amount of information given when running <code>garchFit()</code>.</li>
+<li>A warning message is given when running <code>garchFit()</code>:</li>
+</ul>
+<blockquote>
+<p>Warning message:
+Using formula(x) is deprecated when x is a character vector of length &gt; 1.
+Consider formula(paste(x, collapse = ” “)) instead.</p>
+</blockquote>
+<p>Code within the function itself needs to be updated by its authors.
+- The model for the data is</p>
+<p><span class="math inline">\(x_t=0.0004128+w_t\)</span> with <span class="math inline">\(w_t\sim N(0, \hat \sigma^2_t), \hat \sigma_t^2=0.0967+0.4244y^2_{t-1}\)</span>, and <span class="math inline">\(y_t = x_t - 0.0004128\)</span>.</p>
+<p>Equivalently, we could state the model as <span class="math inline">\(y_t=\hat \sigma_t\epsilon_t\)</span>, where <span class="math inline">\(\hat \sigma^2_t=0.0967+0.4244y^2_{t-1}, y_t=x_t-0.0004128\)</span>, and <span class="math inline">\(\epsilon_t\sim N(0,1)\)</span></p>
+<ul>
+<li><p>Notice how close the parameter estimates are to the true parameters (use the standard error to help measure closeness).<br />
+</p></li>
+<li><p>The standard tests for whether or not the <span class="math inline">\(\alpha_0 = 0\)</span> or <span class="math inline">\(\alpha_1 = 0\)</span> are given in the coefficients table of the output. Both are significantly different from 0 as would be expected. Even though the output says “t value” and “Pr(&gt;|t|)”, a normal distribution approximation is made to the sampling distribution of the test statistic.</p></li>
+<li><p>The Ljung-Box-Pierce test is the same test as discussed before. This test is performed upon the residuals (<code>R</code>) and squared residuals (<code>R^2</code>) for lags 10, 15, and 20. All of the p-values are larger indicating there is no dependence remaining in the residuals or squared residuals.</p></li>
+<li><p>A model can be fit to the original simulated data as well. The estimated model is <span class="math inline">\(\hat \sigma_t^2=\hat \alpha_0+\hat \alpha_1\tilde y^2_{t-1}=0.0990+0.3550\tilde y^2_{t-1}\)</span> with <span class="math inline">\(\hat \mu = -0.01325\)</span>. The code for this estimation is within the program.</p></li>
+</ul>
+<div class="sourceCode" id="cb1060"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1060-1"><a href="arch-models.html#cb1060-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Original series simulated</span></span>
+<span id="cb1060-2"><a href="arch-models.html#cb1060-2" aria-hidden="true" tabindex="-1"></a>  mod.fit.orig <span class="ot">&lt;-</span> <span class="fu">garchFit</span>(<span class="at">formula =</span> <span class="sc">~</span> <span class="fu">garch</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="at">data =</span> save.y, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1060-3"><a href="arch-models.html#cb1060-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show</span>(mod.fit.orig)</span></code></pre></div>
+<pre><code>## 
+## Title:
+##  GARCH Modelling 
+## 
+## Call:
+##  garchFit(formula = ~garch(1, 0), data = save.y, trace = FALSE) 
+## 
+## Mean and Variance Equation:
+##  data ~ garch(1, 0)
+## &lt;environment: 0x124d9bdc8&gt;
+##  [data = save.y]
+## 
+## Conditional Distribution:
+##  norm 
+## 
+## Coefficient(s):
+##        mu      omega     alpha1  
+## -0.013248   0.099037   0.354987  
+## 
+## Std. Errors:
+##  based on Hessian 
+## 
+## Error Analysis:
+##         Estimate  Std. Error  t value Pr(&gt;|t|)    
+## mu     -0.013248    0.010989   -1.206    0.228    
+## omega   0.099037    0.006351   15.595  &lt; 2e-16 ***
+## alpha1  0.354987    0.052809    6.722 1.79e-11 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Log Likelihood:
+##  -433.8491    normalized:  -0.4338491 
+## 
+## Description:
+##  Wed May  3 20:10:36 2023 by user:</code></pre>
+<p>To view what is inside of <code>mod.fit</code>, we need to use the <code>slotNames()</code> function rather than the usual <code>names()</code> function.</p>
+<blockquote>
+<p>Most of R and its corresponding packages are written in a form very similar to the S programming language. This language was first developed in the 1970s at Bell Laboratories with its main designer being John Chambers. Version 3 of S (S3) is emulated most by R, and this is what was used primarily before this example. Version 4 (S4) is used by the <code>fGarch</code> and <code>rugarch</code> packages. The components of an object in S4 are called “slots”. To access a slot, use the syntax <code>&lt;object name&gt;@&lt;slot name&gt;</code>.</p>
+</blockquote>
+<p>i.e., <code>@</code> in S4 plays as <code>$</code> in S3</p>
+<div class="sourceCode" id="cb1062"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1062-1"><a href="arch-models.html#cb1062-1" aria-hidden="true" tabindex="-1"></a><span class="co"># doesn&#39;t work</span></span>
+<span id="cb1062-2"><a href="arch-models.html#cb1062-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mod.fit)</span></code></pre></div>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb1064"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1064-1"><a href="arch-models.html#cb1064-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slotNames</span>(mod.fit)</span></code></pre></div>
+<pre><code>##  [1] &quot;call&quot;        &quot;formula&quot;     &quot;method&quot;      &quot;data&quot;        &quot;fit&quot;        
+##  [6] &quot;residuals&quot;   &quot;fitted&quot;      &quot;h.t&quot;         &quot;sigma.t&quot;     &quot;title&quot;      
+## [11] &quot;description&quot;</code></pre>
+<div class="sourceCode" id="cb1066"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1066-1"><a href="arch-models.html#cb1066-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(mod.fit<span class="sc">@</span>fitted)</span></code></pre></div>
+<pre><code>##   2023-04-27   2023-04-28   2023-04-29   2023-04-30   2023-05-01   2023-05-02 
+## 0.0004128227 0.0004128227 0.0004128227 0.0004128227 0.0004128227 0.0004128227</code></pre>
+<div class="sourceCode" id="cb1068"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1068-1"><a href="arch-models.html#cb1068-1" aria-hidden="true" tabindex="-1"></a><span class="co"># these are just hat mu</span></span></code></pre></div>
+<ul>
+<li>Recall <span class="math inline">\(x_t=\mu_t+w_t\)</span>, so it estimates <span class="math inline">\(\hat \mu\)</span></li>
+</ul>
+<div class="sourceCode" id="cb1069"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1069-1"><a href="arch-models.html#cb1069-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(mod.fit<span class="sc">@</span>residuals)</span></code></pre></div>
+<pre><code>## [1]  0.15402864  0.50940019  0.06549239  0.28637137  0.07065971 -0.69756116</code></pre>
+<div class="sourceCode" id="cb1071"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1071-1"><a href="arch-models.html#cb1071-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(x <span class="sc">-</span> mod.fit<span class="sc">@</span>fitted)</span></code></pre></div>
+<pre><code>## GMT
+##                  garch
+## 2023-04-27  0.15402864
+## 2023-04-28  0.50940019
+## 2023-04-29  0.06549239
+## 2023-04-30  0.28637137
+## 2023-05-01  0.07065971
+## 2023-05-02 -0.69756116</code></pre>
+<div class="sourceCode" id="cb1073"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1073-1"><a href="arch-models.html#cb1073-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(<span class="fu">residuals</span>(<span class="at">object =</span> mod.fit))</span></code></pre></div>
+<pre><code>## [1]  0.15402864  0.50940019  0.06549239  0.28637137  0.07065971 -0.69756116</code></pre>
+<div class="sourceCode" id="cb1075"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1075-1"><a href="arch-models.html#cb1075-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(mod.fit<span class="sc">@</span>sigma.t)</span></code></pre></div>
+<pre><code>## [1] 0.4175212 0.3266854 0.4547382 0.3138064 0.3625745 0.3142818</code></pre>
+<div class="sourceCode" id="cb1077"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1077-1"><a href="arch-models.html#cb1077-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hat sigma_t</span></span>
+<span id="cb1077-2"><a href="arch-models.html#cb1077-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fl">0.0966540+0.4244229</span><span class="sc">*</span>(x[<span class="dv">999</span>]<span class="sc">-</span><span class="fl">0.0004128</span>)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.3142818</code></pre>
+<div class="sourceCode" id="cb1079"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1079-1"><a href="arch-models.html#cb1079-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(mod.fit<span class="sc">@</span>h.t)  <span class="co">#sigma.t^2 for us</span></span></code></pre></div>
+<pre><code>## [1] 0.17432393 0.10672334 0.20678688 0.09847444 0.13146029 0.09877303</code></pre>
+<div class="sourceCode" id="cb1081"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1081-1"><a href="arch-models.html#cb1081-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(mod.fit<span class="sc">@</span>sigma.t<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.17432393 0.10672334 0.20678688 0.09847444 0.13146029 0.09877303</code></pre>
+<div class="sourceCode" id="cb1083"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1083-1"><a href="arch-models.html#cb1083-1" aria-hidden="true" tabindex="-1"></a>mod.fit<span class="sc">@</span>fit<span class="sc">$</span>matcoef[,<span class="dv">1</span>] <span class="co"># matrix coefficient</span></span></code></pre></div>
+<pre><code>##           mu        omega       alpha1 
+## 0.0004128227 0.0966539778 0.4244229492</code></pre>
+<div class="sourceCode" id="cb1085"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1085-1"><a href="arch-models.html#cb1085-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> (x <span class="sc">-</span> mod.fit<span class="sc">@</span>fit<span class="sc">$</span>matcoef[<span class="dv">1</span>,<span class="dv">1</span>])<span class="sc">/</span>mod.fit<span class="sc">@</span>sigma.t</span>
+<span id="cb1085-2"><a href="arch-models.html#cb1085-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(e)</span></code></pre></div>
+<pre><code>## GMT
+##                 garch
+## 2023-04-27  0.3689122
+## 2023-04-28  1.5592990
+## 2023-04-29  0.1440222
+## 2023-04-30  0.9125735
+## 2023-05-01  0.1948833
+## 2023-05-02 -2.2195406</code></pre>
+<div class="sourceCode" id="cb1087"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1087-1"><a href="arch-models.html#cb1087-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that these residuals are different</span></span>
+<span id="cb1087-2"><a href="arch-models.html#cb1087-2" aria-hidden="true" tabindex="-1"></a><span class="co"># There residuals are for the ARCH model part itself</span></span>
+<span id="cb1087-3"><a href="arch-models.html#cb1087-3" aria-hidden="true" tabindex="-1"></a><span class="co"># i.e., e= hat epsilon</span></span></code></pre></div>
+<ul>
+<li>Recall <span class="math inline">\(y_t=\sigma_t\epsilon\implies \epsilon=y_t/\sigma_t\)</span></li>
+</ul>
+<div class="sourceCode" id="cb1088"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1088-1"><a href="arch-models.html#cb1088-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(<span class="fu">residuals</span>(<span class="at">object =</span> mod.fit, <span class="at">standardize =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## [1]  0.3689122  1.5592990  0.1440222  0.9125735  0.1948833 -2.2195406</code></pre>
+<div class="sourceCode" id="cb1090"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1090-1"><a href="arch-models.html#cb1090-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can use residuals(object = mod.fit, standardize = TRUE) </span></span>
+<span id="cb1090-2"><a href="arch-models.html#cb1090-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for e</span></span>
+<span id="cb1090-3"><a href="arch-models.html#cb1090-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb1090-4"><a href="arch-models.html#cb1090-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> e, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> </span>
+<span id="cb1090-5"><a href="arch-models.html#cb1090-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">main =</span> <span class="st">&quot;ARCH residual ACF&quot;</span>) </span>
+<span id="cb1090-6"><a href="arch-models.html#cb1090-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> e, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb1090-7"><a href="arch-models.html#cb1090-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">&quot;ARCH residual PACF&quot;</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1091"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1091-1"><a href="arch-models.html#cb1091-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>Notice the <code>“@fitted”</code> values are all equal to <span class="math inline">\(\hat \mu = 0.00041\)</span> Why?</li>
+<li>The <code>“@residuals”</code> values are the observed time series minus .<br />
+</li>
+<li>I found estimates of the residuals for the ARCH part of the model as $e_t = y_t/_t $. You can also obtain these as well by using the <code>residuals()</code> function with the <code>standardize = TRUE</code> argument value.</li>
+<li>The ACF and PACF plots (not shown above) for <span class="math inline">\(e_t\)</span> do not show any significant autocorrelations or partial autocorrelations as expected.</li>
+</ul>
+<p>The <code>plot()</code> function with the model fitting object leads to a number of plots that can be produced:</p>
+<div class="sourceCode" id="cb1092"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1092-1"><a href="arch-models.html#cb1092-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.fit, <span class="at">which =</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1093"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1093-1"><a href="arch-models.html#cb1093-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selection: 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb1094"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1094-1"><a href="arch-models.html#cb1094-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.fit, <span class="at">which =</span><span class="dv">5</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1095"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1095-1"><a href="arch-models.html#cb1095-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selection: 5</span></span></code></pre></div>
+<div class="sourceCode" id="cb1096"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1096-1"><a href="arch-models.html#cb1096-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.fit, <span class="at">which =</span><span class="dv">10</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1097"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1097-1"><a href="arch-models.html#cb1097-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selection: 10</span></span></code></pre></div>
+<div class="sourceCode" id="cb1098"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1098-1"><a href="arch-models.html#cb1098-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.fit, <span class="at">which =</span><span class="dv">11</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1099"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1099-1"><a href="arch-models.html#cb1099-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selection: 11</span></span></code></pre></div>
+<div class="sourceCode" id="cb1100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1100-1"><a href="arch-models.html#cb1100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.fit, <span class="at">which=</span><span class="dv">13</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1101-1"><a href="arch-models.html#cb1101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selection: 13</span></span></code></pre></div>
+<p>To produce just one plot, you can use <code>plot(mod.fit, which = 1)</code>, where the <code>which</code> argument corresponds to the plot number seen in the list.</p>
+<p>Forecasting can be done using the <code>predict()</code> function:</p>
+<div class="sourceCode" id="cb1102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1102-1"><a href="arch-models.html#cb1102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasts </span></span>
+<span id="cb1102-2"><a href="arch-models.html#cb1102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> mod.fit, <span class="at">n.ahead =</span> <span class="dv">3</span>, <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">nx =</span> </span>
+<span id="cb1102-3"><a href="arch-models.html#cb1102-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<pre><code>##   meanForecast meanError standardDeviation lowerInterval upperInterval
+## 1 0.0004128227 0.5506129         0.5506129    -1.0787687     1.0795943
+## 2 0.0004128227 0.4746875         0.4746875    -0.9299576     0.9307833
+## 3 0.0004128227 0.4385071         0.4385071    -0.8590452     0.8598709</code></pre>
+<ul>
+<li><p><span class="math inline">\(\tilde x^{1000}_{1001}=\hat \mu=0.0004128227\)</span></p></li>
+<li><p><span class="math inline">\(-1.08&lt;x^{1000}_{1001}&lt;1.07959\)</span></p></li>
+<li><p>Note that in the graph, 3 on the horizontal axis correponds to 1000, 4 corresponds to 1001,…</p></li>
+</ul>
+<p>How are these forecasts found?</p>
+<p>Note: m here represents the number of time points into the future for the forecast, not the order of the <code>GARCH()</code> model</p>
+<p>We started with <span class="math inline">\(x_t\)</span>. There are no <span class="math inline">\(\phi_i\)</span> or <span class="math inline">\(\theta_j\)</span> parameters in the model so forecasted values are <span class="math inline">\(\mu\)</span>. We also set <span class="math inline">\(y_t = x_t – \mu\)</span>. Note that <span class="math inline">\(\tilde y^n_{n+m}= E(y_{n+m} | I_n) = 0\)</span>. Thus, the forecasted value for <span class="math inline">\(x_{n+m}\)</span> is <span class="math inline">\(\hat \mu=0.0004128\)</span> and for <span class="math inline">\(y_{n+m} = 0\)</span>. The variance needed for a CI given by <span class="math inline">\(Var(x_{n+m}-\tilde x^n_{n+m})=Var(y_{n+m}-\tilde y^n_{n+m})\)</span> because of the simplicity of the model. Then <span class="math inline">\(Var(y_{n+m}-\tilde y^n_{n+m})=Var(\sigma_{n+m}\epsilon_{n+m})=\sigma^2_{n+m}\)</span> because <span class="math inline">\(y_{n+m}-\tilde y^n_{n+m}=\sigma_{n+m}\epsilon_{n+m}-0=\sigma_{n+m}\epsilon_{n+m}\)</span></p>
+<p>Our model for <span class="math inline">\(\sigma_t^2\)</span> is <span class="math inline">\(\sigma_t^2=\alpha_0+\alpha_1y_{t-1}^2\)</span>. Thus, <span class="math inline">\(\sigma_{n+1}^2=\alpha_0+\alpha_1y^2_{n-1}\)</span></p>
+<p>Substituting the parameter estimates and n = 1000, we obtain</p>
+<div class="sourceCode" id="cb1104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1104-1"><a href="arch-models.html#cb1104-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.0966540</span> <span class="sc">+</span> <span class="fl">0.4244229</span><span class="sc">*</span>(x[<span class="dv">1000</span>]<span class="sc">-</span><span class="fl">0.0004128</span>)<span class="sc">^</span><span class="dv">2</span></span></code></pre></div>
+<pre><code>## [1] 0.3031746</code></pre>
+<div class="sourceCode" id="cb1106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1106-1"><a href="arch-models.html#cb1106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fl">0.3031746</span>)</span></code></pre></div>
+<pre><code>## [1] 0.5506129</code></pre>
+<p>for <span class="math inline">\(\hat \sigma_{1001}^2\)</span> or equivalently <span class="math inline">\(\hat \sigma_{1001}=\sqrt{0.3032}=0.5506\)</span>, which matches the “standardDeviation” column in the output.</p>
+<p>The <span class="math inline">\((1 - \alpha)100%\)</span> C.I. for <span class="math inline">\(x_{n+m}\)</span> is <span class="math inline">\(\tilde x^n_{n+m}\pm Z_{1-\alpha/2}\sqrt{Var(x_{n+m}-\tilde x^n_{n+m})}\)</span></p>
+<p>Substituting the parameter estimates and n = 1000,</p>
+<div class="sourceCode" id="cb1108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1108-1"><a href="arch-models.html#cb1108-1" aria-hidden="true" tabindex="-1"></a>sigma<span class="fl">.1001</span> <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fl">0.0966540</span> <span class="sc">+</span> <span class="fl">0.4244229</span><span class="sc">*</span>(x[<span class="dv">1000</span>] <span class="sc">-</span> <span class="fl">0.0004128</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1108-2"><a href="arch-models.html#cb1108-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1108-3"><a href="arch-models.html#cb1108-3" aria-hidden="true" tabindex="-1"></a><span class="fl">0.0004128</span> <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="at">p=</span><span class="fl">0.975</span>)<span class="sc">*</span>sigma<span class="fl">.1001</span></span></code></pre></div>
+<pre><code>## [1] -1.078769</code></pre>
+<div class="sourceCode" id="cb1110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1110-1"><a href="arch-models.html#cb1110-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.0004128</span> <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p=</span><span class="fl">0.975</span>)<span class="sc">*</span>sigma<span class="fl">.1001</span></span></code></pre></div>
+<pre><code>## [1] 1.079594</code></pre>
+<p>which matches the output.</p>
+<p>For m = 2, we have <span class="math inline">\(\sigma^2_{n+2}=\alpha_0+\alpha_1y^2_{n+1}\)</span>. We saw earlier in the course notes that <span class="math inline">\(E(y_t^2|y_{t-1})= \alpha_0 + \alpha_1y^2_{t-1}\)</span>. Using this result, we can write <span class="math inline">\(\sigma_{n+2}^2\)</span> as <span class="math inline">\(\sigma_{n+2}^2=\alpha_0+\alpha_1(\alpha_0+\alpha_1y^2_n)\)</span></p>
+<p>We find <span class="math inline">\(\hat \sigma_{1002}\)</span> and the 95% confidence interval for <span class="math inline">\(x_{1002}\)</span> to be</p>
+<div class="sourceCode" id="cb1112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1112-1"><a href="arch-models.html#cb1112-1" aria-hidden="true" tabindex="-1"></a>sigma<span class="fl">.1002</span> <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fl">0.0966540</span> <span class="sc">+</span> <span class="fl">0.4244229</span> <span class="sc">*</span> sigma<span class="fl">.1001</span><span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1112-2"><a href="arch-models.html#cb1112-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1112-3"><a href="arch-models.html#cb1112-3" aria-hidden="true" tabindex="-1"></a>sigma<span class="fl">.1002</span></span></code></pre></div>
+<pre><code>## [1] 0.4746875</code></pre>
+<div class="sourceCode" id="cb1114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1114-1"><a href="arch-models.html#cb1114-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.0004128</span><span class="sc">-</span><span class="fu">qnorm</span>(<span class="at">p=</span><span class="fl">0.975</span>)<span class="sc">*</span>sigma<span class="fl">.1002</span></span></code></pre></div>
+<pre><code>## [1] -0.9299576</code></pre>
+<div class="sourceCode" id="cb1116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1116-1"><a href="arch-models.html#cb1116-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.0004128</span> <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="at">p=</span><span class="fl">0.975</span>)<span class="sc">*</span>sigma<span class="fl">.1002</span></span></code></pre></div>
+<pre><code>## [1] 0.9307832</code></pre>
+<p>which matches the output.</p>
+<p>The <code>rugarch</code> package’s data simulation function <code>ugarchsim()</code> needs to use a model fitting object from <code>ugarchfit()</code> to simulate data. Below is an example of how to fit a model to the original simulated data (<code>save.y</code>) and then to use the resulting model fit object to simulate data.</p>
+<div class="sourceCode" id="cb1118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1118-1"><a href="arch-models.html#cb1118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rugarch)</span></code></pre></div>
+<pre><code>## Loading required package: parallel</code></pre>
+<pre><code>## 
+## Attaching package: &#39;rugarch&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     sigma</code></pre>
+<div class="sourceCode" id="cb1122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1122-1"><a href="arch-models.html#cb1122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># garchOrder = c(m,r)</span></span>
+<span id="cb1122-2"><a href="arch-models.html#cb1122-2" aria-hidden="true" tabindex="-1"></a><span class="co"># armaOrder = c(p, q) p = phi, q = theta</span></span>
+<span id="cb1122-3"><a href="arch-models.html#cb1122-3" aria-hidden="true" tabindex="-1"></a>spec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> </span>
+<span id="cb1122-4"><a href="arch-models.html#cb1122-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;sGARCH&quot;</span>, <span class="at">garchOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>)), <span class="at">mean.model =</span> </span>
+<span id="cb1122-5"><a href="arch-models.html#cb1122-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">include.mean =</span> <span class="cn">TRUE</span>, <span class="at">arfima =</span> </span>
+<span id="cb1122-6"><a href="arch-models.html#cb1122-6" aria-hidden="true" tabindex="-1"></a>    <span class="cn">FALSE</span>))</span>
+<span id="cb1122-7"><a href="arch-models.html#cb1122-7" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> spec, <span class="at">data =</span> save.y)</span>
+<span id="cb1122-8"><a href="arch-models.html#cb1122-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>##    Length     Class      Mode 
+##         1 uGARCHfit        S4</code></pre>
+<div class="sourceCode" id="cb1124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1124-1"><a href="arch-models.html#cb1124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(mod.fit)</span></code></pre></div>
+<pre><code>## 
+## *---------------------------------*
+## *          GARCH Model Fit        *
+## *---------------------------------*
+## 
+## Conditional Variance Dynamics    
+## -----------------------------------
+## GARCH Model  : sGARCH(1,0)
+## Mean Model   : ARFIMA(0,0,0)
+## Distribution : norm 
+## 
+## Optimal Parameters
+## ------------------------------------
+##         Estimate  Std. Error  t value Pr(&gt;|t|)
+## mu     -0.013252    0.010990  -1.2059  0.22785
+## omega   0.099077    0.006358  15.5821  0.00000
+## alpha1  0.355799    0.052955   6.7189  0.00000
+## 
+## Robust Standard Errors:
+##         Estimate  Std. Error  t value Pr(&gt;|t|)
+## mu     -0.013252    0.011018  -1.2028  0.22904
+## omega   0.099077    0.006581  15.0556  0.00000
+## alpha1  0.355799    0.067837   5.2449  0.00000
+## 
+## LogLikelihood : -433.8668 
+## 
+## Information Criteria
+## ------------------------------------
+##                     
+## Akaike       0.87373
+## Bayes        0.88846
+## Shibata      0.87372
+## Hannan-Quinn 0.87933
+## 
+## Weighted Ljung-Box Test on Standardized Residuals
+## ------------------------------------
+##                         statistic p-value
+## Lag[1]                      2.677  0.1018
+## Lag[2*(p+q)+(p+q)-1][2]     2.745  0.1645
+## Lag[4*(p+q)+(p+q)-1][5]     3.807  0.2791
+## d.o.f=0
+## H0 : No serial correlation
+## 
+## Weighted Ljung-Box Test on Standardized Squared Residuals
+## ------------------------------------
+##                         statistic p-value
+## Lag[1]                      2.354  0.1250
+## Lag[2*(p+q)+(p+q)-1][2]     2.557  0.1851
+## Lag[4*(p+q)+(p+q)-1][5]     3.015  0.4044
+## d.o.f=1
+## 
+## Weighted ARCH LM Tests
+## ------------------------------------
+##             Statistic Shape Scale P-Value
+## ARCH Lag[2]    0.4045 0.500 2.000  0.5248
+## ARCH Lag[4]    0.7954 1.397 1.611  0.7722
+## ARCH Lag[6]    0.9093 2.222 1.500  0.9118
+## 
+## Nyblom stability test
+## ------------------------------------
+## Joint Statistic:  0.6268
+## Individual Statistics:              
+## mu     0.26102
+## omega  0.09566
+## alpha1 0.18167
+## 
+## Asymptotic Critical Values (10% 5% 1%)
+## Joint Statistic:          0.846 1.01 1.35
+## Individual Statistic:     0.35 0.47 0.75
+## 
+## Sign Bias Test
+## ------------------------------------
+##                    t-value     prob sig
+## Sign Bias           2.7735 0.005649 ***
+## Negative Sign Bias  1.4811 0.138889    
+## Positive Sign Bias  0.6937 0.488002    
+## Joint Effect        8.6820 0.033831  **
+## 
+## 
+## Adjusted Pearson Goodness-of-Fit Test:
+## ------------------------------------
+##   group statistic p-value(g-1)
+## 1    20     21.44       0.3130
+## 2    30     36.32       0.1644
+## 3    40     36.72       0.5743
+## 4    50     42.70       0.7250
+## 
+## 
+## Elapsed time : 0.05718923</code></pre>
+<div class="sourceCode" id="cb1126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1126-1"><a href="arch-models.html#cb1126-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need to use show for S4 instead of summary</span></span></code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>The model specification is different from what we have seen so far. Notice the <code>arfima = FALSE</code> argument value. If one wanted to include an ARFIMA model for the original series, this where you can say TRUE. Notice the output says “ARFIMA(0,0,0)” model, but a regular ARIMA model is used unless the <code>arfima</code> argument is TRUE.</li>
+<li>Notice the use of <code>show()</code> rather than <code>summary()</code> to obtain a summary of the model fit.</li>
+<li>The ARCH(1) model is <span class="math inline">\(y_t = \hat \sigma_t\epsilon_t\)</span> where <span class="math inline">\(\hat \sigma_t^2=\hat \alpha_0+\hat \alpha_1y^2_{t-1}=0.0991+0.3558y^2_{t-1}\)</span> and <span class="math inline">\(y_t=x_t+0.013252\)</span> . These estimates are VERY similar to those produced by <code>garchFit()</code>.<br />
+Below is an example of simulating new data from this model:</li>
+</ul>
+<div class="sourceCode" id="cb1127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1127-1"><a href="arch-models.html#cb1127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1828</span>)</span>
+<span id="cb1127-2"><a href="arch-models.html#cb1127-2" aria-hidden="true" tabindex="-1"></a>x.sim <span class="ot">&lt;-</span> <span class="fu">ugarchsim</span>(<span class="at">fit =</span> mod.fit, <span class="at">n.sim =</span> <span class="dv">1000</span>)</span>
+<span id="cb1127-3"><a href="arch-models.html#cb1127-3" aria-hidden="true" tabindex="-1"></a><span class="fu">slotNames</span>(x.sim)</span></code></pre></div>
+<pre><code>## [1] &quot;simulation&quot; &quot;model&quot;      &quot;seed&quot;</code></pre>
+<div class="sourceCode" id="cb1129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1129-1"><a href="arch-models.html#cb1129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(x.sim<span class="sc">@</span>simulation<span class="sc">$</span>seriesSim)</span></code></pre></div>
+<pre><code>##              [,1]
+## [1,]  0.293186361
+## [2,]  0.165803843
+## [3,] -0.721580486
+## [4,] -0.223599196
+## [5,] -0.005500334
+## [6,]  0.643013227</code></pre>
+<p>When I try to fit the corresponding model to the data, the model does not converge! I was successful with other simulated data.</p>
+</div>
+<div id="arch-models-arima" class="section level2 hasAnchor" number="22.3">
+<h2><span class="header-section-number">22.3</span> ARCH Models: ARIMA<a href="arch-models.html#arch-models-arima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We previously defined an ARCH(m) model as</p>
+<p><span class="math inline">\(y_t = \sigma_t\epsilon_t\)</span> where <span class="math inline">\(\sigma_t^2= \alpha_0 + \alpha_1y^2_{t-1} + \alpha_2y^2_{t-2} +…+ \alpha_my^2_{t-m}\)</span> and <span class="math inline">\(\epsilon_t \sim ind. N(0,1)\)</span></p>
+<p>Conditions on the parameters are <span class="math inline">\(\alpha_i \ge 0\)</span> for all i = 1, …, m and <span class="math inline">\(\alpha_1 + ... + \alpha_m &lt; 1\)</span>.</p>
+<p>We could also incorporate ARIMA models with this too. For example, we could have</p>
+<p><span class="math inline">\(\phi(B)(1-B)^dx_t=\theta(B)w_t\)</span></p>
+<p>where <span class="math inline">\(w_t\sim ind.(0, \sigma_t^2), \sigma_t^2=\alpha_0+\alpha_1y^2_{t-1}+...+\alpha_my^2_{t-m}\)</span> and <span class="math inline">\(y_t\)</span> represents the residuals from the ARIMA model.</p>
+<p>Thus, non-stationarity in the variance can be taken care of by using ARCH models with an ARIMA model.</p>
+<div id="model-building" class="section level3 hasAnchor" number="22.3.1">
+<h3><span class="header-section-number">22.3.1</span> Model Building<a href="arch-models.html#model-building" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><p>Build an ARIMA model for the observed time series to remove any autocorrelation in the data. Refer to the residuals as <span class="math inline">\(y_t\)</span>.</p></li>
+<li><p>Examine the squared series, <span class="math inline">\(y_t^2\)</span>, to check for heteroscedasticity. This can be done by doing an ACF and PACF plot of the <span class="math inline">\(y_t^2\)</span> values. Remember, we are constructing an AR-like model for <span class="math inline">\(y_t^2\)</span> . What would you expect the PACF to show if an ARCH model is needed? The Ljung-Box-Pierce test can also be performed on the <span class="math inline">\(y_t^2\)</span> values as well.</p></li>
+<li><p>Decide on the order of the ARCH model for <span class="math inline">\(y_t^2\)</span> and perform maximum likelihood estimation of all parameters.</p></li>
+</ol>
+<p>:::{.example}</p>
+<p><strong>U.S. GNP (GNP.R)</strong></p>
+<p>Shumway and Stoffer used ARIMA and ARCH models to examine a U.S. GNP data set with quarterly given values. An AR(1) model to the first differenced, log-transformed data was recommended originally by the authors prior to ARCH models being introduced.</p>
+<p>We will estimate the AR(1) and ARCH model all at once using the <code>garchFit()</code> and <code>ugarchfit()</code> functions.</p>
+<p>Let <span class="math inline">\(x_t\)</span> = GNP at time t for this problem.</p>
+<div class="sourceCode" id="cb1131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1131-1"><a href="arch-models.html#cb1131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span>
+<span id="cb1131-2"><a href="arch-models.html#cb1131-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gnp)</span></code></pre></div>
+<pre><code>## [1] 1488.9 1496.9 1500.5 1524.3 1546.6 1571.1</code></pre>
+<div class="sourceCode" id="cb1133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1133-1"><a href="arch-models.html#cb1133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(gnp)</span></code></pre></div>
+<pre><code>## [1] 9224.3 9199.8 9283.5 9367.5 9376.7 9477.9</code></pre>
+<div class="sourceCode" id="cb1135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1135-1"><a href="arch-models.html#cb1135-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> gnp</span>
+<span id="cb1135-2"><a href="arch-models.html#cb1135-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">ylab =</span> <span class="fu">expression</span>(x[t]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> </span>
+<span id="cb1135-3"><a href="arch-models.html#cb1135-3" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>,  <span class="at">main =</span> <span class="st">&quot;GNP data&quot;</span>)</span>
+<span id="cb1135-4"><a href="arch-models.html#cb1135-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>) </span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<p>There is non-stationarity with respect to the mean. Below are the first differences.</p>
+<div class="sourceCode" id="cb1136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1136-1"><a href="arch-models.html#cb1136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">diff</span>(<span class="at">x =</span> x, <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>), <span class="at">ylab =</span> </span>
+<span id="cb1136-2"><a href="arch-models.html#cb1136-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(x[t] <span class="sc">-</span> x[t<span class="dv">-1</span>]), <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, col </span>
+<span id="cb1136-3"><a href="arch-models.html#cb1136-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, <span class="at">main =</span> <span class="st">&quot;First differences of GNP data&quot;</span>)</span>
+<span id="cb1136-4"><a href="arch-models.html#cb1136-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<p>Shumway and Stoffer also work with the log transformation and make this transformation prior to the first differences. This corresponds to our earlier discussion of</p>
+<p><span class="math inline">\(y_t=log(x_t)-log(x_{t-1})=log(x_t/x_{t-1})=log(current \quad value/ past \quad value)\)</span></p>
+<p>being close to a “return” in an investment (although GNP is not an investment). Because I would like to replicate their example, I chose to do the same here for the remainder of this example.</p>
+<p>Below is the estimate of the an AR(1) model along with the usual examinations of model fit.</p>
+<div class="sourceCode" id="cb1137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1137-1"><a href="arch-models.html#cb1137-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that we do differencing outside mod.fit</span></span>
+<span id="cb1137-2"><a href="arch-models.html#cb1137-2" aria-hidden="true" tabindex="-1"></a>gnpgr <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="at">x =</span> <span class="fu">log</span>(gnp), <span class="at">lag =</span> <span class="dv">1</span>, <span class="at">differences =</span> <span class="dv">1</span>) </span>
+<span id="cb1137-3"><a href="arch-models.html#cb1137-3" aria-hidden="true" tabindex="-1"></a>mod.fit.ar <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> gnpgr, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), </span>
+<span id="cb1137-4"><a href="arch-models.html#cb1137-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">include.mean =</span> <span class="cn">TRUE</span>)  </span>
+<span id="cb1137-5"><a href="arch-models.html#cb1137-5" aria-hidden="true" tabindex="-1"></a>mod.fit.ar</span></code></pre></div>
+<pre><code>## 
+## Call:
+## arima(x = gnpgr, order = c(1, 0, 0), include.mean = TRUE)
+## 
+## Coefficients:
+##          ar1  intercept
+##       0.3467     0.0083
+## s.e.  0.0627     0.0010
+## 
+## sigma^2 estimated as 9.03e-05:  log likelihood = 718.61,  aic = -1431.22</code></pre>
+<div class="sourceCode" id="cb1139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1139-1"><a href="arch-models.html#cb1139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="at">file =</span> <span class="st">&quot;examine.mod.R&quot;</span>)</span>
+<span id="cb1139-2"><a href="arch-models.html#cb1139-2" aria-hidden="true" tabindex="-1"></a><span class="fu">examine.mod</span>(<span class="at">mod.fit.obj =</span> mod.fit.ar, <span class="at">mod.name =</span> </span>
+<span id="cb1139-3"><a href="arch-models.html#cb1139-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;ARIMA(1,1,0)&quot;</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-47-1.png" width="672" /><img src="21-ARCH_files/figure-html/unnamed-chunk-47-2.png" width="672" /></p>
+<pre><code>## $z
+##       ar1 intercept 
+##  5.525479  8.539823 
+## 
+## $p.value
+##          ar1    intercept 
+## 3.285877e-08 0.000000e+00</code></pre>
+<p>The estimated ARIMA model for the series is</p>
+<p><span class="math inline">\((1-0.3467B)(1-B)log(x_t)=0.0083+w_t\)</span></p>
+<p>Note: 0.0083 represents the drift term.</p>
+<p>Notice the ACF and PACF plots of the residuals look like the corresponding plots for white noise. Also, notice the normal Q-Q shows the “fat tails” of the residual distribution.</p>
+<p>The same model could be estimated using</p>
+<div class="sourceCode" id="cb1141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1141-1"><a href="arch-models.html#cb1141-1" aria-hidden="true" tabindex="-1"></a>mod.fit.ar <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="at">x =</span> <span class="fu">log</span>(x), <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), xreg </span>
+<span id="cb1141-2"><a href="arch-models.html#cb1141-2" aria-hidden="true" tabindex="-1"></a>      <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x))</span></code></pre></div>
+<p>However, we will not be able to include a value for d in <code>garchFit()</code> or <code>ugarchfit()</code> when we include the ARCH model component. So, the code used here allows us to see the model fitting process without d. </p>
+<p>Let <span class="math inline">\(y_t\)</span> denote the residuals from the ARIMA model’s fit.</p>
+<div class="sourceCode" id="cb1142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1142-1"><a href="arch-models.html#cb1142-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Examine ACF and PACF of the squared residuals</span></span>
+<span id="cb1142-2"><a href="arch-models.html#cb1142-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(mod.fit.ar<span class="sc">$</span>residuals) <span class="co">#Without the </span></span>
+<span id="cb1142-3"><a href="arch-models.html#cb1142-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">#as.numeric() the values are not spaced correctly </span></span>
+<span id="cb1142-4"><a href="arch-models.html#cb1142-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#on the plots</span></span>
+<span id="cb1142-5"><a href="arch-models.html#cb1142-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb1142-6"><a href="arch-models.html#cb1142-6" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="at">x =</span> y<span class="sc">^</span><span class="dv">2</span>, <span class="at">type =</span> <span class="st">&quot;correlation&quot;</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">xlim =</span> </span>
+<span id="cb1142-7"><a href="arch-models.html#cb1142-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">main =</span> </span>
+<span id="cb1142-8"><a href="arch-models.html#cb1142-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated ACF for &quot;</span>, y[t]<span class="sc">^</span><span class="dv">2</span>)))</span>
+<span id="cb1142-9"><a href="arch-models.html#cb1142-9" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="at">x =</span> y<span class="sc">^</span><span class="dv">2</span>, <span class="at">lag.max =</span> <span class="dv">20</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xlim =</span> </span>
+<span id="cb1142-10"><a href="arch-models.html#cb1142-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="at">xlab =</span> <span class="st">&quot;h&quot;</span>, <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>( </span>
+<span id="cb1142-11"><a href="arch-models.html#cb1142-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Estimated PACF for &quot;</span>, y[t]<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+<div class="sourceCode" id="cb1143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1143-1"><a href="arch-models.html#cb1143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<p>There are only marginally significant values in the ACF and PACF for the squared residuals. Shumway and Stoffer say, “it appears there may be some dependence, albeit small, left in the residuals.” I say, “Maybe… “. Following their example, we can fit an ARMA(1,0) AND ARCH(1) model simultaneously using the <code>garchFit()</code> function of the <code>fGarch</code> package. Below is the code and output from <code>garchFit()</code>:</p>
+<div class="sourceCode" id="cb1144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1144-1"><a href="arch-models.html#cb1144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fGarch)</span>
+<span id="cb1144-2"><a href="arch-models.html#cb1144-2" aria-hidden="true" tabindex="-1"></a><span class="co"># AR(1) and ARCH(1)</span></span>
+<span id="cb1144-3"><a href="arch-models.html#cb1144-3" aria-hidden="true" tabindex="-1"></a>mod.fit <span class="ot">&lt;-</span> <span class="fu">garchFit</span>(<span class="at">formula =</span> <span class="sc">~</span> <span class="fu">arma</span>(<span class="dv">1</span>,<span class="dv">0</span>) <span class="sc">+</span> <span class="fu">garch</span>(<span class="dv">1</span>, <span class="dv">0</span>),   </span>
+<span id="cb1144-4"><a href="arch-models.html#cb1144-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> gnpgr)</span></code></pre></div>
+<pre><code>## 
+## Series Initialization:
+##  ARMA Model:                arma
+##  Formula Mean:              ~ arma(1, 0)
+##  GARCH Model:               garch
+##  Formula Variance:          ~ garch(1, 0)
+##  ARMA Order:                1 0
+##  Max ARMA Order:            1
+##  GARCH Order:               1 0
+##  Max GARCH Order:           1
+##  Maximum Order:             1
+##  Conditional Dist:          norm
+##  h.start:                   2
+##  llh.start:                 1
+##  Length of Series:          222
+##  Recursion Init:            mci
+##  Series Scale:              0.01015924
+## 
+## Parameter Initialization:
+##  Initial Parameters:          $params
+##  Limits of Transformations:   $U, $V
+##  Which Parameters are Fixed?  $includes
+##  Parameter Matrix:
+##                      U          V    params includes
+##     mu     -8.20681904   8.206819 0.8205354     TRUE
+##     ar1    -0.99999999   1.000000 0.3466459     TRUE
+##     omega   0.00000100 100.000000 0.1000000     TRUE
+##     alpha1  0.00000001   1.000000 0.1000000     TRUE
+##     gamma1 -0.99999999   1.000000 0.1000000    FALSE
+##     delta   0.00000000   2.000000 2.0000000    FALSE
+##     skew    0.10000000  10.000000 1.0000000    FALSE
+##     shape   1.00000000  10.000000 4.0000000    FALSE
+##  Index List of Parameters to be Optimized:
+##     mu    ar1  omega alpha1 
+##      1      2      3      4 
+##  Persistence:                  0.1 
+## 
+## 
+## --- START OF TRACE ---
+## Selected Algorithm: nlminb 
+## 
+## R coded nlminb Solver: 
+## 
+##   0:     682.89527: 0.820535 0.346646 0.100000 0.100000
+##   1:     308.43148: 0.763492 0.258112  1.06104 0.352453
+##   2:     306.07332: 0.681276 0.195897  1.04763 0.304072
+##   3:     301.00807: 0.561958 0.448458 0.825277 0.0402737
+##   4:     298.88361: 0.383716 0.465477 0.632947 0.385969
+##   5:     296.74288: 0.504144 0.389445 0.683634 0.247795
+##   6:     296.67703: 0.497724 0.366843 0.688130 0.229496
+##   7:     296.60039: 0.500011 0.385702 0.703145 0.211105
+##   8:     296.59692: 0.515645 0.374174 0.690079 0.194961
+##   9:     296.56381: 0.513570 0.367018 0.702272 0.200013
+##  10:     296.55723: 0.523440 0.363126 0.708406 0.194151
+##  11:     296.55632: 0.522578 0.364913 0.710104 0.194839
+##  12:     296.55598: 0.520871 0.364956 0.710924 0.193212
+##  13:     296.55568: 0.519486 0.366571 0.710213 0.194510
+##  14:     296.55568: 0.519509 0.366597 0.710266 0.194512
+##  15:     296.55568: 0.519511 0.366586 0.710290 0.194452
+##  16:     296.55568: 0.519505 0.366562 0.710299 0.194464
+##  17:     296.55568: 0.519526 0.366560 0.710295 0.194472
+##  18:     296.55568: 0.519522 0.366563 0.710295 0.194471
+## 
+## Final Estimate of the Negative LLH:
+##  LLH:  -722.2849    norm LLH:  -3.253536 
+##           mu          ar1        omega       alpha1 
+## 0.0052779470 0.3665625602 0.0000733096 0.1944713367 
+## 
+## R-optimhess Difference Approximated Hessian Matrix:
+##                  mu           ar1         omega        alpha1
+## mu     -2749495.405 -24170.124893  4.546826e+06 -1.586692e+03
+## ar1      -24170.125   -390.266820  1.253879e+04 -6.733791e+00
+## omega   4546825.987  12538.785675 -1.590043e+10 -7.069341e+05
+## alpha1    -1586.692     -6.733791 -7.069341e+05 -1.425395e+02
+## attr(,&quot;time&quot;)
+## Time difference of 0.002020121 secs
+## 
+## --- END OF TRACE ---
+## 
+## 
+## Time to Estimate Parameters:
+##  Time difference of 0.008666992 secs</code></pre>
+<div class="sourceCode" id="cb1146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1146-1"><a href="arch-models.html#cb1146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.fit)</span></code></pre></div>
+<pre><code>## 
+## Title:
+##  GARCH Modelling 
+## 
+## Call:
+##  garchFit(formula = ~arma(1, 0) + garch(1, 0), data = gnpgr) 
+## 
+## Mean and Variance Equation:
+##  data ~ arma(1, 0) + garch(1, 0)
+## &lt;environment: 0x1255a30e8&gt;
+##  [data = gnpgr]
+## 
+## Conditional Distribution:
+##  norm 
+## 
+## Coefficient(s):
+##         mu         ar1       omega      alpha1  
+## 0.00527795  0.36656256  0.00007331  0.19447134  
+## 
+## Std. Errors:
+##  based on Hessian 
+## 
+## Error Analysis:
+##         Estimate  Std. Error  t value Pr(&gt;|t|)    
+## mu     5.278e-03   8.996e-04    5.867 4.44e-09 ***
+## ar1    3.666e-01   7.514e-02    4.878 1.07e-06 ***
+## omega  7.331e-05   9.011e-06    8.135 4.44e-16 ***
+## alpha1 1.945e-01   9.554e-02    2.035   0.0418 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Log Likelihood:
+##  722.2849    normalized:  3.253536 
+## 
+## Description:
+##  Wed May  3 20:10:38 2023 by user:  
+## 
+## 
+## Standardised Residuals Tests:
+##                                 Statistic p-Value    
+##  Jarque-Bera Test   R    Chi^2  9.118036  0.01047234 
+##  Shapiro-Wilk Test  R    W      0.9842406 0.0143365  
+##  Ljung-Box Test     R    Q(10)  9.874326  0.4515875  
+##  Ljung-Box Test     R    Q(15)  17.55855  0.2865844  
+##  Ljung-Box Test     R    Q(20)  23.41363  0.2689437  
+##  Ljung-Box Test     R^2  Q(10)  19.2821   0.03682245 
+##  Ljung-Box Test     R^2  Q(15)  33.23648  0.004352735
+##  Ljung-Box Test     R^2  Q(20)  37.74259  0.009518988
+##  LM Arch Test       R    TR^2   25.41625  0.01296901 
+## 
+## Information Criterion Statistics:
+##       AIC       BIC       SIC      HQIC 
+## -6.471035 -6.409726 -6.471669 -6.446282</code></pre>
+<ul>
+<li><p><span class="math inline">\(\hat \phi_1=3.666e-01\)</span></p></li>
+<li><p><span class="math inline">\(\hat \alpha_1=1.945e-01\)</span></p></li>
+</ul>
+<div class="sourceCode" id="cb1148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1148-1"><a href="arch-models.html#cb1148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb1148-2"><a href="arch-models.html#cb1148-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.fit, <span class="at">which =</span> <span class="dv">13</span>)</span></code></pre></div>
+<p><img src="21-ARCH_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
+<p>Notes:</p>
+<ul>
+<li>The estimated model is <span class="math inline">\((1 – 0.3666B)(1 – B)log(x_t) = 0.0053 + w_t\)</span> with <span class="math inline">\(\hat \sigma_t^2=\hat \alpha_0+\hat \alpha_1y^2_{t-1}=0.00007331+0.1945y^2_{t-1}\)</span></li>
+</ul>
+<p>Note: 0.0053 represents the drift term.</p>
+<ul>
+<li><p>The hypothesis test for <span class="math inline">\(\alpha_1 = 0\)</span> vs. <span class="math inline">\(\ne 0\)</span> has a p-value of 0.0418 indicating that there is marginal evidence that <span class="math inline">\(\alpha_1 \ne 0\)</span>.</p></li>
+<li><p>What do the Jarque Bera Test and the Ljung-Box test suggest about the model? The QQ-plot for the ARCH model residuals suggests a similar conclusion. Shumway and Stoffer mention the problems, but do not explore any resolutions.</p></li>
+<li><p>Why doesn’t <code>garchFit()</code> or <code>ugarchfit()</code> allow for a value of d? The reason may be due to an investment return being more important that the actual value of an investment on a per share/unit basis. Of course, GNP for this example does not correspond to an investment.</p></li>
+</ul>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="multiple-time-series.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="garch-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,808 @@
+# Forecasting
+
+## Point Estimates
+
+Predict (forecast) future values of a time series, $x_{n+1}, x_{n+2}, …$ based on $x_1, …, x_n$.  
+
+For m time points into the future, the “minimum mean square error predictor” of $x_{n+m}$ is  $x^n_{n+m} = E(x_{n+m}|x_n,x_{n-1},…, x_1)$. What does this mean?
+
+- $E(x_{n+m}|x_n,x_{n-1},…, x_1)$ is a conditional expectation. It denotes the expected value of x at m time points into the future, conditional on the time series observed.
+
+- $E(x_{n+m}|x_n,x_{n-1},…, x_1)$ is the value of $g(x_1,..,x_n)$ that minimizes $E[x_{n+m} – g(x_1,..,x_n)]^2$
+
+Instead of using this as a predictor, we will use an approximation $\tilde x^n_{n+m} = E(x_{n+m}|x_n,x_{n-1},…,x_1,…)$. What is the difference?
+
+$\tilde x^n_{n+m}$ is based on an infinite past and $x_{n+m}^n$ is based on a finite past (which is what we actually have). 
+
+For notational convenience, I will denote $x_n, x_{n-1}, …, x_1,…$ as $I_n$. This symbolizes all INFORMATION up to time point n from an INFINITE past.  
+
+:::{.example}
+
+**AR(1)**
+
+The model is $x_t = \phi_1x_{t-1} + w_t$ where $w_t \sim ind(0,\sigma_w^2)$. Taking into account the observed data of $x_1, …, x_n$, this also essentially means $w_1, …, w_n$ are observed.
+
+Suppose we have observations up to time n. We want to forecast future values for time n + m (m > 0). Thus, we want $x_{n+m} = \phi_1x_{n+m-1} + w_{n+m}.$
+
+Let m = 1. Then the “forecasted value at time n + 1 given information up to time n” is
+
+$$\tilde x^n_{n+1} 	= E(x_{n+1}|I_n)\\
+= E(\phi_1x_n + w_{n+1} |I_n)\\
+= E(\phi_1x_n |I_n) + E(w_{n+1} |I_n)\\
+= \phi_1E(x_n |I_n) + 0=\phi_1x_n$$ 
+
+The last line come about because $w_{n+1}$ is unobserved and the $w_{n+1} \sim ind(0,\sigma_w^2)$. Also the expectation is found CONDITIONAL on knowing $x_n, x_{n-1},…, x_1,…;$ i.e., we know what $x_n$ is!
+
+Let m = 2. Then 
+
+$$\tilde x^n_{n+2}	= E(x_{n+2}|I_n)\\
+= E(\phi_1x_{n+1} + w_{n+2} |I_n)\\
+= E(\phi_1x_{n+1} |I_n) + E(w_{n+2} |I_n)\\
+= \phi_1E(x_{n+1} |I_n) + 0=\phi_1\tilde x^n_{n+1}$$ 
+
+The last equation come aboue because $w_{n+2}$ is unobserved and the $w_{n+2} \sim (0, \sigma_w^2)$
+
+$\tilde x^n_{n+2}$ can be further written as $\phi_1 \tilde x_{n+1}^n  =\phi_1^2x_n$
+
+In summary, 
+
+| m |$\tilde x^n_{n+m}$|
+|:---|:------------------|
+| 1 |$\phi_1x_n$|
+| 2 |$\phi_1 \tilde x_{n+1}^n$|
+| 3 |$\phi_1 \tilde x_{n+2}^n$|
+| 4 |$\phi_1 \tilde x_{n+3}^n$|
+|$\vdots$|$\vdots$|
+
+Because the parameters are generally not known, they are replaced with their estimates. Thus, $\tilde x^n_{n+1} = \hat \phi_1x_n , \tilde x^n_{n+2}  = \hat\phi_1\tilde x_{n+1}^n,…$ .
+
+It would be more notationally correct to refer to this as $\hat{\tilde x}^n_{n+1} = \hat \phi_1 x_n  ,  \hat{\tilde x}^n_{n+2} =   \hat \phi_1 \hat{\tilde x}^n_{n+1} , …$, but I chose to follow the notational convention of most textbooks on time series. 
+
+Question: What happens to the forecast as $m \to \infty$?
+
+Ans: The forecast goes to 0 because $E(x_t) = 0$.   
+
+What if $\mu \ne 0$. Then $x_t = \mu(1-\phi_1) + \phi_1x_{t-1} + w_t$ where $\mu(1-\phi_1) = \alpha$ is a constant term. Then the forecast goes to $\mu(1-\phi_1)$ as $m \to \infty$
+
+|m|$\tilde x^n_{n+m}$|
+|:---|:---|
+|1|$\mu(1-\phi_1)+\phi_1x_n$|
+|2|$\mu(1-\phi_1)+\phi_1\tilde x^n_{n+1}$|
+|3|$\mu(1-\phi_1)+\phi_1\tilde x^n_{n+2}$|
+|$\vdots$|$\vdots$|
+
+:::
+
+
+
+:::{.example}
+
+**MA(1)**
+
+Suppose we have observations up to time n and we want to forecast future values for time n + m (m > 0). 
+
+$x_t=\theta_1w_{t-1}+w_t$ where $w_t \sim ind.(0, \sigma_w^2)$
+
+Note that at time n + m, $x_{n+m} = \theta_1w_{n+m-1} + w_{n+m}$.
+
+
+Let m = 1. Then 
+
+$$\tilde x^n_{n+1}=E(x_{n+1}| I_n)\\
+=E(\theta_1w_n+w_{n+1}| I_n)\\
+=\theta_1E(w_n| I_n)+ E(w_{n+1}| I_n)\\
+=\theta_1w_n+0=\theta_1w_n$$
+
+This is b/c $w_{n+1}$ is unobserved with 
+$w_{n+1} \sim(0,\sigma_w^2)$; also $x_n = \phi_1x_{n-1} + w_n$ has been observed
+
+Let m = 2. Then 
+
+$$\tilde x_{n+2}^n=E(x_{n+2}| I_n)\\
+=E(\theta_1w_{n+1}+w_{n+2}| I_n)\\
+=\theta_1E(w_{n+1}| I_n)+E(w_{n+2}|I_n)\\
+=\theta_1 \times 0 +0=0$$
+
+In summary, 
+
+|m|$\tilde x^n_{n+m}$|
+|:---|:----|
+|1|$\theta_1w_n$|
+|2|0|
+|3|0|
+|4|0|
+|$\vdots$|$\vdots$|
+
+Notice how quickly the forecasted value becomes the mean of the series, 0. Of course, you can also have other MA(q) models with a non-zero mean too. Then in this case, you will see the forecasted value quickly becomes the mean of the series.
+
+Because the parameters are generally not known, they are replaced with their estimates. Thus, $\tilde x^n_{n+1} =  \hat \theta_1 \tilde w^n_n.$  
+
+What is $\tilde w^n_n$ ? The answer comes from the residuals!  
+
+How are residuals found? These are symbolically denoted as $\tilde w_t^n$  for t = 1, …, n.  
+
+Now, $w_t = x_t - \theta_1w_{t-1}$. Let $w_0 = 0$ (remember mean is 0 for white noise). Then
+
+$$w_1 = x_1 - \theta_1w_0 = x_1 	\implies   \tilde w_1^n= x_1\\
+w_2 = x_2 - \theta_1w_1   \implies \tilde w^n_w=x_2-\hat \theta_1\tilde w_1^n\\   
+\vdots\\
+w_n = x_n - \theta_1w_{n-1}  \implies  \tilde w_n^n=x_n-\hat \theta_1\tilde w^n_{n-1}$$   
+
+More complicated models follow the same process. See Shumway and Stoffer’s textbook for a ARMA(1,1) example. Alternate methods also include backcasting so that one does not necessarily start $x_t$ and $w_t$ at fixed constant values (like 0) when t < 1. 
+
+
+:::
+
+
+
+:::{.example}
+
+**ARIMA(1,1,1)**
+
+Suppose we have observations up to time n and we want to forecast future values for time n + m (m > 0).  
+
+$(1-\phi_1B)(1-B)x_t = (1+\theta_1B)w_t$ where $w_t \sim ind(0,\sigma_w^2)$.  This can be rewritten as $x_t = (1+\phi_1)x_{t-1} - \phi_1x_{t-2} + \theta_1w_{t-1} + w_t.$  At time n + m, we have
+
+$$x_{n+m} = (1+\phi_1)x_{n+m-1} - \phi_1x_{n+m-2} + \theta_1w_{n+m-1} + w_{n+m}$$
+
+Let m = 1. Then 
+
+$$\tilde x^n_{n+1}  = E(x_{n+1}|I_n)\\
+= E[(1+\phi_1)x_n - \phi_1x_{n-1} + \theta_1w_n + w_{n+1}|I_n]\\
+= (1+\phi_1)E(x_n|I_n) - \phi_1E(x_{n-1}|I_n) + \theta_1E(w_n|I_n) + E(w_{n+1}|I_n)\\
+= (1+\phi_1)x_n - \phi_1x_{n-1} + \theta_1w_n + 0\\ 
+= (1+\phi_1)x_n - \phi_1x_{n-1} + \theta_1w_n$$
+
+Let m = 2. Then 
+
+$$\tilde x^n_{n+2}= E(x_{n+2}|I_n)\\
+= E[(1+\phi_1)x_{n+1} - \phi_1x_n + \theta_1w_{n+1} + w_{n+2}|I_n]\\
+= (1+\phi_1)E(x_{n+1}|I_n) - \phi_1E(x_n|I_n) + \theta_1E(w_{n+1}|I_n) + E(w_{n+2}|I_n)\\ 
+= (1+\phi_1)\tilde x^n_{n+1}  - \phi_1x_n + \theta_10 + 0 \\
+= (1+\phi_1)\tilde x^n_{n+1}  - \phi_1x_n$$
+
+In summary, 
+
+|m|$\tilde x^n_{n+m}$|
+|:---|:---|
+|1|$(1+\phi_1)x_n-\phi_1x_{n-1}+\theta_1w_n$|
+|2|$(1+\phi_1)\tilde x^n_{n+1}-\phi_1x_n$|
+|3|$(1+\phi_1)\tilde x^n_{n+2}-\phi_1\tilde x^n_{n+1}$|
+|4|$(1+\phi_1)\tilde x^n_{n+3}-\phi_1\tilde x^n_{n+2}$|
+|$\vdots$|$\vdots$|
+
+Because the parameters are generally not known, they are replaced with their estimates. Also, $\tilde w^n_n$ replaces $w_n$.
+
+
+:::
+
+
+
+:::{.example}
+
+**AR(1) with $\phi_1=0.7, \mu=0, \sigma_w^2=1$ (fit_AR1.R)**
+
+
+```{r}
+ar1 <- read.table("AR1.0.7.txt", header = TRUE, sep = "")
+x <- ar1$x
+```
+
+```{r}
+mod.fit <- arima(x=x, order = c(1,0,0))
+mod.fit
+```
+
+```{r}
+# Covariance matrix
+mod.fit$var.coef
+```
+
+```{r}
+# Forecasting
+
+# Notice class of mod.fit is "Arima". Therefore, 
+#  generic functions, like predict, will actually
+#  call predict.Arima().
+
+class(mod.fit)
+
+```
+
+```{r}
+# Forecasts 5 times periods into the future
+fore.mod <- predict(object=mod.fit, n.ahead = 5, se.fit = TRUE)
+fore.mod
+```
+
+`se.fit=TRUE` help us calculate the forecast errors $\sqrt{\hat Var(x_{n+m}-\tilde x^n_{n+m})}$
+
+```{r}
+# x_100
+x[100]
+```
+
+Esimated model: 
+
+$(1-0.6854B)x_t=-0.1360+w_t$ where $\hat \sigma_w^2=1.336, \hat \alpha=-0.1360$
+
+Equivalently,
+
+$x_t=-0.1360+0.6854x_{t-1}+w_t$
+
+Forecasts:
+
+|m|$\tilde x^{100}_{100+m}$|
+|:---|---|
+|1|$\hat \mu(1-\hat \phi_1)+\hat \phi_1x_{100}= -0.1360+0.6854\times2.0371 = 1.2602$|
+|2|$\hat \mu(1-\hat \phi_1)+\hat \phi_1 \tilde x^{100}_{101}= -0.1360+0.6854\times1.2602 = 0.7277$|
+|3|$\hat \mu(1-\hat \phi_1)+\hat \phi_1 \tilde x^{100}_{102}= -0.1360+0.6854\times0.7277 = 0.3628$|
+
+Notice the syntax used in the `predict()` function!  Calculation of the standard errors and confidence intervals for $x_{n+m}$ will be discussed later.  
+
+Below are the residuals.
+
+```{r}
+# Residuals
+
+names(mod.fit)
+```
+
+
+```{r}
+mod.fit$residuals
+```
+
+$x_t=-0.1360+0.6854x_{t-1}+w_t\\ \implies w_t=x_t+0.1360-0.6854x_{t-1}$
+
+Below calculates $\tilde w^{100}_{100}$
+
+```{r}
+# Last residual 
+# as.numeric() removes a leftover label
+as.numeric(x[100]-mod.fit$coef[2]*(1-mod.fit$coef[1])-mod.fit$coef[1]*x[99])
+```
+
+We can add to the plot of the time series the forecasts t = n, …, m. For visual display, sometimes it is interesting to add the corresponding predicted values for t = 1, …, n. What are these predicted values? A simple computational way to find these in R is use a result from a regression course: 
+
+  residual = observed – predicted 
+
+which leads to 
+
+  predicted = observed – residual
+
+Similar to there being multiple ways to find residuals, there are multiple ways to find predicted values. Below is how I used predicted = observed – residual and created the corresponding plot. 
+
+```{r}
+#Predicted values for t=1,...,100
+x-mod.fit$residuals
+```
+
+```{r}
+# add the forecasts into the first plot with C.I.s
+
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "o", col = "red", lwd = 1, pch = 20, main = 
+    expression(paste("Data simulated from AR(1): ", x[t] 
+    == 0.7*x[t-1] + w[t], " where ", w[t], "~N(0,1)")) , 
+    panel.first = grid(col = "gray", lty = "dotted"), xlim 
+    = c(1, 105))
+
+lines(x = c(x - mod.fit$residuals, fore.mod$pred), lwd 
+    = 1, col = "black", type = "o", pch = 17) 
+legend("top", legend = c("Observed", "Forecast"), 
+    lty = c("solid", "solid"), col = c("red", "black"), pch 
+    = c(20, 17), bty = "n")
+
+
+```
+
+The x-axis limits were changed in the `plot()`function to allow for the forecasts for t = 101, …, 105 to be shown. Notice how I put these predicted values together into one vector for the first `lines()` function call. We use `c(x - mod.fit$residuals, fore.mod$pred)` to include both the predicted value for observed data(t=1,...,100) and forecast value for future (unobserved data) (t=101,...,105)
+
+Below is a zoomed in version of the plot. 
+
+```{r}
+# zoom in (only change the xlim)
+
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "o", col = "red", lwd = 1, pch = 20, main = 
+    expression(paste("Data simulated from AR(1): ", x[t] 
+    == 0.7*x[t-1] + w[t], " where ", w[t], "~N(0,1)")) , 
+    panel.first = grid(col = "gray", lty = "dotted"), xlim = 
+    c(96, 105))
+
+lines(x = c(x - mod.fit$residuals, fore.mod$pred), lwd 
+    = 1, col = "black", type = "o", pch = 17) 
+
+legend("top", legend = c("Observed", "Forecast"), 
+   lty = c("solid", "solid"), col = c("red", "black"),
+   pch=c(20, 17), bty = "n")
+
+```
+
+:::
+
+
+
+:::{.example}
+
+**ARIMA(1,1,1) with $\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200$(arima111_sim.R)**
+
+```{r}
+arima11 <- read.csv("arima111.csv")
+x <- arima11$x
+```
+
+```{r}
+mod.fit <- arima(x=x, order=c(1,1,1))
+mod.fit
+```
+
+The estimated model is
+
+$(1 - 0.6720B)(1 - B)x_t = (1+0.4681B)w_t$ with $ \hat \sigma_w^2 = 9.56$
+
+Equivalently,
+
+$x_t=(1 + 0.6720)x_{t-1} – 0.6720x_{t-2} + 0.4681w_{t-1} + w_t$
+
+Forecasts for t=201,...,205:
+
+```{r}
+# Forecasts 5 time periods into the future
+fore.mod <- predict(object=mod.fit, n.ahead = 5, se.fit = TRUE)
+
+fore.mod
+
+```
+
+```{r}
+x[199:200]
+```
+
+We will discuss later how the standard errors and confidence intervals.  
+
+With the help of the above output, by-hand calculations of the forecasts are shown below. Note that $\tilde w^{200}_{200}$  was found from the R output.  
+
+|m|$\tilde x^n_{n+m}$|
+|:---|---|
+|1|$$(1+\hat \phi_1)x_{200} - \hat \phi_1x_{199} +  \hat \theta_1 \tilde w_{200}^{200}\\ 
+= (1+0.6720)(-488.4823) – (0.6720)(-488.2191) + (0.4681)(4.9086)\\ = -486.36$$|
+|2|$$(1+\hat \phi_1)\tilde x^{200}_{201}  - \hat \phi_1x_{200}\\
+= (1+0.6720)(-486.36) – (0.6720)(-488.4823)\\ = -484.93$$|
+|3|$$(1+\hat \phi_1)\tilde x^{200}_{202}  -\hat \phi_1 \tilde x^{200}_{201}\\   
+= (1+0.6720)(-484.9216) - (0.6720)(-486.3584)\\ = -483.96
+$$|
+
+Below are plots of the forecasts.
+
+```{r}
+# Forecasts with C.I.s
+
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "o", col = "red", lwd = 1, pch = 20, main = 
+    expression(paste("ARIMA model: ", (1 - 0.7*B)*(1-
+    B)*x[t] == (1 + 0.4*B)*w[t])), panel.first = grid(col = 
+   "gray", lty = "dotted"), xlim = c(1, 205))
+   
+lines(x = c(x - mod.fit$residuals, fore.mod$pred), lwd 
+    = 1, col = "black", type = "o", pch = 17) 
+
+legend("top", legend = c("Observed", "Forecast"), 
+    lty = c("solid", "solid"), col = c("red", "black"), pch 
+    = c(20, 17), bty = "n")
+
+```
+
+It is hard to see the observed and forecasted values in the above plot so I zoomed in to create the plot below.  
+
+```{r}
+# zoom in
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "o", col = "red", lwd = 1, pch = 20, main = 
+    expression(paste("ARIMA model: ", (1 - 0.7*B)*(1-         
+    B)*x[t] == (1 + 0.4*B)*w[t])), panel.first = 
+    grid(col = "gray", lty = "dotted"), xlim = c(196, 
+    205), ylim = c(-540, -440))
+
+lines(x = c(x - mod.fit$residuals, fore.mod$pred), lwd 
+   = 1, col = "black", type = "o", pch = 17) 
+
+
+legend("top", legend = c("Observed", "Forecast"),
+   lty = c("solid", "solid"), col = c("red", "black"), pch = 
+    c(20, 17), bty = "n")
+
+
+```
+
+:::
+
+
+## Inference
+
+It was shown earlier how to write an ARIMA process as an infinite order MA process. To find the standard error of ARIMA forecasts, this needs to be done again.  
+
+:::{.example}
+
+**AR(1) with $\mu=0$**
+
+$x_t=\frac{1}{1-\phi_1B}w_t=(1+\phi_1B+\phi_1^2B^2+...)w_t$
+
+Then
+
+$$\tilde x^n_{n+m}=E(x_{n+m}| I_n)\\
+=E[(1+\phi_1B+\phi_1^2B^2+...)w_{n+m}|I_n]\\
+=E[w_{n+m}+\phi_1w_{n+m-1}+\phi_1^2w_{n+m-2}+...| I_n]$$
+
+Let m=1. Then
+
+$$\tilde x^n_{n+1}=E(x_{n+1}| I_n)\\
+=E[w_{n+1}+\phi_1w_n+\phi_1^2w_{n-1}+...| I_n]\\
+=0+\phi_1w_n+\phi_1^2w_{n-1}+...$$
+
+Note that $$\phi_1w_n+\phi_1^2w_{n-1}+...\\
+\phi_1(x_n-\phi_1x_{n-1})+\phi_1^2(x_{n-1}-\phi_1x_{n-2})+...\\
+\phi_1x_n-\phi_1^2x_{n-1}+\phi_1^2x_{n-1}-\phi_1^3x_{n-2}+...\\
+=\phi_1x_n$$
+
+which is the same value of $\tilde x^n_{n+1}$ shown earlier.  
+
+Let m=2. Then
+
+$$\tilde x^n_{n+2}=E(x_{n+2}| I_n)\\
+=E(w_{n+2}+\phi_1w_{n+1}+\phi_1^2w_n+\phi^3_1w_{n-1}+...| I_n)\\
+=\phi_1^2w_n+\phi_1^3w_{n-1}+...$$
+
+Let m=3. Then
+
+$$\tilde x^n_{n+3}=E(x_{n+3}| I_n)\\
+=E(w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1}+\phi^3_1w_{n}+...| I_n)\\
+=\phi_1^3w_n+\phi_1^4w_{n-1}+...$$
+
+:::
+
+**Forecast error: $x_{n+m}-\tilde x^n_{n+m}=$ observed-forecast**
+
+The variance of the forecast error is: $Var(x_{n+m}-\tilde x^n_{n+m})$  
+
+Shumway and Stoffer denote the variance of the forecast error symbolically as $P^n_{n+m}$.  
+
+**Approximate (1-$\alpha$)100% C.I. for $x_{n+m}$**
+
+$$\tilde x^n_{n+m} \pm Z_{1-\alpha/2}\sqrt{ \hat Var(x_{n+m}-\tilde x^n_{n+m})}$$
+
+where $Z_{1-\alpha/2}$ is the $1-\alpha/2$ quantile of a standard normal distribution.
+
+$1-\alpha=P(-Z_{1-\alpha/2}< \frac{x_{n+m}-\tilde x^n_{n+m}}{\sqrt{\hat  Var(x_{n+m}-\tilde x^n_{n+m})}}<Z_{1-\alpha/2})$
+
+I refer to this a “confidence interval”. Others may prefer to call this a prediction interval due to adopting the often used naming convention of “prediction intervals” are for random variables and “confidence intervals” are for parameters. In the end, all frequentist-based intervals are confidence intervals. If you want to differentiate between the names, you may. I will just call them confidence intervals or C.I.s for short.  
+
+:::{.example}
+
+**AR(1) with $\mu=0$**
+
+For m=1:
+
+$$x_{n+1}-\tilde x^n_{n+1}=(w_{n+1}+\phi_1w_n+\phi_1^2w_{n-1}+...)-(\phi_1w_n+\phi_1^2w_{n-1}+...)\\=w_{n+1}$$
+
+For m=2:
+
+$$x_{n+2}-\tilde x^n_{n+2}=(w_{n+2}+\phi_1w_{n+1}+\phi_1^2w_n+...)-(\phi_1^2w_n+\phi_1^3w_{n-1}+...)\\=w_{n+2}+\phi_1w_{n+1}$$
+For m=3:
+
+$$x_{n+3}-\tilde x^n_{n+3}=(w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1}+...)-(\phi_1^3w_n+\phi_1^4w_{n-1}+...)\\w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1}$$
+
+Note that $wt \sim ind (0, \sigma_w^2)$. Then
+
+$$Var(x_{n+1}-\tilde x^n_{n+1})=Var(w_{n+1})=\sigma_w^2\\
+Var(x_{n+2}-\tilde x^n_{n+2})=Var(w_{n+2}+\phi_1w_{n+1})=\sigma_w^2+\phi_1^2\sigma_w^2\\
+Var(x_{n+3}-\tilde x^n_{n+3})=Var(w_{n+3}+\phi_1w_{n+2}+\phi_1^2w_{n+1})=\\
+\sigma_w^2+\phi_1^2\sigma_w^2+\phi_1^4\sigma_w^2=\\
+\sigma_w^2(1+\phi_1^2+\phi_1^4)$$
+
+In general for an AR(1) process: 
+
+$Var(x_{n+m}-\tilde x^n_{n+m})=\sigma_w^2\sum_{i=1}^{m}(\phi_1^2)^{i-1}$
+
+The approximate (1-$\alpha$)100% C.I. for $x_{n+m}$ is
+
+$$\tilde x^n_{n+m} \pm Z_{1-\alpha/2} \sqrt{ \hat Var(x_{n+m}-\tilde x^n_{n+m}) }\\
+\implies \tilde x^n_{n+m} \pm Z_{1-\alpha/2} \hat \sigma_w \sqrt{\sum_{i=1}^{m}(\hat \phi_1^2)^{i-1}}$$
+
+Notice what happens to the confidence interval as m increases – it gets WIDER (although not by much for larger values of m). Why does it make sense for the confidence interval to get wider?  Well, we are more uncertain as we go gurther and further from our observed data.
+
+:::
+
+In general for an ARIMA(p,d,q), the formulas for the forecast error, variance of the forecast error, and the C.I. can be derived using the infinite order MA representation.  
+
+$\phi(B)(1-B)^dx_t=\theta(B)w_t$ can be rewritten as
+
+$x_t=\frac{\theta(B)}{\phi(B)(1-B)^d}w_t=\psi(B)w_t$
+
+where $\psi(B)=(1+\psi_1B+\psi_2B^2+...)=\frac{\theta(B)}{\phi(B)(1-B)^d}$
+
+The forecast error is  $x_{n+m}-\tilde x^n_{n+m} =  \sum_{i=0}^{m-1}\psi_iw_{n+m-i}$ where $\psi_0 = 1$. For example, with an AR(1) and m = 1, $ x_{n+m}-\tilde x^n_{n+m} = w_{n+1}$ which matches our previous result.  
+
+The variance of the forecast error is 
+
+$Var[x_{n+m}-\tilde x^n_{n+m}]=\sigma_w^2\sum_{i=0}^{m-1}\psi_i^2$
+
+The approximate (1-$\alpha$)100% C.I. used in practice is 
+
+$\tilde x^n_{n+m} \pm Z_{1-\alpha/2}\hat\sigma_w\sqrt{\sum_{i=0}^{m-1}\hat \psi_i^2}$
+
+:::{.example}
+
+**MA(1)**
+
+The process can be written as $x_t = (1 + \theta_1B)w_t$
+
+Translating this to $x_t = \psi(B)w_t$ produces $\psi_1 = \theta_1$ and $\psi_i = 0$ for i > 1. Then 
+
+$$Var[x_{n+m}-\tilde x^n_{n+m}]=\sigma_w^2\sum_{i=0}^{m-1}\psi_i^2=\begin{cases} \sigma_w^2 & m=1 \\ \sigma_w^2(1+\theta_1^2) & m \ge 2 \end{cases}$$
+
+:::
+
+
+:::{.example}
+
+**ARIMA(1,1,1)**
+
+$$(1-\phi_1B)(1-B)x_t=(1+\theta_1B)w_t\\
+\iff x_t=\frac{(1+\theta_1B)}{(1-\phi_1B)(1-B)}w_t=\psi(B)w_t$$
+
+Then $$(1-\phi_1B)(1-B)(1+\psi_1B+\psi_2B^2+\psi_3B^3+...)=(1+\theta_1B)\\
+\iff [1-B(1+\phi_1)+\phi_1B^2](1+\psi_1B+\psi_2B^2+\psi_2B^3+...)=(1+\theta_1B)\\
+\iff 1+\psi_1B+\psi_2B^2+\psi_3B^3+...\\
+-(1+\phi_1)B-\psi_1(1+\phi_1)B^2-\psi_2(1+\phi_1)B^3-\psi_3(1+\phi_1)B^4-...\\
+\phi_1B^2+\psi_1\phi_1B^3+\psi_2\phi_1B^4+\psi_3\phi_1B^5=(1+\theta_1B)$$
+
+$$B: \psi_1-(1+\phi_1)=\theta_1\implies \psi_1=1+\phi_1+\theta_1\\
+B^2: \psi_2-\psi_1(1+\phi_1)+\phi_1=0\implies \psi_2=\psi_1(1+\phi_1)-\phi_1\\
+B^3: \psi_3-\psi_2(1+\phi_1)+\phi_1\psi_1=0\implies \psi_3=\psi_2(1+\phi_1)-\phi_1\psi_1\\
+\vdots\\
+B^j: \psi_j=\psi_{j-1}(1+\phi_1)-\phi_1\psi_{j-2}$$
+
+$$Var[x_{n+1}-\tilde x^n_{n+1}]=\sigma_w^2\sum_{i=0}^{1-1}\psi_i^2=\sigma_w^2\\
+Var[x_{n+2}-\tilde x^n_{n+2}]=\sigma_w^2\sum_{i=0}^{2-1}\psi_i^2=\sigma_w^2[1+(1+\phi_1+\theta_1)^2]\\
+\vdots$$
+
+:::
+
+
+:::{.example}
+
+**AR(1) with $\phi_1=0.7, \mu=0, \sigma_w^2=1$ (fit_AR1.R)**
+
+From the previous R code and output, it was found that  $\hat \sigma_w^2 = 1.335638$ and $\hat \phi_1  = 0.6853698$. The forecasts and standard errors, $\sqrt{Var(x_{n+m}-\tilde x^n_{n+m})}$  , are automatically calculated by the `predict()` function:
+
+```{r}
+ar1 <- read.table(file = "AR1.0.7.txt", header = TRUE, sep = "")
+head(ar1)
+x <- ar1$x
+
+mod.fit <- arima(x = x, order = c(1, 0, 0), method = "CSS-ML", include.mean = TRUE)
+```
+
+
+```{r}
+fore.mod <- predict(object=mod.fit, n.ahead = 5, se.fit 
+    = TRUE) 
+
+fore.mod
+```
+
+You can see the forecast values are `1.26014875  0.72767770  0.36273810  0.11261952 -0.05880421`, and the $\sqrt{\hat Var(x_{n+m}-\tilde x^n_{n+m})}$ are `1.155698 1.401082 1.502576 1.547956 1.568820`
+
+In particular, $\sqrt{\hat Var(x_{101}-\tilde x^{100}_{101})}=1.155698$
+
+
+The 95% confidence intervals were found using 
+$\tilde x^n_{n+m}\pm Z_{1-\alpha/2} \hat \sigma_w \sqrt{\sum_{i=1}^{m}(\hat \phi_1^2)^{i-1}}$  to produce
+
+```{r}
+fore.mod$pred # a vector of length 5
+```
+
+
+```{r}
+#Calculate 95% C.I.s 
+
+low <- fore.mod$pred - qnorm(p = 0.975, mean = 0, sd = 
+         1)*fore.mod$se
+
+up <- fore.mod$pred + qnorm(p = 0.975, mean = 0, sd = 
+         1)*fore.mod$se
+
+data.frame(low, up)
+```
+
+Doing the calculations by hand produces:
+
+|m|$\tilde x^{100}_{100+m}$|$Var(x_{100+m}-\tilde x^{100}_{100+m})$|95% C.I.|
+|---|---|----|----|
+|1|1.2601|$\hat \sigma_w^2\sum_{i=1}^{1}(\hat \phi_1^2)^{i-1}=\sigma_w^2=1.336$|$1.2601\pm 1.96 \sqrt{1.336} = (-1.005, 3.525)$|
+|2|0.7277|$\hat \sigma_w^2\sum_{i=1}^{2}(\hat \phi_1^2)^{i-1}=\sigma_w^2(1+\hat \phi_1^2)\\=1.336(1+0.6854^2)=1.963$|$0.7277\pm 1.96\sqrt{1.963}= (-2.018, 3.473)$|
+|3|0.3627|$\hat \sigma_w^2\sum_{i=1}^{3}(\hat \phi_1^2)^{i-1}=\sigma_w^2(1+\hat \phi_1^2+\hat \phi_1^4)\\=1.336(1+0.6854^2+0.6854^4)\\=2.258$|$0.3627\pm 1.96 \sqrt{2.258} = (-2.582, 3.308)$|
+
+
+Forecast plots: 
+
+```{r}
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "o", col = "red", lwd = 1, pch = 20, main = 
+    expression(paste("Data simulated from AR(1): ", x[t] 
+    == 0.7*x[t-1] + w[t], " where ", w[t], "~N(0,1)")) , 
+    panel.first = grid(col = "gray", lty = "dotted"), xlim 
+    = c(1, 105))
+
+lines(x = c(x - mod.fit$residuals, fore.mod$pred), lwd 
+    = 1, col = "black", type = "o", pch = 17) 
+lines(y = low, x = 101:105, lwd = 1, col = "darkgreen", 
+    lty = "dashed") 
+lines(y = up, x = 101:105, lwd = 1, col = "darkgreen", 
+    lty = "dashed") 
+
+legend("top", legend = c("Observed", "Forecast", 
+    "95% C.I."), lty = c("solid", "solid", "dashed"),
+    col = c("red", "black", "darkgreen"), pch = c(20, 
+    17, NA), bty = "n")
+
+# No pch for C.I., that's why we use NA, of course you can use others
+```
+
+
+```{r}
+# zoom in
+
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = 
+    "o", col = "red", lwd = 1, pch = 20, main = 
+    expression(paste("Data simulated from AR(1): ", x[t] 
+    == 0.7*x[t-1] + w[t], " where ", w[t], "~N(0,1)")) , 
+    panel.first = grid(col = "gray", lty = "dotted"), xlim = 
+    c(96, 105))
+
+lines(x = c(x - mod.fit$residuals, fore.mod$pred), lwd 
+    = 1, col = "black", type = "o", pch = 17) 
+lines(y = low, x = 101:105, lwd = 1, col = "darkgreen", 
+    lty = "dashed") 
+lines(y = up, x = 101:105, lwd = 1, col = "darkgreen", 
+    lty = "dashed") 
+
+legend("topleft", legend = c("Observed", "Forecast", 
+    "95% C.I."), lty = c("solid", "solid", "dashed"), col 
+    = c("red", "black", "darkgreen"), pch = c(20, 17, 
+    NA), bty = "n")
+
+
+```
+
+:::
+
+
+:::{.example}
+
+**ARIMA(1,1,1) with $\phi_1=0.7, \theta_1=0.4, \sigma_w^2=9, n=200$ (arima111_sim.R)**
+
+From the previous R code and output:
+
+```{r}
+#Data could be simulated using the following code - notice the use of the order option.  
+set.seed(6632)
+x <- arima.sim(model = list(order = c(1,1,1), ar = 0.7, ma = 0.4), n = 200, rand.gen = rnorm, sd = 3)
+
+  
+```
+
+```{r}
+#Instead, here data that I had simulated earlier using the same model.  
+  arima111 <- read.csv(file = "arima111.csv")
+
+  head(arima111)
+  tail(arima111)
+  x <- arima111$x
+```
+
+
+```{r}
+mod.fit <- arima(x = x, order = c(1, 1, 1))
+mod.fit
+```
+
+```{r}
+fore.mod <- predict(object = mod.fit, n.ahead = 5, se.fit  
+    = TRUE) 
+fore.mod
+```
+
+```{r}
+#Calculate 95% C.I.s 
+low <- fore.mod$pred - qnorm(p = 0.975, mean = 0, sd = 
+    1)*fore.mod$se
+
+up <- fore.mod$pred + qnorm(p = 0.975, mean = 0, sd = 
+    1)*fore.mod$se
+
+data.frame(low, up)
+
+
+```
+
+Doing the calculations by hand produces:
+
+|m|$\tilde x^{200}_{200+m}$|$Var(x_{200+m}-\tilde x^{200}_{200+m})$|95% C.I.|
+|---|---|----|----|
+|1|-486.36|$\hat\sigma_w^2\sum_{i=0}^{1-1}\hat\psi_i^2=\hat \sigma_w=9.558$|$-486.36\pm 1.96\sqrt{9.558} = \\(-492.42, -480.30)$
+|
+|2|-484.94|$\hat\sigma_w^2\sum_{i=0}^{2-1}\hat\psi_i^2=\hat \sigma_w(1+\hat \psi_w^2)\\=\hat \sigma_w^2(1+(1+\hat \phi_1+\hat \theta_1)^2)\\=9.558(1+(1+0.6720+0.4681)^2)\\=53.334$|$-484.94\pm 1.96 \sqrt{53.334}=\\ (-499.25, -470.62)$|
+
+Because the data is being simulated from an ARIMA(1,1,1) process, 210 observations were actually simulated originally so that one could determine how good the forecasts are for the last 10 time points. Below are the new observations with their forecasts.  
+
+```{r}
+  fore.mod <- predict(object = mod.fit, n.ahead = 10, se.fit = TRUE)
+  fore.mod
+
+  #Calculate 95% C.I.s 
+  low <- fore.mod$pred - qnorm(p = 0.975, mean = 0, sd = 1)*fore.mod$se
+  up <- fore.mod$pred + qnorm(p = 0.975, mean = 0, sd = 1)*fore.mod$se
+  data.frame(low, up)
+```
+
+```{r}
+#When I originally simulated the data, 210 observations were actually simulated.  
+  #  I did this so that I could examine how well the confidence intervals captured the true future values
+x.extra <- c(-494.85, -506.44, -517.70, -526.64, -529.10, -530.94, -532.52, -537.46, -540.39, -541.43)
+```
+
+
+|m|$\tilde x^{200}_{200+m}$|95% C.I. lower limit|95% C.I. upper limit|$x_{200+m}$|
+|---|---|----|----|---|
+|1|-486.36|-492.42|-480.30|-494.85|
+|2|-484.94|-499.25|-470.62|-506.44|
+|3|-483.98|-506.67|-461.28|-517.70|
+|4|-483.33|-514.07|-452.60|-526.64|
+|5|-482.90|-521.19|-444.62|-529.10|
+|6|-482.61|-527.92|-437.30|-530.94|
+|7|-482.42|-534.26|-430.58|-532.52|
+|8|-482.29|-540.20|-424.37|-537.46|
+|9|-482.20|-545.78|-418.61|-540.39|
+|10|-482.14|-551.04|-413.24|-541.43|
+
+
+Below is plot of these values. See the program for the code.  
+
+
+```{r}
+
+  
+#Plot of forecasts, C.I.s, and true future values.
+  #dev.new(width = 8, height = 6, pointsize = 10)
+  
+plot(x = x, ylab = expression(x[t]), xlab = "t", type = "o", col = "red", lwd = 1, pch = 20,
+       main = expression(paste("ARIMA model: ", (1 - 0.7*B)*(1-B)*x[t] == (1 + 0.4*B)*w[t])), 
+       panel.first=grid(col = "gray", lty = "dotted"), xlim = c(196, 210), ylim = c(-580, -400))
+  
+lines(x = c(x - mod.fit$residuals, fore.mod$pred), lwd = 1, col = "black", type = "o", pch = 17) 
+  
+lines(y = low, x = 201:210, lwd = 1, col = "darkgreen", lty = "dashed") 
+  
+lines(y = up, x = 201:210, lwd = 1, col = "darkgreen", lty = "dashed") 
+  
+lines(y = x.extra, x = 201:210, lwd = 1, col = "blue", lty = "solid", type = "o", pch = 20) 
+  
+legend("bottomleft", legend = c("Observed", "Forecast", "95% C.I.", "Actual future values"), 
+         lty = c("solid", "solid", "dashed", "solid"),
+         col = c("red", "black", "darkgreen", "blue"), pch = c(20, 17, NA, 20), bty = "n")
+```
+
+
+Notice that most of the 10 extra observations are outside of the C.I. bounds. Also, notice that the width of the C.I. increases as the time from t = 200 increases.  
+
+A few other realizations were simulated to see if the above was an anomaly and indeed the above was an anomaly. The forecast C.I.s did contain the 10 extra observations!  
+
+:::
+
+All forecasts and associated inferences assume that what has occurred in the past will occur in the future. Thus, trends seen in the past will continue in the future. What could happen if this does not occur?
+
+Well, then you can just throw away what you just learned!!

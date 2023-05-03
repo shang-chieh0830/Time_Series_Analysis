@@ -1,0 +1,290 @@
+# Plotting 
+
+In this chapter, we will go over some _Time Series_ examples.
+The aim of this chapter is to help you grasp some of the ideas about plotting.
+
+## Example Data
+
+Click [OSU_enroll.csv](http://www.chrisbilder.com/stat878/sections/2/OSU_enroll.csv) to download data.
+
+```{r}
+osu.enroll <- read.csv(file = "OSU_enroll.csv", 
+    stringsAsFactors = TRUE)
+```
+
+```{r}
+head(osu.enroll)
+```
+
+```{r}
+tail(osu.enroll)
+```
+
+```{r}
+x <- osu.enroll$Enrollment
+```
+
+
+```{r}
+#One way to do plot
+dev.new(width = 8, height = 6, pointsize = 10) 
+
+# we did not specify y-axis and R put our x in y-axis, time in  x-axis
+
+plot(x = x, ylab = "OSU Enrollment", 
+       xlab = "t (time)", type="l", col = "red", 
+       main = "OSU Enrollment from Fall 1989 to Fall 2002", 
+       panel.first = grid(col = "gray", lty = "dotted"))
+points(x = x, pch = 20, col = "blue")
+
+
+
+```
+
+```{r}
+# A little different version of the plot
+  plot(x = x, ylab = "OSU Enrollment", type = "o", xlab = "t (time)", col = "red",
+    main = "OSU enrollment data", panel.first = grid(col = "gray", lty = "dotted"))
+```
+
+
+```{r}
+dev.new(width = 8, height = 6, pointsize = 10) 
+
+# we did not specify y-axis and R put our x in y-axis, time in  x-axis
+
+plot(x = x, ylab = "OSU Enrollment", 
+       xlab = "t (time)", type="l", col = "red", 
+       main = "OSU Enrollment from Fall 1989 to Fall 2002", 
+       panel.first = grid(col = "gray", lty = "dotted"))
+
+points(x = osu.enroll$Enrollment, pch = 20, col = "blue")
+```
+
+Altenatively, you can do the same thing using ggplot.
+
+```{r}
+library(ggplot2)
+
+# Create a data frame
+df <- data.frame(osu.enroll)
+
+# Create the plot
+ggplot(df, aes(x = t, y = Enrollment)) +
+  geom_line(colour = "red") +  # Line plot
+  geom_point(shape = 20, colour = "blue") +  # Add points
+  labs(x = "t (time)", y = "OSU Enrollment", 
+       title = "OSU Enrollment from Fall 1989 to Fall 2002") +  # Set axis labels and title
+  theme_bw() +  # Set the theme to a white background with black lines
+  theme(panel.grid.major = element_line(colour = "gray", linetype = "dotted"))  # Add gray dotted lines to the plot
+```
+
+When only x is specified in the `plot()` function, R puts this on the y-axis and uses the observation number on the x-axis.
+
+Compare this to the next plot below where both x and y arguments are specified.  
+
+```{r}
+#More complicated plot
+fall <- osu.enroll[osu.enroll$Semester == "Fall",]
+spring <- osu.enroll[osu.enroll$Semester == "Spring",]
+summer <- osu.enroll[osu.enroll$Semester == "Summer",]
+
+plot(y = fall$Enrollment, x = fall$t,
+    ylab = "OSU Enrollment", xlab = "t (time)", 
+    col = "blue", 
+    main = "OSU Enrollment from Fall 1989 to Fall 2002", 
+    panel.first = grid(col = "gray", lty = "dotted"), 
+    pch = 1, type = "o", ylim = c(0,max(osu.enroll$Enrollment)))
+
+lines(y = spring$Enrollment, x = spring$t, col = "red", 
+    type = "o", pch = 2)
+
+lines(y = summer$Enrollment, x = summer$t, col = 
+    "darkgreen", type = "o", pch = 3)
+    
+legend(x="center", legend= c("Fall","Spring","Summer"), pch=c(1,2,3), lty=c(1,1,1), col=c("blue","red","darkgreen"), bty="n")
+
+
+```
+
+```{r}
+#Another way to do plot with actual dates
+plot(y = osu.enroll$Enrollment, 
+    x = as.Date(osu.enroll$date, format = "%m/%d/%Y"), 
+    xlab = "Time", type = "l", col = "red",  
+    main = "OSU Enrollment from Fall 1989 to Fall 2002",
+    ylab = "OSU Enrollment")
+
+points(y = osu.enroll$Enrollment, 
+    x = as.Date(osu.enroll$date, format = "%m/%d/%Y"), pch 
+    = 20, col = "blue")
+
+#Create own gridlines
+# v specifies vertical line; h specifies horizontal line
+ abline(v = as.Date(c("1990/1/1", "1992/1/1", "1994/1/1", 
+    "1996/1/1", "1998/1/1", "2000/1/1", "2002/1/1")),
+    lty = "dotted", col = "lightgray")
+ abline(h = c(10000, 15000, 20000), lty = "dotted", col = 
+    "lightgray")
+     
+```
+
+```{r}
+# Autocorrelation
+
+rho.x <- acf(x = x, type = "correlation", main = "OSU Enrollment series")
+rho.x
+rho.x$acf[1:9]
+  
+```
+
+
+## S&P500 Index
+
+Click [SP500weekly.csv](http://www.chrisbilder.com/stat878/sections/2/SP500weekly.csv) to download data.
+
+```{r}
+SP500 <- read.csv(file="SP500weekly.csv",stringsAsFactors = TRUE)
+```
+
+```{r}
+head(SP500)
+```
+
+```{r}
+tail(SP500)
+```
+
+```{r}
+x <- SP500$Close
+```
+
+```{r}
+#One way to do plot
+dev.new(width = 8, height = 6, pointsize = 10) 
+#again, we do not specify y-axis here
+plot(x = x, ylab = "S&P 500 Index", xlab = "t (time)", 
+    type = "l", col = "red", main = "S&P 500 Index from 
+    1/1/1995 to 10/25/2021 (weekly)", 
+    panel.first = grid(col = "gray", lty = "dotted"))
+
+```
+
+```{r}
+#Another way to do plot with actual dates
+plot(y = x, x = as.Date(SP500$WeekStart, format =
+    "%m/%d/%Y"), xlab = "Time", type = "l", col = "red", main 
+    = "S&P 500 Index from 1/1/1995 to 10/25/2021 (weekly)",
+    ylab = "S&P 500 Index")
+
+#Create own gridlines
+abline(v = as.Date(c("1995/1/1", "2000/1/1", "2005/1/1", 
+    "2010/1/1", "2015/1/1", "2020/1/1")), lty = "dotted", 
+    col = "lightgray")
+
+abline(h = seq(from = 0, to = 5000, by = 1000), lty = 
+    "dotted", col = "lightgray")
+
+```
+
+```{r}
+# One more way with fine control of the dates
+plot(y = x, x = as.Date(SP500$WeekStart, format = 
+    "%m/%d/%Y"), xlab = "Time", type = "l", col = "red", 
+    main = "S&P 500 Index from 1/1/1995 to 10/25/2021 
+    (weekly)", ylab = "S&P 500 Index", xaxt = "n")
+
+axis.Date(side = 1, at = seq(from = as.Date("1995/1/1"),
+    to = as.Date("2021/12/31"), by = "years"), labels = 
+    format(x = seq(from = as.Date("1995/1/1"), to = 
+    as.Date("2021/12/31"), by = "years"), format = "%b%y"), 
+    las = 2)  #las changes orientation of labels
+
+#Create own gridlines
+abline(v = as.Date(c("1995/1/1", "2000/1/1", "2005/1/1", 
+    "2010/1/1", "2015/1/1", "2020/1/1")), lty = "dotted", 
+    col = "lightgray")
+abline(h = seq(from = 0, to = 5000, by = 1000), lty = 
+    "dotted", col = "lightgray")
+
+```
+
+## Sunspots
+
+Click [SN_y_tot_V2.0.csv](http://www.chrisbilder.com/stat878/sections/2/SN_y_tot_V2.0.csv) to download data.
+
+```{r}
+sunspots <- read.table(file = "SN_y_tot_V2.0.csv", sep = 
+    ";", col.names = c("Mid.year", "Mean.total", 
+   "Mean.SD.total", "Numb.obs.used", "Definitive"))
+```
+
+```{r}
+head(sunspots)
+```
+
+```{r}
+tail(sunspots)
+```
+
+```{r}
+dev.new(width = 8, height = 6, pointsize = 10)
+
+#again, we did not specify y-axis here
+plot(x = sunspots$Mean.total, ylab = "Number of 
+    sunspots", xlab = "t (time)", type = "l", col = "red", 
+    main = "Sunspots per year from 1700 to 2020",
+    panel.first = grid(col = "gray", lty = "dotted"))
+
+points(x = sunspots$Mean.total, pch = 20, col = "blue")
+
+
+```
+
+```{r}
+# Include dates
+plot(y = sunspots$Mean.total, x = sunspots$Mid.year, ylab 
+    = "Number of sunspots", xlab = "Year", type = "l", col 
+    = "red", main = "Sunspots per year from 1700 to 2020",
+    panel.first = grid(col = "gray", lty = "dotted"))
+
+points(y = sunspots$Mean.total, x = sunspots$Mid.year, 
+    pch = 20, col = "blue")
+
+```
+
+```{r}
+#Convert to an object of class "ts"
+
+x <- ts(data = sunspots$Mean.total, start = 1700, frequency 
+    = 1)
+
+x
+
+```
+
+```{r}
+class(x)
+
+class(sunspots$Mean.total)
+```
+
+### plot.ts()
+
+plot() is a generic function - uses the plot.ts() method function
+
+```{r}
+# we did not specify y-axis here, but x is now ts
+plot(x = x, ylab = expression(paste(x[t], " (Number of 
+   sunspots)")), xlab = "Year", type = "o", col = "red", main 
+   = "Sunspots per year from 1700 to 2020")
+```
+
+```{r}
+plot.ts(x = x, ylab = expression(paste(x[t], " (Number of sunspots)")),
+  xlab = "Year", type = "o", col = "red", main = "Sunspots per year from 1700 to 2020")
+
+
+#type = "b" also works for "both" points and lines, but it leaves spaces between the points and lines
+```
+

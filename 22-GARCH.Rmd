@@ -1,0 +1,202 @@
+# GARCH Models
+
+GARCH models are the generalization of ARCH models
+
+## GARCH(m, r)
+
+We now examine the GARCH model in more detail. Note that the “G” stands for “Generalized”. The model is
+
+$y_t=\sigma_t\epsilon_t$ where
+
+$\sigma_t^2=\alpha_0+\alpha_1y^2_{t-1}+...+\alpha_my^2_{t-m}+\beta_1\sigma^2_{t-1}+...+\beta_r\sigma^2_{t-r}$ and $\epsilon_t\sim ind.(0,1)$
+
+The additional parameters help incorporate past variances. Note that $E(y_t)$ is 0.
+
+Notes:
+
+- This model helps to incorporate past volatilities (as measured by the variance term) that may affect the present. The overall hope is that a smaller number of parameters will be needed for a GARCH model than if an ARCH model was used instead. In other words, we want to have a parsimonious model. 
+- The $\sigma^2_{t-1},…,\sigma^2_{t-r}$   are all unobservable.
+- We use a normality assumption when estimating the model, so $\epsilon_t \sim ind. N(0,1)$. 
+- If r = 0, then GARCH(m,r) = ARCH(m).  
+- The model can be reparameterized and thought of as a ARMA model for $y^2_t$. For example, with a GARCH(1,1), 
+
+$\sigma_t^2=\alpha_0+\alpha_1y^2_{t-1}+\beta_1\sigma_{t-1}^2,$
+
+we obtain, 
+
+
+$$y_t^2=(\sigma_t^2)+(y^2_t-\sigma^2_t)\\
+=(\alpha_0+\alpha_1y^2_{t-1}+\beta_1\sigma^2_{t-1})+(y^2_t-\sigma^2_t)\\
+=(\alpha_0+\alpha_1y^2_{t-1}+\beta_1\sigma^2_{t-1})+(\beta_1y^2_{t-1}-\beta_1y^2_{t-1})+(y^2_t-\sigma^2_t)\\
+=\alpha_0+(\alpha_1+\beta_1)y^2_{t-1}-\beta_1(y^2_{t-1}-\sigma^2_{t-1})+(y^2_t-\sigma^2_t)\\
+=\alpha_0+(\alpha_1+\beta_1)y^2_{t-1}-\beta_1\nu_{t-1}+\nu_t$$
+
+where $\nu_t=y^2_t\sigma^2_t=\sigma^2\epsilon_t^2-\sigma_t^2=\sigma_t^2(\epsilon_t^2-1)$ plays the role of “$w_t$” in a regular ARMA(1,1) model.  
+
+- The constraints on the parameters are: $\alpha_0 > 0, \alpha_i \ge 0, \beta_i \ge 0,$ and $\sum_{i=1}^{max(m,r)}(\alpha_i+\beta_j)<1$. Note that if m < r, then the extra $\alpha_i$’s in the sum are 0; vice versa for r < m and the $\beta_j$’s. 
+- Integrated GARCH or IGARCH model 
+
+In a GARCH(1,1) model, it can be found that at times $\alpha_1 + \beta_1 = 1$. For this case, 
+
+$y_t^2=\alpha_0+(\alpha_1+\beta_1)y^2_{t-1}-\beta_1\nu_{t-1}+\nu_t=\alpha_0+y^2_{t-1}-\beta_1\nu_{t-1}+\nu_t$
+
+$\implies y^2_t-y^2_{t-1}=\alpha_0-\beta_1\nu_{t-1}+\nu_t$
+
+$\implies (1-B)y^2_t=\alpha_0-\beta_1\nu_{t-1}+\nu_t$
+
+An interpretation of the IGARCH(1,1) model is that the volatility is persistent. This is because it can be shown that the past volatility (variances) has an effect on all future volatilities. For more information, see Chan’s and Pena, Tiao, and Tsay’s textbooks. 
+
+- Due to $y_t$ being squared and how it is included in the model, GARCH (including ARCH) models affect volatility (variability) in returns the same way for both positive and negative returns. This can be unrealistic due to how the stock market tends to react to “good” and “bad” news. Hull’s finance textbook says that 
+
+> The volatility of an equity’s price tends to be inversely related to the price so that a negative $u_{n-1} (y_{t-1})$ has a bigger effect on $\sigma_n (\sigma_t)$ than the same positive $u_{n-1} (y_{t-1})$.
+
+- Determining the value of r in the model is not straightforward. Pena, Tiao, and Tsay’s textbook says  
+
+> The identification of GARCH models in practice is not simple. Only lower-order GARCH models are used in most applications.
+
+  What should you do then? One possibility is to try a few different models and see which model gives satisfactory residuals. From these models, choose the one with the smallest number of parameters.
+
+
+:::{.example}
+
+*Monthly returns of value-weighted S&P 500 Index from 1926 to 1991 (SP500.R)*
+
+This is an example from Pena, Tiao, and Tsay’s textbook. The authors say that an ARCH(9) model would be needed if the GARCH part was not used.  
+
+Below are my initial examinations of the data: 
+
+```{r}
+sp500 <- read.table(file = "sp500.txt", header = FALSE, 
+   col.names = "x", sep = "") 
+head(sp500)
+x <- sp500$x
+```
+
+
+
+
+```{r}
+par(mfrow = c(2,2))
+acf(x = x, type = "correlation", lag.max = 20, xlab = 
+    "h", main = expression(paste("Estimated ACF for ", 
+    x[t])))
+pacf(x = x, lag.max = 20, xlab = "h", main = 
+    expression(paste("Estimated PACF for ", x[t])))
+acf(x = x^2, type = "correlation", lag.max = 20, xlab = 
+    "h", main = expression(paste("Estimated ACF for ", 
+    x[t]^2)))
+pacf(x = x^2, lag.max = 20, xlab = "h", main = 
+    expression(paste("Estimated PACF for ", x[t]^2)))
+par(mfrow = c(1,1))
+
+```
+
+The above plots show dependence in the $x_t$ and $x_t^2$ series. I am not sure if it is really appropriate to look at the $x_t^2$  series plots yet because we have not tried to model the dependence in the $x_t$ series. However, because the authors look at the $x_t^2$, I still constructed the plots here.  
+
+The authors suggest a MA(3) or AR(3) model would be appropriate for $x_t$. They focus on an AR(3).  
+
+```{r}
+mod.fit.ar3 <- arima(x = x, order = c(3, 0, 0), 
+                       include.mean = TRUE)
+mod.fit.ar3
+
+y <- as.numeric(mod.fit.ar3$residuals)
+```
+
+```{r}
+par(mfrow = c(2,2))
+acf(x = y, type = "correlation", lag.max = 20, xlab = 
+    "h", main = expression(paste("Estimated ACF for ", 
+    y[t])))
+pacf(x = y, lag.max = 20, xlab = "h", main = 
+    expression(paste("Estimated PACF for ", y[t])))
+acf(x = y^2, type = "correlation", lag.max = 20, xlab = 
+    "h", main = expression(paste("Estimated ACF for ", 
+    y[t]^2)))
+pacf(x = y^2, lag.max = 20, xlab = "h", main = 
+    expression(paste("Estimated PACF for ", y[t]^2)))
+par(mfrow = c(1,1))
+
+```
+
+
+The estimated ARMA(3,0) model is
+
+$x_t= 0.0066 + 0.0890x_{t-1} - 0.0238x_{t-2} - 0.1229x_{t-3} + w_t$
+
+where $(1-0.0890+0.0238+0.1229)\times 0.0062 = 0.0066.$
+
+Below is code for an ARMA(3,0) and GARCH(1,1) model suggested by the authors. 
+
+```{r}
+library(fGarch)
+# garch(1,1)=garch(m,r)
+mod.fit.garch <- garchFit(formula = ~ arma(3,0) + 
+    garch(1, 1), data = x)
+summary(mod.fit.garch)
+```
+
+- $\hat \beta_1=8.5302e-01$
+
+```{r}
+plot(mod.fit.garch, which=10)
+```
+
+
+```{r}
+plot(mod.fit.garch, which=11)
+```
+
+```{r}
+plot(mod.fit.garch, which=13)
+```
+
+The estimated GARCH model is: $\hat \sigma^2_t= 7.975\times 10^{-5} + 0.1242y^2_{t-1}  + 0.8530\hat \sigma^2_{t-1}$
+
+Notice all of the parameters are significantly different from 0. Because we re-estimated the ARMA(3,0) too, we can re-examine the significance of the corresponding parameters. Similar to the authors, I think the ARMA(3,0) model may not be necessary! Dropping the ARMA(3,0) model as in Pena, Tiao, and Tsay. I re-fit a GARCH model. However, note that non-normality indicated by the QQ-plot above. This was not mentioned in the book.
+
+Furthermore, this could adversely affect inferences as well. 
+
+Below is my corresponding code and output without the ARMA(3,0) part. 
+
+```{r}
+mod.fit.garch <- garchFit(formula = ~ garch(1, 1), data = 
+    x, trace=FALSE)
+summary(mod.fit.garch)
+```
+
+- $\hat \beta_1=8.544e-01$
+
+The estimated model is  $\hat \sigma_t^2= 8.061\times 10^{-5} + 0.1220\tilde y^2_{t-1}  + 0.8544\hat \sigam^2_{t-1}$ , where $\mu$ is estimated to be $7.45\times 10^{-3}$. A QQ-plot for the standardized residuals still indicates a normality problem.    
+
+:::
+
+What can you do about the normality problem?
+
+- Assume a different distribution for $\epsilon_t$. See the `cond.dist` argument of `garchFit()` for a list. Note that the documentation for what these distributions represent is not good. 
+- Use “robust” standard errors. The `cond.dist = "QMLE"` argument value produces these types of standard errors using a sandwich estimate of the covariance matrix. The documentation for this is still somewhat poor. In most other statistical applications, sandwich estimators produce consistent estimates of the covariance matrix even when the distributional assumptions are incorrectly specified.  
+
+
+The authors also suggest fitting an IGARCH model to the data due to  $\hat \alpha+\hat \beta$  being close to 1. Unfortunately,  `garchFit()` can fit these types of models. Code is included in my program for the `ugarchfit()` function of the `rugarch` package to fit the model. The estimated model is $\hat \sigma_t^2= 0.0074 + 0.1430\tilde y^2_{t-1} + 0.8570\hat \sigma_{t-1}^2$  with $x_t = 0.0074 + wt$ where $w_t\sim ind.N(0, \sigma_t^2)$. The intercept parameter is estimated simultaneously with the other parameters. Notice  $\hat \alpha_+\hat \beta_= 1$ as required by the IGARCH(1,1) model, The authors state that “this model seems hard to justify for an excess return series.” This statement is in reference to how past volatility affects all future volatilities for this model (i.e., 1950 volatility affect 1990s volatility). Overall, I did not see improvement with this model over the others.
+
+```{r}
+library(rugarch)
+spec3 <- ugarchspec(variance.model = list(model = "iGARCH", garchOrder = c(1,1)),
+     mean.model = list(armaOrder = c(0, 0), include.mean = TRUE, arfima = FALSE))
+
+mod.fit.igarch <- ugarchfit(spec = spec3, data = as.numeric(x))
+  
+show(mod.fit.igarch)  
+```
+
+```{r}
+plot(mod.fit.igarch, which=9)
+```
+
+
+## Final Comments
+
+- There are MANY other types of GARCH models. In fact, I would not be surprised if there are whole classes on the subject at other universities, perhaps in finance departments. 
+- One of these other GARCH models is an EGARCH (where the “E” stands for exponential) model which helps to account for potential asymmetry between positive/negative returns. Remember that ARCH and GARCH treated them symmetrically. In other words, we did not differentiate between positive or negative returns in the model since $y_t$ was always squared.  The `ugarchfit()` function can fit these types of models (use `model = "eGARCH"` in the model specifications). 
+- An asymmetric power GARCH model can account for the asymmetry as well. Shumway and Stoffer’s textbook describe this model. 
+
