@@ -31,14 +31,14 @@ Using a Taylor series expansion about 0 leads to
 $$(1-B)^d=\frac{(1-0)^d}{0!}(B-0)^0+\frac{-d(1-0)^{d-1}}{1!}(B-0)^1\\+\frac{d(d-1)(1-0)^{d-2}}{2!}(B-0)^2+...\\
 =1+(-d)B+\frac{d(d-1)}{2}B^2+...$$
 
-The general expression is $(1-B)^d-\sum_{j=0}^{\infty}\pi_jB^j$ where $\pi_j=\frac{\Gamma(j-d)}{\Gamma(j+1)\Gamma(-d)}$
+The general expression is $(1-B)^d=\sum_{j=0}^{\infty}\pi_jB^j$ where $\pi_j=\frac{\Gamma(j-d)}{\Gamma(j+1)\Gamma(-d)}$
 
 Notes:
 
 - $\Gamma(x+1)=x\Gamma(x)=x\int_{0}^{\infty}y^{x-1}e^{-y}dy$ for x>0 is the gamma function. Note that if x is an integer, this simplifies to $\Gamma(x) = (x – 1)!$ 
 
   - How can I have $\Gamma(-d)$ above???
-  - 	Notice the $\Gamma(-d)$ will fall out; for example,
+  - Notice the $\Gamma(-d)$ will fall out; for example,
   
   $$\pi_1=\frac{\Gamma(1-d)}{\Gamma(1+1)\Gamma(-d)}=\frac{-d\Gamma(-d)}{\Gamma(2)\Gamma(-d)}=-d$$
 
@@ -50,7 +50,7 @@ One can try a few values of j to see it works out.
 
 - It can be shown that $x_t=\sum_{j=0}^{\infty}\psi_jw_{t-j}$ where $\psi_j=\frac{\Gamma(j+d)}{\Gamma(j+1)\gamma(d)}$
 
-### Finding estimatet of d:
+### Finding estimate of d:
 
 Use an iterative root-finding procedure with $Q(d) =  \sum w_t^2(d)$. In other words, minimize the squared $w_t$’s (residuals) with respect to d. Iterative numerical method details are available in Shumway and Stoffer’s textbook.    
 
@@ -64,7 +64,7 @@ Notes:
 
 - A seasonal form of the model could also have been used above.
 
-- We have often just examined the $\mu = 0$ form of an ARMA model. The way we have written the $\mu \ne 0$ form of the model is $\phi(B)x_t = \alpha + \theta(B)w_t$ where $\alpha = \mu(1-\phi_1-\phi_2-…-\phi_p)$. Instead, one could also write the model as $\phi(B)(x_t-\mu) = \theta(B)w_t$ so that the $\\alpha$ term is not directly written in there. This is why the ARFIMA model is represented as above.   
+- We have often just examined the $\mu = 0$ form of an ARMA model. The way we have written the $\mu \ne 0$ form of the model is $\phi(B)x_t = \alpha + \theta(B)w_t$ where $\alpha = \mu(1-\phi_1-\phi_2-…-\phi_p)$. Instead, one could also write the model as $\phi(B)(x_t-\mu) = \theta(B)w_t$ so that the $\alpha$ term is not directly written in there. This is why the ARFIMA model is represented as above.   
 
 - Let $z_t=(1-B)^dx_t$. Thus $x_t$ is passed through an infinite linear filter to form $z_t$. We can then find an ARMA model for $z_t$.
 
@@ -172,7 +172,7 @@ Notes:
 
 $$(1 - 0.1875B)(1 - B)^{0.2501}(x_t + 0.1712) = w_t.$$
 
-with $\hat \sigma_w^2=0.9928298^2$. Notice how the mean is incorporated into the model.  
+with $\hat \sigma_w^2=0.9928298^2$. Notice how the mean is incorporated into the model (`mean(x)=-0.1712`).  
 
 - A test of $H_0: \phi_1=0$ vs. $H_a:\phi_1 \ne 0$ results in
 

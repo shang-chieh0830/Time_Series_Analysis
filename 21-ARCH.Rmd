@@ -139,9 +139,10 @@ Notes:
 $x_t = \mu + w_t$
 
   where $w_t \sim ind.(0, \sigma_t^2), \sigma_t^2= \alpha_0 + \alpha_1y^2_{t-1}, y_t = x_t - \mu$.
+  
 - Because the variance changes, this is where the H part of the ARCH name comes about.  
 - For now, t will be taken as having a normal distribution.
-- The $\alpha_0$ and $\alpha_1$ parameters have constraints on possible values they can take on so that $\sigma_t^2  > 0$. For example, $\alpha_1  > 0$ to make sure   $\sigma_t^2> 0$ for any $\alpha_0$. More specific constraints are given later.
+- The $\alpha_0$ and $\alpha_1$ parameters have constraints on possible values they can take on so that $\sigma_t^2  > 0$. For example, $\alpha_1  > 0$ to make sure $\sigma_t^2> 0$ for any $\alpha_0$. More specific constraints are given later.
 - One can think of this as $y_t$ is white noise with variance depending on the past. 
 - Also, one may need to find an ARMA model for the original series $x_t$ itself if it has autocorrelation in it. We can then work with the residuals as $y_t$ to find an ARCH model. We will discuss finding an ARMA model and ARCH model together later in the notes.  
 - You could rewrite the model as $y_t=\sqrt{\alpha_0+\alpha_1y^2_{t-1}}\epsilon_t$
